@@ -1,0 +1,31 @@
+# Temporaire : lit la documentation de Quizz API pour trouver les vrais endpoints.
+name: Sonder Quizz API
+on:
+  workflow_dispatch:
+  push:
+    branches: [claude/admiring-darwin-xi8jzo]
+    paths: [.github/workflows/probe-api.yml]
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Endpoints candidats
+        run: |
+          B=https://quizzapi.jomoreschi.fr
+          for p in / /api /api/v1 /api/v1/quiz /api/v2/quiz "/api/v2/quiz?limit=2" /api/quiz "/api/v1/quiz?limit=2" /docs /documentation /api-docs /swagger.json /openapi.json /api/v2 /api/v2/categories /api/v1/categories; do
+            echo "=== $p"
+            curl -sS -m 15 -L -o /tmp/r -w "status=%{http_code} type=%{content_type} acao=%header{access-control-allow-origin}\n" "$B$p" || true
+            head -c 600 /tmp/r; echo
+          done
+      - name: Chemins /api cités dans la page et ses scripts
+        run: |
+          B=https://quizzapi.jomoreschi.fr
+          curl -sS -m 15 "$B/" > home.html
+          grep -oE '(src|href)="[^"]+"' home.html | sort -u
+          for s in $(grep -oE 'src="[^"]+\.js"' home.html | sed 's/src="//;s/"$//'); do
+            case "$s" in http*) u="$s";; /*) u="$B$s";; *) u="$B/$s";; esac
+            echo "--- $u"
+            curl -sS -m 15 "$u" | grep -oE '.{0,80}/api/[^"'"'"'` ]{0,80}.{0,80}' | sort -u | head -60
+          done
+          echo "--- texte de la page"
+          sed -e 's/<[^>]*>/ /g' home.html | tr -s ' \n' | head -c 6000
