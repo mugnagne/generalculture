@@ -1,0 +1,47 @@
+# Télécharge les questions de Quizz API côté serveur (pas de CORS ici)
+# et commite `questions.json`, que le site lit ensuite comme un fichier local.
+# Le script recopie les questions telles quelles, sans les modifier.
+name: Importer les questions
+
+on:
+  workflow_dispatch: # bouton « Run workflow » dans l'onglet Actions
+  push:
+    branches: [claude/admiring-darwin-xi8jzo]
+    paths:
+      - scripts/import-questions.mjs
+      - .github/workflows/import-questions.yml
+  schedule:
+    - cron: '17 4 * * 1' # chaque lundi, pour récupérer les nouvelles questions
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-questions
+  cancel-in-progress: false
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Télécharger les questions
+        run: node scripts/import-questions.mjs --rounds 40
+
+      - name: Commiter questions.json s'il a changé
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add questions.json
+          if git diff --cached --quiet; then
+            echo "Aucun changement."
+          else
+            git commit -m "Mise à jour de questions.json depuis Quizz API"
+            git pull --rebase origin "${GITHUB_REF_NAME}"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

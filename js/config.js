@@ -28,7 +28,10 @@ export const CONFIG = {
   SOURCES: [
     {
       id: 'quizzapi',
-      enabled: true,
+      // Désactivé : l'API n'envoie pas d'en-tête CORS, le navigateur bloque
+      // donc l'appel. Les questions sont lues dans questions.json, généré par
+      // le workflow GitHub Actions « Importer les questions ».
+      enabled: false,
       label: 'Quizz API',
       homepage: 'https://quizzapi.jomoreschi.fr',
       // Endpoint et paramètres à VÉRIFIER dans la documentation de l'API

@@ -66,6 +66,14 @@ Le script d'import affiche lui aussi la structure exacte de la réponse.
 
 ### Si l'API bloque les appels du navigateur (CORS)
 
+C'est le cas : Quizz API n'envoie pas d'en-tête `Access-Control-Allow-Origin`, d'où la source
+`quizzapi` désactivée dans `config.js`. Le workflow GitHub Actions
+`.github/workflows/import-questions.yml` lance le script ci-dessous sur les serveurs de GitHub,
+puis commite `questions.json`. Il tourne à chaque modification du script, chaque lundi, et à la
+demande (onglet **Actions → Importer les questions → Run workflow**).
+
+Pour le lancer à la main :
+
 ```bash
 node scripts/import-questions.mjs              # 20 appels × 50 questions, dédoublonnées
 node scripts/import-questions.mjs --rounds 40  # pour en récupérer davantage
