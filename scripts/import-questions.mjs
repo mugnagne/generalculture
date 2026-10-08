@@ -11,7 +11,7 @@
  * doublons (même identifiant) sont écartés.
  *
  * Usage (Node 18+) :
- *   node scripts/import-questions.mjs [--rounds 20] [--limit 50]
+ *   node scripts/import-questions.mjs [--rounds 1] [--limit 50]
  *                                     [--category X] [--difficulty Y]
  *                                     [--endpoint URL] [--out questions.json]
  */
@@ -27,9 +27,10 @@ const args = Object.fromEntries(
 );
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const ENDPOINT = args.endpoint ?? 'https://quizzapi.jomoreschi.fr/api/v1/quiz';
-const ROUNDS = Number(args.rounds ?? 20);
-const LIMIT = Number(args.limit ?? 50);
+const ENDPOINT = args.endpoint ?? 'https://quizzapi.jomoreschi.fr/api/v2/quiz';
+// Sans --limit, l'API renvoie tout son catalogue : un seul appel suffit.
+const ROUNDS = Number(args.rounds ?? 1);
+const LIMIT = args.limit ? Number(args.limit) : null;
 const OUT = path.resolve(ROOT, args.out ?? 'questions.json');
 
 /** Même logique que questionSource.js : trouve le tableau de questions. */
@@ -54,7 +55,7 @@ let firstResponse = null;
 
 for (let round = 1; round <= ROUNDS; round++) {
   const url = new URL(ENDPOINT);
-  url.searchParams.set('limit', String(LIMIT));
+  if (LIMIT) url.searchParams.set('limit', String(LIMIT));
   if (args.category) url.searchParams.set('category', args.category);
   if (args.difficulty) url.searchParams.set('difficulty', args.difficulty);
 

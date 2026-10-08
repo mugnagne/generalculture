@@ -1,5 +1,5 @@
-# Télécharge les questions de Quizz API côté serveur (pas de CORS ici)
-# et commite `questions.json`, que le site lit ensuite comme un fichier local.
+# Télécharge le catalogue de Quizz API et commite `questions.json`, copie de
+# secours que le site utilise si l'API est indisponible.
 # Le script recopie les questions telles quelles, sans les modifier.
 name: Importer les questions
 
@@ -31,7 +31,7 @@ jobs:
           node-version: 22
 
       - name: Télécharger les questions
-        run: node scripts/import-questions.mjs --rounds 40
+        run: node scripts/import-questions.mjs
 
       - name: Commiter questions.json s'il a changé
         run: |

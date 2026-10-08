@@ -28,18 +28,18 @@ export const CONFIG = {
   SOURCES: [
     {
       id: 'quizzapi',
-      // Désactivé : l'API n'envoie pas d'en-tête CORS, le navigateur bloque
-      // donc l'appel. Les questions sont lues dans questions.json, généré par
-      // le workflow GitHub Actions « Importer les questions ».
-      enabled: false,
+      enabled: true,
       label: 'Quizz API',
       homepage: 'https://quizzapi.jomoreschi.fr',
-      // Endpoint et paramètres à VÉRIFIER dans la documentation de l'API
-      // (https://quizzapi.jomoreschi.fr) : voir README, section « Source ».
-      endpoint: 'https://quizzapi.jomoreschi.fr/api/v1/quiz',
+      // Endpoint vérifié : GET /api/v2/quiz?limit=&category=&difficulty=
+      // → { count, quizzes: [{ id, question, answer, badAnswers[3],
+      //     category, difficulty, categoryId }] }  (CORS autorisé : « * »)
+      // Pas d'anecdote dans cette API : rien n'est donc affiché à cet endroit.
+      endpoint: 'https://quizzapi.jomoreschi.fr/api/v2/quiz',
       params: { limit: 'limit', category: 'category', difficulty: 'difficulty' },
-      // Nombre de questions demandées pour découvrir les catégories/difficultés.
-      discoveryLimit: 50,
+      // Sans `limit`, l'API renvoie tout le catalogue (≈ 870 questions, ~300 Ko) :
+      // on le charge une fois, on le met en cache 24 h et on filtre localement.
+      fetchAll: true,
     },
     {
       id: 'openquizzdb',
@@ -54,8 +54,8 @@ export const CONFIG = {
       attribution: 'OpenQuizzDB — Fourni par Openquizzdb.org (licence CC BY-SA)',
     },
     {
-      // Fichier généré par `node scripts/import-questions.mjs` lorsque
-      // l'API bloque les appels depuis le navigateur (CORS).
+      // Copie de secours générée par `node scripts/import-questions.mjs`
+      // (workflow GitHub Actions hebdomadaire), utilisée si l'API est en panne.
       id: 'local',
       enabled: true,
       label: 'Quizz API (copie locale)',

@@ -39,49 +39,35 @@ Format interne d'une question :
 Les sources sont essayées dans l'ordre défini par `CONFIG.SOURCES` (`js/config.js`) :
 
 1. **Quizz API** (<https://quizzapi.jomoreschi.fr>) : source principale, appelée directement
-   depuis le navigateur sur `GET /api/v1/quiz?limit=…&category=…&difficulty=…`.
+   depuis le navigateur (l'API autorise le CORS). Format vérifié sur une vraie réponse :
+   `GET /api/v2/quiz?limit=…&category=…&difficulty=…` →
+   `{ count, quizzes: [{ id, question, answer, badAnswers: [3], category, difficulty, categoryId }] }`.
+   Sans `limit`, l'API renvoie tout son catalogue (≈ 870 questions) : le site le charge une fois,
+   le met en cache 24 h et filtre localement. L'API ne fournit pas d'anecdote, donc aucune n'est affichée.
 2. **OpenQuizzDB** (<https://www.openquizzdb.org>) : source de secours, **désactivée par défaut**
    parce que son API demande une clé personnelle. Pour l'activer, demandez une clé sur le site,
    renseignez `key` et passez `enabled: true`. Sa licence est CC BY-SA : la mention
    « OpenQuizzDB — Fourni par Openquizzdb.org » s'affiche alors automatiquement en bas de page.
-3. **`questions.json`** : une copie locale de Quizz API, utilisée si les deux sources précédentes échouent.
+3. **`questions.json`** : copie de secours de Quizz API, utilisée si l'API est indisponible.
 
-Le site ne code en dur ni les catégories ni les difficultés. Il les déduit des questions que
-renvoie la source. La source qui a réellement servi les questions est citée en bas de page.
+Les catégories et difficultés ne sont pas codées en dur : le site les déduit des questions
+renvoyées. La source qui a réellement servi les questions est citée en bas de page.
 
-### ⚠️ À vérifier au premier lancement
+⚠️ L'ancienne adresse `/api/v1/quiz` renvoie la page HTML du site, sans en-tête CORS,
+ce qui s'affichait comme une erreur CORS dans le navigateur. Seule `/api/v2/quiz` est la bonne.
 
-Je n'ai pas pu joindre `quizzapi.jomoreschi.fr` ni `openquizzdb.org` depuis l'environnement
-de développement : le réseau bloquait les deux domaines. Ce qui n'a donc **pas encore été
-vérifié sur une vraie réponse** :
+### Copie de secours `questions.json`
 
-- le chemin de l'endpoint et les noms des paramètres (`limit`, `category`, `difficulty`). Ils se règlent dans `config.js` ;
-- les noms des champs JSON. `normalizeQuizzApi()` cherche le premier tableau de la réponse,
-  puis accepte `question`, `answer`/`correct_answer`, `badAnswers`/`incorrect_answers`, `category`,
-  `difficulty`, `anecdote`, `_id`/`id`.
-
-Si le format n'est pas reconnu, l'écran affiche « format non reconnu » et la console montre
-un exemple brut. Il suffit alors d'ajuster `normalizeQuizzApi()`, rien d'autre.
-Le script d'import affiche lui aussi la structure exacte de la réponse.
-
-### Si l'API bloque les appels du navigateur (CORS)
-
-C'est le cas : Quizz API n'envoie pas d'en-tête `Access-Control-Allow-Origin`, d'où la source
-`quizzapi` désactivée dans `config.js`. Le workflow GitHub Actions
-`.github/workflows/import-questions.yml` lance le script ci-dessous sur les serveurs de GitHub,
-puis commite `questions.json`. Il tourne à chaque modification du script, chaque lundi, et à la
-demande (onglet **Actions → Importer les questions → Run workflow**).
-
-Pour le lancer à la main :
+Le workflow GitHub Actions `.github/workflows/import-questions.yml` lance le script
+ci-dessous chaque lundi, à chaque modification du script, ou à la demande
+(onglet **Actions → Importer les questions → Run workflow**), puis commite `questions.json`.
 
 ```bash
-node scripts/import-questions.mjs              # 20 appels × 50 questions, dédoublonnées
-node scripts/import-questions.mjs --rounds 40  # pour en récupérer davantage
+node scripts/import-questions.mjs              # tout le catalogue en un appel
 ```
 
 Ce script (Node 18+) recopie les objets JSON de l'API **tels quels** dans `questions.json`,
-sans rien modifier. Committez ce fichier avec le site : la source « local » prendra le relais.
-Pour ne servir que ce fichier, passez `enabled: false` sur la source `quizzapi`.
+sans rien modifier.
 
 ### Changer de source
 

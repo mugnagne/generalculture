@@ -172,7 +172,7 @@ const ADAPTERS = {
   quizzapi: {
     async fetchRaw(src, { category, difficulty, limit }) {
       const url = new URL(src.endpoint);
-      url.searchParams.set(src.params.limit, String(limit));
+      if (limit) url.searchParams.set(src.params.limit, String(limit));
       if (category) url.searchParams.set(src.params.category, category);
       if (difficulty) url.searchParams.set(src.params.difficulty, difficulty);
       return extractArray(await fetchJson(url.toString()));
@@ -181,7 +181,7 @@ const ADAPTERS = {
   },
 
   openquizzdb: {
-    async fetchRaw(src, { limit }) {
+    async fetchRaw(src, { limit = 20 }) {
       if (!src.key) throw new QuestionSourceError('Clé OpenQuizzDB manquante.', 'http');
       const url = new URL(src.endpoint);
       url.searchParams.set('key', src.key);
@@ -267,7 +267,8 @@ async function getPool(filters, wanted) {
   let firstError = null; // l'erreur de la source principale est la plus parlante
   for (const src of enabledSources()) {
     try {
-      const limit = Math.min(Math.max(wanted * 3, 30), 50);
+      // Sans `limit`, Quizz API renvoie tout son catalogue en un seul appel.
+      const limit = src.fetchAll ? null : Math.min(Math.max(wanted * 3, 30), 50);
       const loaded = (await loadFromSource(src, { ...filters, limit })).filter((q) => matches(q, filters));
       if (!loaded.length) {
         throw new QuestionSourceError('Aucune question disponible pour ces critères.', 'empty');
@@ -322,7 +323,9 @@ export async function getFilters() {
  * @param {{category?: string, difficulty?: string, count: number}} options
  */
 export async function getQuestions({ category = null, difficulty = null, count }) {
-  const pool = await getPool({ category, difficulty }, count);
+  // Le catalogue complet est mis en cache une fois, puis filtré ici :
+  // un seul appel réseau par 24 h, quelles que soient les options choisies.
+  const pool = (await getPool({}, count)).filter((q) => matches(q, { category, difficulty }));
   const reported = getReportedIds();
   const seen = getSeenIds();
   const usable = pool.filter((q) => !reported.has(q.id));
