@@ -27,6 +27,8 @@ python3 -m http.server 8000      # ou : npx serve .
 | `js/storage.js` | localStorage : cache, meilleurs scores, questions vues, signalements |
 | `js/app.js` | Interface (DOM, clavier, accessibilité) |
 | `scripts/import-questions.mjs` | Copie locale des questions dans `questions.json` (cas CORS) |
+| `assets/` | Sprites, interface, palette, décors et carte (à ajouter ; dossiers vides suivis par `.gitkeep`) |
+| `CREDITS.md` | Auteurs et licences des ressources graphiques |
 
 Format interne d'une question :
 
