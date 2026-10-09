@@ -1,4 +1,20 @@
-# 🧠 Quiz Culture Générale
+# ⚔️ La Reconquête de Valdorn
+
+Jeu de conquête en pixel art (Phaser 3) : chaque bataille se gagne en répondant à des questions
+de culture générale venues de Quizz API. Le quiz d'origine reste disponible sur `classique.html`.
+
+- `index.html` : le jeu. Paramètres de test : `?region=givre&bataille=1|2|3`.
+- `debug.html` : toutes les animations du manifeste, à l'échelle du jeu.
+- `src/` : scènes Phaser, données des régions (`src/data/world.js`), interface Kenney (`src/ui.js`).
+- `scripts/build_assets.py` (Pillow) : régénère `assets/sprites/manifest.json` et `assets/generated/`
+  (décors et carte en 480x270, palette). Les fichiers d'origine des assets ne sont jamais modifiés.
+- Le jeu réutilise tel quel `js/questionSource.js` (via `src/questions.js`). Quand une réserve
+  catégorie × difficulté compte moins de 10 questions, elle est complétée avec les niveaux voisins
+  de la même catégorie.
+
+---
+
+# 🧠 Quiz Culture Générale (version classique : `classique.html`)
 
 Un quiz de culture générale en français, en HTML/CSS/JavaScript vanilla (modules ES),
 sans backend ni étape de build. Il se déploie tel quel sur Netlify, Vercel ou GitHub Pages.

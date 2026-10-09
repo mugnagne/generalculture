@@ -1,0 +1,1073 @@
+{
+ "generatedBy": "scripts/build_assets.py",
+ "characters": {
+  "hero-knight": {
+   "pack": "Hero Knight",
+   "facing": "right",
+   "body": {
+    "height": 51,
+    "bottom": 114,
+    "centerX": 96.5,
+    "width": 47
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Hero Knight/Sprites/Idle.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 11,
+     "columns": 11,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Hero Knight/Sprites/Attack1.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Hero Knight/Sprites/Attack2.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Hero Knight/Sprites/Take Hit.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Hero Knight/Sprites/Death.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 11,
+     "columns": 11,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/Hero Knight/Sprites/Run.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 12,
+     "loop": true
+    },
+    "jump": {
+     "file": "assets/sprites/Hero Knight/Sprites/Jump.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 10,
+     "loop": false
+    },
+    "fall": {
+     "file": "assets/sprites/Hero Knight/Sprites/Fall.png",
+     "frameWidth": 180,
+     "frameHeight": 180,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "medieval-warrior-3": {
+   "pack": "Medieval Warrior Pack 3",
+   "facing": "right",
+   "body": {
+    "height": 38,
+    "bottom": 86,
+    "centerX": 67.0,
+    "width": 26
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Idle.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 10,
+     "columns": 10,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Attack1.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Attack2.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack3": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Attack3.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 5,
+     "columns": 5,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Get Hit.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Death.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 9,
+     "columns": 9,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/Medieval Warrior Pack 3/Sprites/Run.png",
+     "frameWidth": 135,
+     "frameHeight": 135,
+     "start": 0,
+     "frames": 6,
+     "columns": 6,
+     "fps": 12,
+     "loop": true
+    }
+   }
+  },
+  "medieval-warrior-2": {
+   "pack": "Medieval Warrior Pack 2",
+   "facing": "right",
+   "body": {
+    "height": 41,
+    "bottom": 95,
+    "centerX": 75.0,
+    "width": 26
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Idle.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Attack1.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Attack2.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack3": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Attack3.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack4": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Attack4.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Take Hit.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Death.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 6,
+     "columns": 6,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/Medieval Warrior Pack 2/Sprites/Run.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 12,
+     "loop": true
+    }
+   }
+  },
+  "fantasy-warrior": {
+   "pack": "Fantasy Warrior",
+   "facing": "right",
+   "body": {
+    "height": 45,
+    "bottom": 101,
+    "centerX": 85.5,
+    "width": 39
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Idle.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 10,
+     "columns": 10,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Attack1.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Attack2.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 14,
+     "loop": false
+    },
+    "attack3": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Attack3.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Take hit.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Death.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/Fantasy Warrior/Sprites/Run.png",
+     "frameWidth": 162,
+     "frameHeight": 162,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 12,
+     "loop": true
+    }
+   }
+  },
+  "skeleton": {
+   "pack": "Monsters Creatures Fantasy",
+   "facing": "right",
+   "body": {
+    "height": 51,
+    "bottom": 101,
+    "centerX": 82.5,
+    "width": 45
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Idle.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Attack.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Take Hit.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Death.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 10,
+     "loop": false
+    },
+    "walk": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Walk.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 10,
+     "loop": true
+    },
+    "shield": {
+     "file": "assets/sprites/Monsters_Creatures_Fantasy/Skeleton/Shield.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "evil-wizard": {
+   "pack": "Evil Wizard",
+   "facing": "right",
+   "body": {
+    "height": 55,
+    "bottom": 100,
+    "centerX": 73.0,
+    "width": 32
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Evil Wizard/Sprites/Idle.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Evil Wizard/Sprites/Attack.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Evil Wizard/Sprites/Take Hit.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Evil Wizard/Sprites/Death.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 5,
+     "columns": 5,
+     "fps": 10,
+     "loop": false
+    },
+    "walk": {
+     "file": "assets/sprites/Evil Wizard/Sprites/Move.png",
+     "frameWidth": 150,
+     "frameHeight": 150,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 10,
+     "loop": true
+    }
+   }
+  },
+  "evil-wizard-2": {
+   "pack": "Evil Wizard 2",
+   "facing": "right",
+   "body": {
+    "height": 95,
+    "bottom": 167,
+    "centerX": 136.5,
+    "width": 57
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Idle.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Attack1.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Attack2.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Take hit.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Death.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/EVil Wizard 2/Sprites/Run.png",
+     "frameWidth": 250,
+     "frameHeight": 250,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 12,
+     "loop": true
+    }
+   }
+  },
+  "fire-worm": {
+   "pack": "Fire Worm",
+   "facing": "right",
+   "body": {
+    "height": 41,
+    "bottom": 58,
+    "centerX": 42.5,
+    "width": 51
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Fire Worm/Sprites/Worm/Idle.png",
+     "frameWidth": 90,
+     "frameHeight": 90,
+     "start": 0,
+     "frames": 9,
+     "columns": 9,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Fire Worm/Sprites/Worm/Attack.png",
+     "frameWidth": 90,
+     "frameHeight": 90,
+     "start": 0,
+     "frames": 16,
+     "columns": 16,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Fire Worm/Sprites/Worm/Get Hit.png",
+     "frameWidth": 90,
+     "frameHeight": 90,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Fire Worm/Sprites/Worm/Death.png",
+     "frameWidth": 90,
+     "frameHeight": 90,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 10,
+     "loop": false
+    },
+    "walk": {
+     "file": "assets/sprites/Fire Worm/Sprites/Worm/Walk.png",
+     "frameWidth": 90,
+     "frameHeight": 90,
+     "start": 0,
+     "frames": 9,
+     "columns": 9,
+     "fps": 10,
+     "loop": true
+    }
+   }
+  },
+  "medieval-king-2": {
+   "pack": "Medieval King Pack 2",
+   "facing": "right",
+   "body": {
+    "height": 54,
+    "bottom": 105,
+    "centerX": 79.5,
+    "width": 31
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Idle.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Attack1.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Attack2.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "attack3": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Attack3.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Take Hit.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 4,
+     "columns": 4,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Death.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 6,
+     "columns": 6,
+     "fps": 10,
+     "loop": false
+    },
+    "run": {
+     "file": "assets/sprites/Medieval King Pack 2/Sprites/Run.png",
+     "frameWidth": 160,
+     "frameHeight": 111,
+     "start": 0,
+     "frames": 8,
+     "columns": 8,
+     "fps": 12,
+     "loop": true
+    }
+   }
+  },
+  "mimic": {
+   "pack": "Monsters Creatures Fantasy 2",
+   "facing": "left",
+   "body": {
+    "height": 30,
+    "bottom": 83,
+    "centerX": 77.0,
+    "width": 42
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/idle_transformed.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 9,
+     "columns": 9,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/attack_1.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 14,
+     "columns": 14,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/attack_2.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 13,
+     "columns": 13,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/hurt.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 3,
+     "columns": 3,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/death.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 6,
+     "columns": 6,
+     "fps": 10,
+     "loop": false
+    },
+    "walk": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/walk.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 6,
+     "columns": 6,
+     "fps": 10,
+     "loop": true
+    },
+    "transform": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/transform.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 7,
+     "columns": 7,
+     "fps": 10,
+     "loop": false
+    },
+    "closed": {
+     "file": "assets/sprites/Monsters Creatures Fantasy 2/Mimic/Idle_closed.png",
+     "frameWidth": 146,
+     "frameHeight": 146,
+     "start": 0,
+     "frames": 1,
+     "columns": 1,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "frost-guardian": {
+   "pack": "Frost Guardian (chierit)",
+   "facing": "left",
+   "body": {
+    "height": 92,
+    "bottom": 110,
+    "centerX": 95.5,
+    "width": 79
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Frost_Guardian_FREE_v1.0/frost_guardian_free_192x128_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 128,
+     "start": 0,
+     "frames": 6,
+     "columns": 16,
+     "fps": 8,
+     "loop": true
+    },
+    "walk": {
+     "file": "assets/sprites/Frost_Guardian_FREE_v1.0/frost_guardian_free_192x128_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 128,
+     "start": 16,
+     "frames": 10,
+     "columns": 16,
+     "fps": 10,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Frost_Guardian_FREE_v1.0/frost_guardian_free_192x128_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 128,
+     "start": 32,
+     "frames": 14,
+     "columns": 16,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/Frost_Guardian_FREE_v1.0/frost_guardian_free_192x128_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 128,
+     "start": 48,
+     "frames": 7,
+     "columns": 16,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Frost_Guardian_FREE_v1.0/frost_guardian_free_192x128_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 128,
+     "start": 64,
+     "frames": 16,
+     "columns": 16,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "cthulu": {
+   "pack": "Cthulu (chierit)",
+   "facing": "right",
+   "body": {
+    "height": 63,
+    "bottom": 96,
+    "centerX": 94.0,
+    "width": 60
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 0,
+     "frames": 15,
+     "columns": 15,
+     "fps": 8,
+     "loop": true
+    },
+    "walk": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 15,
+     "frames": 12,
+     "columns": 15,
+     "fps": 10,
+     "loop": true
+    },
+    "fly": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 30,
+     "frames": 6,
+     "columns": 15,
+     "fps": 10,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 45,
+     "frames": 7,
+     "columns": 15,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 60,
+     "frames": 9,
+     "columns": 15,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 75,
+     "frames": 5,
+     "columns": 15,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/free_cthulu/animations/cthulu_192x112_SpriteSheet.png",
+     "frameWidth": 192,
+     "frameHeight": 112,
+     "start": 90,
+     "frames": 11,
+     "columns": 15,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "demon-slime": {
+   "pack": "Demon Slime (chierit)",
+   "facing": "left",
+   "body": {
+    "height": 105,
+    "bottom": 159,
+    "centerX": 146.0,
+    "width": 80
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/boss_demon_slime_FREE_v1.0/spritesheets/demon_slime_FREE_v1.0_288x160_spritesheet.png",
+     "frameWidth": 288,
+     "frameHeight": 160,
+     "start": 0,
+     "frames": 6,
+     "columns": 22,
+     "fps": 8,
+     "loop": true
+    },
+    "walk": {
+     "file": "assets/sprites/boss_demon_slime_FREE_v1.0/spritesheets/demon_slime_FREE_v1.0_288x160_spritesheet.png",
+     "frameWidth": 288,
+     "frameHeight": 160,
+     "start": 22,
+     "frames": 12,
+     "columns": 22,
+     "fps": 10,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/boss_demon_slime_FREE_v1.0/spritesheets/demon_slime_FREE_v1.0_288x160_spritesheet.png",
+     "frameWidth": 288,
+     "frameHeight": 160,
+     "start": 44,
+     "frames": 15,
+     "columns": 22,
+     "fps": 14,
+     "loop": false
+    },
+    "hurt": {
+     "file": "assets/sprites/boss_demon_slime_FREE_v1.0/spritesheets/demon_slime_FREE_v1.0_288x160_spritesheet.png",
+     "frameWidth": 288,
+     "frameHeight": 160,
+     "start": 66,
+     "frames": 5,
+     "columns": 22,
+     "fps": 12,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/boss_demon_slime_FREE_v1.0/spritesheets/demon_slime_FREE_v1.0_288x160_spritesheet.png",
+     "frameWidth": 288,
+     "frameHeight": 160,
+     "start": 88,
+     "frames": 22,
+     "columns": 22,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  },
+  "undead-executioner": {
+   "pack": "Undead Executioner (Kronovi)",
+   "facing": "left",
+   "body": {
+    "height": 62,
+    "bottom": 83,
+    "centerX": 56.5,
+    "width": 45
+   },
+   "anims": {
+    "idle": {
+     "file": "assets/sprites/Undead executioner puppet/png/idle.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 4,
+     "columns": 5,
+     "fps": 8,
+     "loop": true
+    },
+    "idle2": {
+     "file": "assets/sprites/Undead executioner puppet/png/idle2.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 8,
+     "columns": 4,
+     "fps": 8,
+     "loop": true
+    },
+    "attack": {
+     "file": "assets/sprites/Undead executioner puppet/png/attacking.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 13,
+     "columns": 6,
+     "fps": 14,
+     "loop": false
+    },
+    "attack2": {
+     "file": "assets/sprites/Undead executioner puppet/png/skill1.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 12,
+     "columns": 6,
+     "fps": 14,
+     "loop": false
+    },
+    "summon": {
+     "file": "assets/sprites/Undead executioner puppet/png/summon.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 5,
+     "columns": 4,
+     "fps": 10,
+     "loop": false
+    },
+    "death": {
+     "file": "assets/sprites/Undead executioner puppet/png/death.png",
+     "frameWidth": 100,
+     "frameHeight": 100,
+     "start": 0,
+     "frames": 18,
+     "columns": 10,
+     "fps": 10,
+     "loop": false
+    }
+   }
+  }
+ }
+}
