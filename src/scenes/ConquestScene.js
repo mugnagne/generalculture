@@ -53,7 +53,8 @@ export class ConquestScene extends Phaser.Scene {
     this.tweens.add({ targets: card, alpha: 1, duration: 400, delay: 300 });
 
     this.buttons = [
-      button(this, W / 2 - 60, py + ph - 26, 120, 20, 'Reconquérir la région', () => this.scene.start('combat', { regionId: region.id, tierId: 1 })),
+      button(this, W / 2 - 112, py + ph - 26, 108, 20, 'Retour à la carte', () => this.scene.start('map')),
+      button(this, W / 2 + 4, py + ph - 26, 108, 20, 'Rejouer la région', () => this.scene.start('combat', { regionId: region.id, tierId: 1 })),
     ];
     // Boutons inactifs tant qu'ils ne sont pas apparus (évite de passer l'écran par un Entrée de trop)
     this.buttons.forEach((b) => b.setAlpha(0).setEnabled(false));

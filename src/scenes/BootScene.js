@@ -24,6 +24,9 @@ export class BootScene extends Phaser.Scene {
     this.load.on('complete', () => label.destroy());
 
     preloadUi(this);
+    this.load.json('regions', 'src/data/regions.json');
+    // Carte : si l'image manque, la scène de carte dessine un continent ovale de secours.
+    this.load.image('map', 'assets/generated/map/map.jpg');
     for (const r of REGIONS) {
       if (r.background) this.load.image('bg:' + r.id, `assets/generated/backgrounds/${r.background}.jpg`);
     }

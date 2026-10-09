@@ -3,7 +3,12 @@
 Jeu de conquête en pixel art (Phaser 3) : chaque bataille se gagne en répondant à des questions
 de culture générale venues de Quizz API. Le quiz d'origine reste disponible sur `classique.html`.
 
-- `index.html` : le jeu. Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`.
+- `index.html` : le jeu, qui s'ouvre sur la carte. Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`.
+- Carte : régions = polygones de `src/data/regions.json`. Touche **E** sur la carte pour les retracer
+  (1-9 : région, clic : point, glisser : déplacer, clic droit : retirer, X : exporter le JSON à recopier
+  dans `src/data/regions.json`, R : revenir au fichier). Les modifications restent en brouillon local tant
+  qu'on n'a pas remplacé le fichier.
+- Progression : `localStorage` (`valdorn:save:v1`), bouton « Réinitialiser » sur la carte (double clic de confirmation).
 - `debug.html` : toutes les animations du manifeste, à l'échelle du jeu, et les recolorations.
 - Recoloration : règles par plage de teinte dans `src/data/recolor.js`, algorithme dans `src/recolor.js`,
   textures générées une fois au chargement (`src/variants.js`) ; les PNG d'origine ne changent pas.

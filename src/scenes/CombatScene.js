@@ -11,6 +11,7 @@ import { regionById, enemyFor, defeatLine, MARECHAL, MAX_QUESTIONS, TIERS } from
 import { fitCamera } from '../display.js';
 import { text, panel, button, hpBar, C } from '../ui.js';
 import { ensureVariant } from '../variants.js';
+import { recordVictory, recordDefeat } from '../save.js';
 
 const W = 480;
 const GROUND_Y = 158;
@@ -143,9 +144,12 @@ export class CombatScene extends Phaser.Scene {
   async loadQuestions() {
     this.questionText.setText('Les éclaireurs rapportent les questions…');
     try {
-      this.questions = await getBattleQuestions(this.region.category, this.tier.difficulty, MAX_QUESTIONS);
+      const questions = await getBattleQuestions(this.region.category, this.tier.difficulty, MAX_QUESTIONS);
+      if (!this.sys.isActive()) return; // la scène a été quittée pendant le chargement
+      this.questions = questions;
       this.next();
     } catch (err) {
+      if (!this.sys.isActive()) return;
       this.questionText.setText(`Impossible de charger les questions : ${err.message}`);
       this.retryButton = button(this, W / 2 - 40, 226, 80, 20, 'Réessayer', () => {
         this.retryButton.destroy();
@@ -244,6 +248,8 @@ export class CombatScene extends Phaser.Scene {
     this.state = 'ended';
     this.timerBar.width = 0;
     this.timerLabel.setText('');
+    if (won) recordVictory(this.region.id, this.tier.id);
+    else recordDefeat(this.region.id);
     if (won) await this.enemy.die();
     else if (!reason) await this.hero.die();
 
@@ -266,14 +272,14 @@ export class CombatScene extends Phaser.Scene {
     text(this, W / 2, y + 34, msg, { size: 8, width: w - 24, align: 'center' }).setOrigin(0.5, 0);
 
     const nextTier = TIERS.find((t) => t.id === this.tier.id + 1);
-    const actions = won
-      ? [nextTier ? ['Bataille suivante', { regionId: this.region.id, tierId: nextTier.id }] : null,
-        ['Rejouer', { regionId: this.region.id, tierId: this.tier.id }]]
-      : [['Recommencer la région', { regionId: this.region.id, tierId: 1 }]];
-    const list = actions.filter(Boolean);
-    const bw = 120;
+    const toMap = ['Retour à la carte', null];
+    const list = won
+      ? [['Bataille suivante', { regionId: this.region.id, tierId: nextTier.id }], toMap]
+      : [['Recommencer la région', { regionId: this.region.id, tierId: 1 }], toMap];
+    const bw = 116;
     const total = list.length * bw + (list.length - 1) * 8;
     this.endButtons = list.map(([label, data], i) =>
-      button(this, (W - total) / 2 + i * (bw + 8), y + h - 28, bw, 20, label, () => this.scene.restart(data)));
+      button(this, (W - total) / 2 + i * (bw + 8), y + h - 28, bw, 20, label,
+        () => (data ? this.scene.restart(data) : this.scene.start('map'))));
   }
 }
