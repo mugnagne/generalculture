@@ -12,6 +12,8 @@ import { fitCamera } from '../display.js';
 import { text, panel, button, hpBar, C } from '../ui.js';
 import { ensureVariant } from '../variants.js';
 import { recordVictory, recordDefeat } from '../save.js';
+import { fadeIn, goTo } from '../transition.js';
+import { sfx, music, toggleMute } from '../audio.js';
 
 const W = 480;
 const GROUND_Y = 158;
@@ -38,6 +40,8 @@ export class CombatScene extends Phaser.Scene {
 
   create() {
     fitCamera(this);
+    fadeIn(this);
+    music(this, this.tier.role === 'boss' ? 'musique-boss' : 'musique-combat');
     this.drawBackground();
 
     const heroH = this.manifest.characters[MARECHAL.sprite].body.height;
@@ -134,6 +138,7 @@ export class CombatScene extends Phaser.Scene {
       } else if (this.state === 'ended' && e.key === 'Enter') {
         this.endButtons?.[0]?.press();
       }
+      if (e.key === 'm' || e.key === 'M') toggleMute(this.game);
     });
   }
 
@@ -213,6 +218,7 @@ export class CombatScene extends Phaser.Scene {
       else b.setState('dim');
     });
 
+    sfx(this, correct ? 'bonne' : 'mauvaise');
     if (correct) {
       this.say('Bonne réponse ! Le Maréchal frappe.', C.goodText);
       await this.hero.attack(this.enemy);
@@ -250,12 +256,13 @@ export class CombatScene extends Phaser.Scene {
     this.timerLabel.setText('');
     if (won) recordVictory(this.region.id, this.tier.id);
     else recordDefeat(this.region.id);
+    sfx(this, won ? 'victoire' : 'defaite');
     if (won) await this.enemy.die();
     else if (!reason) await this.hero.die();
 
     if (won && this.tier.id === TIERS.length) {
-      // Troisième victoire : la région est conquise.
-      this.time.delayedCall(500, () => this.scene.start('conquest', { regionId: this.region.id }));
+      // Troisième victoire : la région est conquise (la capitale mène à la victoire finale).
+      this.time.delayedCall(500, () => goTo(this, this.region.capital ? 'finale' : 'conquest', { regionId: this.region.id }));
       return;
     }
 
@@ -280,6 +287,6 @@ export class CombatScene extends Phaser.Scene {
     const total = list.length * bw + (list.length - 1) * 8;
     this.endButtons = list.map(([label, data], i) =>
       button(this, (W - total) / 2 + i * (bw + 8), y + h - 28, bw, 20, label,
-        () => (data ? this.scene.restart(data) : this.scene.start('map'))));
+        () => goTo(this, data ? 'combat' : 'map', data ?? {})));
   }
 }

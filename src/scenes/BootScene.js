@@ -4,6 +4,7 @@
 import { preloadCharacters, createAnimations } from '../sprites.js';
 import { preloadUi, text, C } from '../ui.js';
 import { fitCamera } from '../display.js';
+import { preloadAudioList, loadAudioFiles, isMuted } from '../audio.js';
 import { REGIONS, MARECHAL } from '../data/world.js';
 
 export class BootScene extends Phaser.Scene {
@@ -25,6 +26,8 @@ export class BootScene extends Phaser.Scene {
 
     preloadUi(this);
     this.load.json('regions', 'src/data/regions.json');
+    this.load.text('credits-md', 'CREDITS.md');
+    preloadAudioList(this);
     // Carte : si l'image manque, la scène de carte dessine un continent ovale de secours.
     this.load.image('map', 'assets/generated/map/map.jpg');
     for (const r of REGIONS) {
@@ -41,7 +44,11 @@ export class BootScene extends Phaser.Scene {
 
   create() {
     createAnimations(this, this.registry.get('manifest'), this.characterKeys());
-    const start = this.registry.get('start');
-    this.scene.start(start.scene, start.data);
+    // Sons facultatifs (assets/audio/sons.json), puis lancement de l'écran demandé
+    loadAudioFiles(this, () => {
+      this.game.sound.mute = isMuted();
+      const start = this.registry.get('start');
+      this.scene.start(start.scene, start.data);
+    });
   }
 }

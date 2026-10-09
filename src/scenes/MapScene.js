@@ -10,6 +10,8 @@ import { REGIONS, MARECHAL } from '../data/world.js';
 import { fitCamera } from '../display.js';
 import { text, panel, button, C } from '../ui.js';
 import { drawBanner } from '../banner.js';
+import { fadeIn, goTo } from '../transition.js';
+import { music, toggleMute } from '../audio.js';
 import {
   regionState, isConquered, conqueredCount, capitalUnlocked, resetSave, nextTier,
 } from '../save.js';
@@ -46,6 +48,8 @@ export class MapScene extends Phaser.Scene {
 
   create() {
     fitCamera(this);
+    fadeIn(this);
+    music(this, 'musique-carte');
     this.input.mouse?.disableContextMenu();
     this.shapes = this.loadShapes();
     this.editing = false;
@@ -111,7 +115,8 @@ export class MapScene extends Phaser.Scene {
     panel(this, 4, 4, 176, 22, { border: 'plain', tint: C.goldHex });
     this.countText = text(this, 10, 8, '', { size: 8, color: C.ink });
     this.resetButton = button(this, W - 94, 5, 90, 18, 'Réinitialiser', () => this.askReset());
-    this.hint = text(this, 6, H - 12, 'Cliquez une région pour l’attaquer · flèches + Entrée au clavier · E : éditer',
+    this.menuButton = button(this, W - 152, 5, 54, 18, 'Menu', () => goTo(this, 'title'));
+    this.hint = text(this, 6, H - 12, 'Cliquez une région pour l’attaquer · flèches + Entrée · Échap : menu · M : son · E : éditer',
       { size: 8, color: C.ink }).setShadow(1, 1, '#0E071B', 0, false, true);
   }
 
@@ -287,12 +292,14 @@ export class MapScene extends Phaser.Scene {
       this.cameras.main.shake(150, 0.004);
       return;
     }
-    this.scene.start('combat', { regionId: r.id, tierId: nextTier(r.id) });
+    goTo(this, 'combat', { regionId: r.id, tierId: nextTier(r.id) });
   }
 
   onKey(e) {
     if (e.key === 'e' || e.key === 'E') return this.toggleEdit();
     if (this.editing) return this.editKey(e);
+    if (e.key === 'Escape') return goTo(this, 'title');
+    if (e.key === 'm' || e.key === 'M') return toggleMute(this.game);
     const order = REGIONS.filter((r) => this.shapes[r.id].length >= 3);
     if (['ArrowRight', 'ArrowDown', 'ArrowLeft', 'ArrowUp', 'Tab'].includes(e.key)) {
       e.preventDefault?.();

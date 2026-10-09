@@ -3,7 +3,10 @@
 Jeu de conquête en pixel art (Phaser 3) : chaque bataille se gagne en répondant à des questions
 de culture générale venues de Quizz API. Le quiz d'origine reste disponible sur `classique.html`.
 
-- `index.html` : le jeu, qui s'ouvre sur la carte. Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`.
+- `index.html` : le jeu (écran titre → carte → combats → conquêtes → victoire finale → crédits).
+  Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`, `?ecran=carte|finale|credits`.
+- Crédits : l'écran lit `CREDITS.md` (chierit en premier, puis LuizMelo, Kronovi, Kenney).
+- Sons facultatifs : voir `assets/audio/LISEZMOI.md` (touche M pour couper le son).
 - Carte : régions = polygones de `src/data/regions.json`. Touche **E** sur la carte pour les retracer
   (1-9 : région, clic : point, glisser : déplacer, clic droit : retirer, X : exporter le JSON à recopier
   dans `src/data/regions.json`, R : revenir au fichier). Les modifications restent en brouillon local tant

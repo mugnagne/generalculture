@@ -5,6 +5,7 @@
  * Le 9-slice est fait à la main (9 images) pour fonctionner aussi en Canvas.
  */
 import { getR } from './display.js';
+import { sfx } from './audio.js';
 
 const KENNEY = 'assets/ui/kenney-fantasy-ui-borders/PNG/Default/Border/';
 
@@ -133,8 +134,13 @@ export function button(scene, x, y, w, h, label, onPress, { size = 8, key = null
   c.add(zone);
   zone.on('pointerover', () => c.enabled && c.setState('hover'));
   zone.on('pointerout', () => c.enabled && c.setState('idle'));
-  zone.on('pointerup', () => c.enabled && onPress());
-  c.press = () => c.enabled && onPress();
+  const press = () => {
+    if (!c.enabled) return;
+    sfx(scene, 'clic', 0.5);
+    onPress();
+  };
+  zone.on('pointerup', press);
+  c.press = press;
   c.setState('idle');
   return c;
 }
@@ -155,4 +161,27 @@ export function hpBar(scene, x, y, max, { color = C.good, alignRight = false } =
   c.set = (hp) => cells.forEach((cell, i) => cell.setVisible(alignRight ? i < hp : i < hp));
   c.set(max);
   return c;
+}
+
+/**
+ * Navigation clavier dans une liste de boutons : flèches haut/bas (ou gauche/droite),
+ * Entrée / Espace pour valider. Les boutons désactivés sont sautés.
+ */
+export function menuNav(scene, buttons, { start = 0 } = {}) {
+  let index = -1;
+  const usable = () => buttons.filter((b) => b.enabled && b.visible);
+  const focus = (i) => {
+    const list = usable();
+    if (!list.length) return;
+    buttons.forEach((b) => b.enabled && b.setState('idle'));
+    index = (i + list.length) % list.length;
+    list[index].setState('hover');
+  };
+  scene.input.keyboard.on('keydown', (e) => {
+    if (['ArrowDown', 'ArrowRight'].includes(e.key)) focus(index + 1);
+    else if (['ArrowUp', 'ArrowLeft'].includes(e.key)) focus(index - 1);
+    else if ((e.key === 'Enter' || e.key === ' ') && index >= 0) usable()[index]?.press();
+  });
+  if (start >= 0) focus(start);
+  return { focus };
 }

@@ -7,6 +7,9 @@ import { BootScene } from './scenes/BootScene.js';
 import { CombatScene } from './scenes/CombatScene.js';
 import { ConquestScene } from './scenes/ConquestScene.js';
 import { MapScene } from './scenes/MapScene.js';
+import { TitleScene } from './scenes/TitleScene.js';
+import { CreditsScene } from './scenes/CreditsScene.js';
+import { FinaleScene } from './scenes/FinaleScene.js';
 import { MANIFEST_URL } from './sprites.js';
 import { BASE_W, BASE_H, computeFactor, watchResize } from './display.js';
 
@@ -18,9 +21,11 @@ async function start() {
 
   const manifest = await (await fetch(MANIFEST_URL)).json();
 
-  // Par défaut : la carte. Paramètres de test : ?region=givre&bataille=2 ou ?conquete=givre
+  // Par défaut : l'écran titre. Paramètres de test : ?region=givre&bataille=2, ?conquete=givre,
+  // ?ecran=carte|finale|credits
   const params = new URLSearchParams(location.search);
-  let start = { scene: 'map', data: {} };
+  const screens = { carte: 'map', finale: 'finale', credits: 'credits' };
+  let start = { scene: screens[params.get('ecran')] ?? 'title', data: {} };
   if (params.has('conquete')) start = { scene: 'conquest', data: { regionId: params.get('conquete') } };
   else if (params.has('region')) start = { scene: 'combat', data: { regionId: params.get('region'), tierId: Number(params.get('bataille') ?? 1) } };
 
@@ -38,7 +43,7 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, MapScene, CombatScene, ConquestScene],
+    scene: [BootScene, TitleScene, MapScene, CombatScene, ConquestScene, FinaleScene, CreditsScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);

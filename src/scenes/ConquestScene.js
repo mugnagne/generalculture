@@ -5,6 +5,8 @@ import { regionById, MARECHAL } from '../data/world.js';
 import { fitCamera } from '../display.js';
 import { text, panel, button, C } from '../ui.js';
 import { drawBanner } from '../banner.js';
+import { fadeIn, goTo } from '../transition.js';
+import { sfx, music } from '../audio.js';
 
 const W = 480;
 const H = 270;
@@ -20,6 +22,9 @@ export class ConquestScene extends Phaser.Scene {
 
   create() {
     fitCamera(this);
+    fadeIn(this);
+    music(this, 'musique-carte');
+    sfx(this, 'conquete');
     const { region } = this;
     const key = 'bg:' + region.id;
     if (this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0);
@@ -53,8 +58,8 @@ export class ConquestScene extends Phaser.Scene {
     this.tweens.add({ targets: card, alpha: 1, duration: 400, delay: 300 });
 
     this.buttons = [
-      button(this, W / 2 - 112, py + ph - 26, 108, 20, 'Retour à la carte', () => this.scene.start('map')),
-      button(this, W / 2 + 4, py + ph - 26, 108, 20, 'Rejouer la région', () => this.scene.start('combat', { regionId: region.id, tierId: 1 })),
+      button(this, W / 2 - 112, py + ph - 26, 108, 20, 'Retour à la carte', () => goTo(this, 'map')),
+      button(this, W / 2 + 4, py + ph - 26, 108, 20, 'Rejouer la région', () => goTo(this, 'combat', { regionId: region.id, tierId: 1 })),
     ];
     // Boutons inactifs tant qu'ils ne sont pas apparus (évite de passer l'écran par un Entrée de trop)
     this.buttons.forEach((b) => b.setAlpha(0).setEnabled(false));

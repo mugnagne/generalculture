@@ -3,6 +3,7 @@
  * animations jouées sous forme de promesses.
  */
 import { animKey, fileKey } from './sprites.js';
+import { sfx } from './audio.js';
 
 export class Fighter {
   /**
@@ -73,6 +74,7 @@ export class Fighter {
 
   /** Encaisse un coup : animation de dégâts, ou flash blanc + recul de 2 px si absente. */
   async hurt() {
+    sfx(this.scene, 'coup');
     if (this.has('hurt')) return this.play('hurt');
     const away = this.faceLeft ? 2 : -2;
     this.sprite.setTintFill(0xffffff);
