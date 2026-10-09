@@ -1,0 +1,607 @@
+{
+ "cendre": {
+  "variants": {
+   "PNG/background 1": {
+    "layers": [
+     "assets/backgrounds/cendre/PNG/background 1/Plan 5.png",
+     "assets/backgrounds/cendre/PNG/background 1/Plan 3.png",
+     "assets/backgrounds/cendre/PNG/background 1/Plan 4.png",
+     "assets/backgrounds/cendre/PNG/background 1/Plan 2.png",
+     "assets/backgrounds/cendre/PNG/background 1/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 5.1
+   },
+   "PNG/background 2": {
+    "layers": [
+     "assets/backgrounds/cendre/PNG/background 2/Plan 6.png",
+     "assets/backgrounds/cendre/PNG/background 2/Plan 5.png",
+     "assets/backgrounds/cendre/PNG/background 2/Plan 4.png",
+     "assets/backgrounds/cendre/PNG/background 2/Plan 3.png",
+     "assets/backgrounds/cendre/PNG/background 2/Plan 2.png",
+     "assets/backgrounds/cendre/PNG/background 2/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 3": {
+    "layers": [
+     "assets/backgrounds/cendre/PNG/background 3/Plan 5.png",
+     "assets/backgrounds/cendre/PNG/background 3/Plan 4.png",
+     "assets/backgrounds/cendre/PNG/background 3/Plan 2.png",
+     "assets/backgrounds/cendre/PNG/background 3/Plan 3.png",
+     "assets/backgrounds/cendre/PNG/background 3/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.4
+   },
+   "PNG/background 4": {
+    "layers": [
+     "assets/backgrounds/cendre/PNG/background 4/Plan 5.png",
+     "assets/backgrounds/cendre/PNG/background 4/Plan 3.png",
+     "assets/backgrounds/cendre/PNG/background 4/Plan 4.png",
+     "assets/backgrounds/cendre/PNG/background 4/Plan 2.png",
+     "assets/backgrounds/cendre/PNG/background 4/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   }
+  }
+ },
+ "collines": {
+  "variants": {
+   "PNG/summer 1": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer 1/1.png",
+     "assets/backgrounds/collines/PNG/summer 1/2.png",
+     "assets/backgrounds/collines/PNG/summer 1/3.png",
+     "assets/backgrounds/collines/PNG/summer 1/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer 2": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer 2/1.png",
+     "assets/backgrounds/collines/PNG/summer 2/2.png",
+     "assets/backgrounds/collines/PNG/summer 2/3.png",
+     "assets/backgrounds/collines/PNG/summer 2/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer 3": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer 3/1.png",
+     "assets/backgrounds/collines/PNG/summer 3/2.png",
+     "assets/backgrounds/collines/PNG/summer 3/3.png",
+     "assets/backgrounds/collines/PNG/summer 3/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer 4": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer 4/1.png",
+     "assets/backgrounds/collines/PNG/summer 4/2.png",
+     "assets/backgrounds/collines/PNG/summer 4/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer5": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer5/1.png",
+     "assets/backgrounds/collines/PNG/summer5/2.png",
+     "assets/backgrounds/collines/PNG/summer5/3.png",
+     "assets/backgrounds/collines/PNG/summer5/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer6": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer6/1.png",
+     "assets/backgrounds/collines/PNG/summer6/2.png",
+     "assets/backgrounds/collines/PNG/summer6/3.png",
+     "assets/backgrounds/collines/PNG/summer6/4.png",
+     "assets/backgrounds/collines/PNG/summer6/5.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer7": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer7/1.png",
+     "assets/backgrounds/collines/PNG/summer7/2.png",
+     "assets/backgrounds/collines/PNG/summer7/3.png",
+     "assets/backgrounds/collines/PNG/summer7/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/summer8": {
+    "layers": [
+     "assets/backgrounds/collines/PNG/summer8/1.png",
+     "assets/backgrounds/collines/PNG/summer8/2.png",
+     "assets/backgrounds/collines/PNG/summer8/3.png",
+     "assets/backgrounds/collines/PNG/summer8/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   }
+  }
+ },
+ "givre": {
+  "variants": {
+   "winter 1": {
+    "layers": [
+     "assets/backgrounds/givre/winter 1/1.png",
+     "assets/backgrounds/givre/winter 1/2.png",
+     "assets/backgrounds/givre/winter 1/7.png",
+     "assets/backgrounds/givre/winter 1/3.png",
+     "assets/backgrounds/givre/winter 1/5.png",
+     "assets/backgrounds/givre/winter 1/4.png",
+     "assets/backgrounds/givre/winter 1/6.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "winter 2": {
+    "layers": [
+     "assets/backgrounds/givre/winter 2/1.png",
+     "assets/backgrounds/givre/winter 2/6.png",
+     "assets/backgrounds/givre/winter 2/3.png",
+     "assets/backgrounds/givre/winter 2/2.png",
+     "assets/backgrounds/givre/winter 2/4.png",
+     "assets/backgrounds/givre/winter 2/5.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 1.0
+   },
+   "winter 3": {
+    "layers": [
+     "assets/backgrounds/givre/winter 3/1.png",
+     "assets/backgrounds/givre/winter 3/4.png",
+     "assets/backgrounds/givre/winter 3/2.png",
+     "assets/backgrounds/givre/winter 3/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "winter 4": {
+    "layers": [
+     "assets/backgrounds/givre/winter 4/1.png",
+     "assets/backgrounds/givre/winter 4/4.png",
+     "assets/backgrounds/givre/winter 4/2.png",
+     "assets/backgrounds/givre/winter 4/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "winter 5": {
+    "layers": [
+     "assets/backgrounds/givre/winter 5/1.png",
+     "assets/backgrounds/givre/winter 5/11.png",
+     "assets/backgrounds/givre/winter 5/2.png",
+     "assets/backgrounds/givre/winter 5/5.png",
+     "assets/backgrounds/givre/winter 5/3.png",
+     "assets/backgrounds/givre/winter 5/10.png",
+     "assets/backgrounds/givre/winter 5/4.png",
+     "assets/backgrounds/givre/winter 5/8.png",
+     "assets/backgrounds/givre/winter 5/7.png",
+     "assets/backgrounds/givre/winter 5/6.png",
+     "assets/backgrounds/givre/winter 5/9.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.3
+   },
+   "winter 6": {
+    "layers": [
+     "assets/backgrounds/givre/winter 6/1.png",
+     "assets/backgrounds/givre/winter 6/4.png",
+     "assets/backgrounds/givre/winter 6/2.png",
+     "assets/backgrounds/givre/winter 6/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "winter 7": {
+    "layers": [
+     "assets/backgrounds/givre/winter 7/1.png",
+     "assets/backgrounds/givre/winter 7/4.png",
+     "assets/backgrounds/givre/winter 7/2.png",
+     "assets/backgrounds/givre/winter 7/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "winter 8": {
+    "layers": [
+     "assets/backgrounds/givre/winter 8/1.png",
+     "assets/backgrounds/givre/winter 8/4.png",
+     "assets/backgrounds/givre/winter 8/2.png",
+     "assets/backgrounds/givre/winter 8/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   }
+  }
+ },
+ "hautecouronne": {
+  "variants": {
+   "PNG/background 1": {
+    "layers": [
+     "assets/backgrounds/hautecouronne/PNG/background 1/Plan 3.png",
+     "assets/backgrounds/hautecouronne/PNG/background 1/Plan 2.png",
+     "assets/backgrounds/hautecouronne/PNG/background 1/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 2": {
+    "layers": [
+     "assets/backgrounds/hautecouronne/PNG/background 2/Plan 4.png",
+     "assets/backgrounds/hautecouronne/PNG/background 2/Plan 3.png",
+     "assets/backgrounds/hautecouronne/PNG/background 2/Plan 2.png",
+     "assets/backgrounds/hautecouronne/PNG/background 2/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 3": {
+    "layers": [
+     "assets/backgrounds/hautecouronne/PNG/background 3/Plan 4.png",
+     "assets/backgrounds/hautecouronne/PNG/background 3/Plan 2.png",
+     "assets/backgrounds/hautecouronne/PNG/background 3/Plan 3.png",
+     "assets/backgrounds/hautecouronne/PNG/background 3/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 1.1
+   },
+   "PNG/background 4": {
+    "layers": [
+     "assets/backgrounds/hautecouronne/PNG/background 4/Plan 2.png",
+     "assets/backgrounds/hautecouronne/PNG/background 4/Plan 3.png",
+     "assets/backgrounds/hautecouronne/PNG/background 4/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.6
+   }
+  }
+ },
+ "iles": {
+  "variants": {
+   "Ocean_1": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_1/1.png",
+     "assets/backgrounds/iles/Ocean_1/2.png",
+     "assets/backgrounds/iles/Ocean_1/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.1
+   },
+   "Ocean_2": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_2/2.png",
+     "assets/backgrounds/iles/Ocean_2/3.png",
+     "assets/backgrounds/iles/Ocean_2/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_3": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_3/1.png",
+     "assets/backgrounds/iles/Ocean_3/2.png",
+     "assets/backgrounds/iles/Ocean_3/3.png",
+     "assets/backgrounds/iles/Ocean_3/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_4": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_4/1.png",
+     "assets/backgrounds/iles/Ocean_4/2.png",
+     "assets/backgrounds/iles/Ocean_4/3.png",
+     "assets/backgrounds/iles/Ocean_4/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_5": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_5/1.png",
+     "assets/backgrounds/iles/Ocean_5/2.png",
+     "assets/backgrounds/iles/Ocean_5/3.png",
+     "assets/backgrounds/iles/Ocean_5/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_6": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_6/1.png",
+     "assets/backgrounds/iles/Ocean_6/4.png",
+     "assets/backgrounds/iles/Ocean_6/2.png",
+     "assets/backgrounds/iles/Ocean_6/3.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_7": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_7/1.png",
+     "assets/backgrounds/iles/Ocean_7/2.png",
+     "assets/backgrounds/iles/Ocean_7/3.png",
+     "assets/backgrounds/iles/Ocean_7/4.png",
+     "assets/backgrounds/iles/Ocean_7/5.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "Ocean_8": {
+    "layers": [
+     "assets/backgrounds/iles/Ocean_8/1.png",
+     "assets/backgrounds/iles/Ocean_8/5.png",
+     "assets/backgrounds/iles/Ocean_8/2.png",
+     "assets/backgrounds/iles/Ocean_8/3.png",
+     "assets/backgrounds/iles/Ocean_8/4.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   }
+  }
+ },
+ "lumenor": {
+  "variants": {
+   "PNG/background 1": {
+    "layers": [
+     "assets/backgrounds/lumenor/PNG/background 1/Plan 3.png",
+     "assets/backgrounds/lumenor/PNG/background 1/Plan 2.png",
+     "assets/backgrounds/lumenor/PNG/background 1/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 2": {
+    "layers": [
+     "assets/backgrounds/lumenor/PNG/background 2/Plan 4.png",
+     "assets/backgrounds/lumenor/PNG/background 2/Plan 3.png",
+     "assets/backgrounds/lumenor/PNG/background 2/Plan 2.png",
+     "assets/backgrounds/lumenor/PNG/background 2/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 3": {
+    "layers": [
+     "assets/backgrounds/lumenor/PNG/background 3/Plan 4.png",
+     "assets/backgrounds/lumenor/PNG/background 3/Plan 2.png",
+     "assets/backgrounds/lumenor/PNG/background 3/Plan 3.png",
+     "assets/backgrounds/lumenor/PNG/background 3/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 1.1
+   },
+   "PNG/background 4": {
+    "layers": [
+     "assets/backgrounds/lumenor/PNG/background 4/Plan 2.png",
+     "assets/backgrounds/lumenor/PNG/background 4/Plan 3.png",
+     "assets/backgrounds/lumenor/PNG/background 4/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.6
+   }
+  }
+ },
+ "sables": {
+  "variants": {
+   "PNG/background 1": {
+    "layers": [
+     "assets/backgrounds/sables/PNG/background 1/Plan 5.png",
+     "assets/backgrounds/sables/PNG/background 1/Plan 3.png",
+     "assets/backgrounds/sables/PNG/background 1/Plan 4.png",
+     "assets/backgrounds/sables/PNG/background 1/Plan 2.png",
+     "assets/backgrounds/sables/PNG/background 1/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.5
+   },
+   "PNG/background 2": {
+    "layers": [
+     "assets/backgrounds/sables/PNG/background 2/Plan 5.png",
+     "assets/backgrounds/sables/PNG/background 2/Plan 4.png",
+     "assets/backgrounds/sables/PNG/background 2/Plan 3.png",
+     "assets/backgrounds/sables/PNG/background 2/Plan 2.png",
+     "assets/backgrounds/sables/PNG/background 2/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.0
+   },
+   "PNG/background 3": {
+    "layers": [
+     "assets/backgrounds/sables/PNG/background 3/Plan 5.png",
+     "assets/backgrounds/sables/PNG/background 3/Plan 3.png",
+     "assets/backgrounds/sables/PNG/background 3/Plan 4.png",
+     "assets/backgrounds/sables/PNG/background 3/Plan 2.png",
+     "assets/backgrounds/sables/PNG/background 3/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 1.4
+   },
+   "PNG/background 4": {
+    "layers": [
+     "assets/backgrounds/sables/PNG/background 4/Plan 5.png",
+     "assets/backgrounds/sables/PNG/background 4/Plan 3.png",
+     "assets/backgrounds/sables/PNG/background 4/Plan 4.png",
+     "assets/backgrounds/sables/PNG/background 4/Plan 2.png",
+     "assets/backgrounds/sables/PNG/background 4/Plan 1.png"
+    ],
+    "width": 576,
+    "height": 324,
+    "check": 0.9
+   }
+  }
+ },
+ "serenne": {
+  "variants": {
+   "PNG/Battleground1/Bright": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/ruins_bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/hills&trees.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/ruins2.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/ruins.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/statue.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Bright/stones&grass.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.2
+   },
+   "PNG/Battleground1/Pale": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/ruins_bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/hills&trees.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/ruins2.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/ruins.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/statue.png",
+     "assets/backgrounds/serenne/PNG/Battleground1/Pale/stones&grass.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.1
+   },
+   "PNG/Battleground2/Bright": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/mountaims.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/wall@windows.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/candeliar.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/floor.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/columns&falgs.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Bright/dragon.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.1
+   },
+   "PNG/Battleground2/Pale": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/mountaims.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/wall@windows.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/candeliar.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/floor.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/columns&falgs.png",
+     "assets/backgrounds/serenne/PNG/Battleground2/Pale/dragon.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.1
+   },
+   "PNG/Battleground3/Bright": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/fireflys.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/jungle_bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/trees&bushes.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/grasses.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/lianas.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/grass&road.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Bright/tree_face.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.3
+   },
+   "PNG/Battleground3/Pale": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/fireflys.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/trees&bushes.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/jungle_bg.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/grasses.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/lianas.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/grass&road.png",
+     "assets/backgrounds/serenne/PNG/Battleground3/Pale/tree_face.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 1.6
+   },
+   "PNG/Battleground4/Bright": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/back_trees.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/wall.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/graves.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/crypt.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/ground.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/bones.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Bright/tree.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 2.6
+   },
+   "PNG/Battleground4/Pale": {
+    "layers": [
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/sky.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/back_trees.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/graves.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/wall.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/crypt.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/ground.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/bones.png",
+     "assets/backgrounds/serenne/PNG/Battleground4/Pale/tree.png"
+    ],
+    "width": 1920,
+    "height": 1080,
+    "check": 0.9
+   }
+  }
+ }
+}

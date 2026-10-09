@@ -37,9 +37,24 @@ Les fichiers d'origine ne sont jamais modifiés : réductions et recolorations s
 | Police Pixelify Sans (Google Fonts) | Stefie Justprince | SIL Open Font License 1.1 |
 | Phaser 3.90 (`vendor/`) | Phaser Studio | MIT |
 
-## Décors et carte (`assets/backgrounds/`, `assets/map/`)
+## Décors de combat (`assets/backgrounds/`)
 
-Fournis par le propriétaire du projet. Origine à compléter.
+Packs gratuits de CraftPix (craftpix.net), utilisés sans modification, selon la licence
+<https://craftpix.net/file-licenses/>.
+
+| Dossier | Pack | Auteur | Lien | Licence |
+|---|---|---|---|---|
+| `givre/` | Free Winter Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-winter-backgrounds-pixel-art | craftpix.net/file-licenses |
+| `iles/` | Ocean and Clouds Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/ocean-and-clouds-free-pixel-art-backgrounds | craftpix.net/file-licenses |
+| `cendre/` | Ancient Temple Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-ancient-temple-pixel-game-backgrounds | craftpix.net/file-licenses |
+| `lumenor/`, `hautecouronne/` | Castle Interior Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-castle-interior-pixel-game-backgrounds | craftpix.net/file-licenses |
+| `serenne/` | Fantasy Game Battlegrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-pixel-art-fantasy-game-battlegrounds | craftpix.net/file-licenses |
+| `collines/` | Summer Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-summer-pixel-art-backgrounds | craftpix.net/file-licenses |
+| `sables/` | Desert Oasis Backgrounds | CraftPix · craftpix.net | https://free-game-assets.itch.io/free-desert-oasis-pixel-art-background-pack | craftpix.net/file-licenses |
+
+## Carte (`assets/map/`)
+
+Fournie par le propriétaire du projet. Origine à compléter.
 
 ## Questions
 

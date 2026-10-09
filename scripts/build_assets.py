@@ -7,6 +7,7 @@ Produit :
   assets/generated/backgrounds/*.jpg  décors réduits en 480x270
   assets/generated/map/map.jpg        carte réduite en 480x270
   assets/generated/palette.json       les 64 couleurs ENDESGA lues dans le PNG
+  assets/generated/backdrops.json     décors de combat : calques de chaque variante, du fond vers l'avant
 
 Les tailles de frame ne sont pas devinées : chaque image est découpée selon la
 taille indiquée ci-dessous, puis les cases vides (100 % transparentes) en fin de
@@ -14,7 +15,9 @@ bande ou de ligne sont ignorées pour compter les frames réelles.
 
 Usage : python3 scripts/build_assets.py   (nécessite Pillow)
 """
+import itertools
 import json
+import re
 from pathlib import Path
 from PIL import Image
 
@@ -183,6 +186,118 @@ def build_images():
         print('image :', dst.relative_to(ROOT))
 
 
+COMPOSITE_NAME = re.compile(r'^(background \d+|summer\d+|battleground\d+|hd|preview.*)$', re.I)
+
+
+def order_layers(layers, reference):
+    """
+    Ordre des calques, du plus lointain au plus proche, retrouvé en les comparant à
+    l'image assemblée fournie par le pack : un calque de premier plan coïncide avec
+    l'image finale partout où il est opaque, un calque masqué beaucoup moins.
+    """
+    ref = reference.convert('RGB').resize(layers[0][1].size, Image.NEAREST)
+    small = (layers[0][1].width // 4, layers[0][1].height // 4)
+    ref_s = ref.resize(small, Image.NEAREST)
+
+    def score(img):
+        px = img.resize(small, Image.NEAREST).load()
+        rp = ref_s.load()
+        hit = tot = 0
+        for y in range(small[1]):
+            for x in range(small[0]):
+                r, g, b, a = px[x, y]
+                if a < 250:
+                    continue
+                tot += 1
+                rr, gg, bb = rp[x, y]
+                hit += abs(r - rr) + abs(g - gg) + abs(b - bb) < 24
+        return hit / tot if tot else 0
+
+    def opacity(img):
+        alpha = img.getchannel('A').resize(small, Image.NEAREST)
+        return sum(1 for a in alpha.tobytes() if a > 250) / (small[0] * small[1])
+
+    # Le calque entièrement opaque est le fond ; les autres, du moins au plus « visible ».
+    scored = sorted(layers, key=lambda l: (opacity(l[1]) < 0.98, score(l[1])))
+    return [path for path, _ in scored]
+
+
+CHECK_SIZE = (144, 81)
+
+
+def composite_error(paths, reference, cache=None):
+    """Écart moyen (0-255) entre l'assemblage des calques et l'image de référence."""
+    cache = cache if cache is not None else {}
+    def small(p):
+        if p not in cache:
+            cache[p] = Image.open(ROOT / p).convert('RGBA').resize(CHECK_SIZE, Image.NEAREST)
+        return cache[p]
+    base = small(paths[0]).copy()
+    for p in paths[1:]:
+        base.alpha_composite(small(p))
+    ref = reference.convert('RGB').resize(CHECK_SIZE, Image.NEAREST)
+    a, b = base.convert('RGB').tobytes(), ref.tobytes()
+    return sum(abs(x - y) for x, y in zip(a, b)) / len(a)
+
+
+def best_order(paths, reference):
+    """Si l'heuristique ne reproduit pas l'image de référence, essaie tous les ordres (fond fixé)."""
+    cache = {}
+    best = (composite_error(paths, reference, cache), paths)
+    if best[0] <= 2 or len(paths) > 7:
+        return best
+    back, rest = paths[0], paths[1:]
+    for perm in itertools.permutations(rest):
+        err = composite_error([back, *perm], reference, cache)
+        if err < best[0]:
+            best = (err, [back, *perm])
+    return best
+
+
+def build_backdrops():
+    """
+    Décors de combat (CraftPix) : pour chaque région, une image unique
+    assets/backgrounds/<région>.png, ou un dossier <région>/ contenant un ou plusieurs
+    décors en calques. Les fichiers d'origine sont seulement lus : le jeu les charge
+    directement, ce manifeste ne fait que lister les calques dans le bon ordre.
+    """
+    root = ROOT / 'assets' / 'backgrounds'
+    out = {}
+    for single in sorted(root.glob('*.png')):
+        img = Image.open(single)
+        out[single.stem] = {'variants': {'unique': {
+            'layers': [str(single.relative_to(ROOT))], 'width': img.width, 'height': img.height}}}
+    for region_dir in sorted(d for d in root.iterdir() if d.is_dir()):
+        variants = {}
+        dirs = sorted({p.parent for p in region_dir.rglob('*.png')})
+        for d in dirs:
+            files = [p for p in sorted(d.glob('*.png')) if 'coupon' not in p.name.lower()]
+            if not files:
+                continue
+            sizes = {p: Image.open(p).size for p in files}
+            layer_size = min(sizes.values(), key=lambda s: s[0])
+            layers = [p for p in files if sizes[p] == layer_size and not COMPOSITE_NAME.match(p.stem)]
+            refs = [p for p in files if p not in layers]
+            if not layers:
+                continue
+            name = str(d.relative_to(region_dir))
+            loaded = [(str(p.relative_to(ROOT)), Image.open(p).convert('RGBA')) for p in layers]
+            if len(loaded) == 1 or not refs:
+                ordered = [path for path, _ in loaded]
+                err = None
+            else:
+                reference = Image.open(sorted(refs, key=lambda p: sizes[p][0])[0])
+                err, ordered = best_order(order_layers(loaded, reference), reference)
+                err = round(err, 1)
+            variants[name] = {'layers': ordered, 'width': layer_size[0], 'height': layer_size[1], 'check': err}
+        if variants:
+            out[region_dir.name] = {'variants': variants}
+    dst = GEN / 'backdrops.json'
+    dst.write_text(json.dumps(out, indent=1, ensure_ascii=False))
+    for region, data in out.items():
+        print('décor :', region, {k: (len(v['layers']), v.get('check')) for k, v in data['variants'].items()})
+
+
 def build_palette():
     src = ROOT / 'assets' / 'palette' / 'endesga-64-32x.png'
     img = Image.open(src).convert('RGB')
@@ -196,4 +311,5 @@ if __name__ == '__main__':
     GEN.mkdir(parents=True, exist_ok=True)
     build_manifest()
     build_images()
+    build_backdrops()
     build_palette()

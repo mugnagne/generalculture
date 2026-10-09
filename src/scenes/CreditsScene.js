@@ -37,7 +37,9 @@ export class CreditsScene extends Phaser.Scene {
       add(text(this, W / 2, 0, section.title.toUpperCase(), { size: 8, color: '#0098DC' }).setOrigin(0.5, 0), 10);
       for (const e of section.entries) {
         add(text(this, W / 2, 0, e.author, { size: 16, color: C.ink }).setOrigin(0.5, 0), 2);
-        const detail = [e.items.filter(Boolean).join(', '), e.licence && `licence ${e.licence}`].filter(Boolean).join(' — ');
+        const items = e.items.filter(Boolean).join(e.lines ? '\n' : ', ');
+        const licence = e.licence && `licence ${e.licence}`;
+        const detail = e.lines ? [items, licence].filter(Boolean).join('\n') : [items, licence].filter(Boolean).join(' — ');
         add(text(this, W / 2, 0, detail, { size: 8, color: C.muted, width: 400, align: 'center' }).setOrigin(0.5, 0), 14);
       }
       y += 10;

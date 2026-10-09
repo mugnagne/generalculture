@@ -11,12 +11,12 @@ import { regionById, enemyFor, defeatLine, MARECHAL, MAX_QUESTIONS, TIERS } from
 import { fitCamera } from '../display.js';
 import { text, panel, button, hpBar, C } from '../ui.js';
 import { ensureVariant } from '../variants.js';
+import { preloadBackdrop, drawBackdrop } from '../backdrop.js';
 import { recordVictory, recordDefeat } from '../save.js';
 import { fadeIn, goTo } from '../transition.js';
 import { sfx, music, toggleMute } from '../audio.js';
 
 const W = 480;
-const GROUND_Y = 158;
 const HERO_X = 130;
 const ENEMY_X = 350;
 const TIMER_MS = 20000;
@@ -38,6 +38,10 @@ export class CombatScene extends Phaser.Scene {
     this.endButtons = null;
   }
 
+  preload() {
+    preloadBackdrop(this, this.region);
+  }
+
   create() {
     fitCamera(this);
     fadeIn(this);
@@ -45,10 +49,10 @@ export class CombatScene extends Phaser.Scene {
     this.drawBackground();
 
     const heroH = this.manifest.characters[MARECHAL.sprite].body.height;
-    this.hero = new Fighter(this, this.manifest, MARECHAL.sprite, { x: HERO_X, groundY: GROUND_Y, height: heroH, faceLeft: false });
+    this.hero = new Fighter(this, this.manifest, MARECHAL.sprite, { x: HERO_X, groundY: this.groundY, height: heroH, faceLeft: false });
     const enemyH = this.tier.role === 'boss' ? heroH * BOSS_SCALE : heroH;
     this.enemy = new Fighter(this, this.manifest, this.enemySprite(), {
-      x: ENEMY_X, groundY: GROUND_Y, height: enemyH, faceLeft: true, attackAnim: this.enemyDef.attack,
+      x: ENEMY_X, groundY: this.groundY, height: enemyH, faceLeft: true, attackAnim: this.enemyDef.attack,
     });
 
     this.heroHp = this.tier.playerHp;
@@ -75,16 +79,11 @@ export class CombatScene extends Phaser.Scene {
   /* ------------------------------------------------------------------ */
 
   drawBackground() {
-    const key = 'bg:' + this.region.id;
-    if (this.textures.exists(key)) {
-      this.add.image(0, 0, key).setOrigin(0);
-    } else {
-      // Décor manquant : fond uni à la couleur principale de la maison.
-      this.add.rectangle(0, 0, W, 270, Phaser.Display.Color.HexStringToColor(this.region.house.colors[0]).color).setOrigin(0);
-    }
+    // Décor CraftPix de la région, avec une parallaxe très légère ; il fixe la hauteur du sol.
+    this.groundY = drawBackdrop(this, this.region, { combat: true });
     // Ombres au sol sous les combattants
-    this.add.ellipse(HERO_X, GROUND_Y, 44, 7, 0x000000, 0.35);
-    this.add.ellipse(ENEMY_X, GROUND_Y, this.tier.role === 'boss' ? 74 : 44, 8, 0x000000, 0.35);
+    this.add.ellipse(HERO_X, this.groundY, 44, 7, 0x000000, 0.35);
+    this.add.ellipse(ENEMY_X, this.groundY, this.tier.role === 'boss' ? 74 : 44, 8, 0x000000, 0.35);
   }
 
   drawHud() {
@@ -97,7 +96,8 @@ export class CombatScene extends Phaser.Scene {
     text(this, W - 10, 7, this.enemyDef.name, { size: 8, color: C.ink }).setOrigin(1, 0);
     this.enemyBar = hpBar(this, W - 10, 20, this.tier.enemyHp, { color: C.good, alignRight: true });
 
-    // Bandeau central : région et bataille
+    // Bandeau central : région et bataille (sur une bande sombre, lisible sur les décors clairs)
+    this.add.rectangle(W / 2, 32, 168, 22, C.shadow, 0.55).setOrigin(0.5, 0);
     text(this, W / 2, 34, this.region.name, { size: 8, color: C.ink }).setOrigin(0.5, 0).setShadow(1, 1, '#0E071B', 0, false, true);
     text(this, W / 2, 44, `Bataille ${this.tier.id}/3 · ${this.tier.label}`, { size: 8, color: C.muted })
       .setOrigin(0.5, 0).setShadow(1, 1, '#0E071B', 0, false, true);

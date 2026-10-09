@@ -17,7 +17,11 @@ de culture générale venues de Quizz API. Le quiz d'origine reste disponible su
   textures générées une fois au chargement (`src/variants.js`) ; les PNG d'origine ne changent pas.
 - `src/` : scènes Phaser, données des régions (`src/data/world.js`), interface Kenney (`src/ui.js`).
 - `scripts/build_assets.py` (Pillow) : régénère `assets/sprites/manifest.json` et `assets/generated/`
-  (décors et carte en 480x270, palette). Les fichiers d'origine des assets ne sont jamais modifiés.
+  (carte en 480x270, palette, `backdrops.json`). Les fichiers d'origine des assets ne sont jamais modifiés.
+- Décors de combat CraftPix : `assets/backgrounds/<région>.png` ou `assets/backgrounds/<région>/` (calques).
+  `backdrops.json` liste, pour chaque variante, les calques du plus lointain au plus proche (ordre retrouvé
+  en les comparant à l'image assemblée du pack). Dans `src/data/world.js`, `backdrop.variant` choisit la
+  variante et `backdrop.ground` la ligne du sol (en pixels de l'image d'origine) où poser les combattants.
 - Le jeu réutilise tel quel `js/questionSource.js` (via `src/questions.js`). Quand une réserve
   catégorie × difficulté compte moins de 10 questions, elle est complétée avec les niveaux voisins
   de la même catégorie.

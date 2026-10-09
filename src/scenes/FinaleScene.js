@@ -7,6 +7,7 @@ import { text, panel, button, menuNav, C } from '../ui.js';
 import { drawBanner } from '../banner.js';
 import { Fighter } from '../fighter.js';
 import { fadeIn, goTo } from '../transition.js';
+import { preloadBackdrop, drawBackdrop } from '../backdrop.js';
 import { music } from '../audio.js';
 
 const W = 480;
@@ -17,14 +18,17 @@ export class FinaleScene extends Phaser.Scene {
     super('finale');
   }
 
+  preload() {
+    preloadBackdrop(this, REGIONS.find((r) => r.capital));
+  }
+
   create() {
     fitCamera(this);
     fadeIn(this);
     music(this, 'musique-finale');
 
     const capital = REGIONS.find((r) => r.capital);
-    const key = 'bg:' + capital.id;
-    if (this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0);
+    drawBackdrop(this, capital);
     this.add.rectangle(0, 0, W, H, 0xc42430, 0.18).setOrigin(0);
     this.add.rectangle(0, 0, W, H, 0x0e071b, 0.35).setOrigin(0);
 

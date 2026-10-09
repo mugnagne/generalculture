@@ -6,6 +6,7 @@ import { fitCamera } from '../display.js';
 import { text, panel, button, C } from '../ui.js';
 import { drawBanner } from '../banner.js';
 import { fadeIn, goTo } from '../transition.js';
+import { preloadBackdrop, drawBackdrop } from '../backdrop.js';
 import { sfx, music } from '../audio.js';
 
 const W = 480;
@@ -20,15 +21,17 @@ export class ConquestScene extends Phaser.Scene {
     this.region = regionById(regionId);
   }
 
+  preload() {
+    preloadBackdrop(this, this.region);
+  }
+
   create() {
     fitCamera(this);
     fadeIn(this);
     music(this, 'musique-carte');
     sfx(this, 'conquete');
     const { region } = this;
-    const key = 'bg:' + region.id;
-    if (this.textures.exists(key)) this.add.image(0, 0, key).setOrigin(0);
-    else this.add.rectangle(0, 0, W, H, Phaser.Display.Color.HexStringToColor(region.house.colors[0]).color).setOrigin(0);
+    drawBackdrop(this, region);
 
     // Voile rouge du Maréchal qui monte sur le décor
     const veil = this.add.rectangle(0, H, W, H, 0xc42430, 0.35).setOrigin(0);

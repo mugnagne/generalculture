@@ -30,9 +30,8 @@ export class BootScene extends Phaser.Scene {
     preloadAudioList(this);
     // Carte : si l'image manque, la scène de carte dessine un continent ovale de secours.
     this.load.image('map', 'assets/generated/map/map.jpg');
-    for (const r of REGIONS) {
-      if (r.background) this.load.image('bg:' + r.id, `assets/generated/backgrounds/${r.background}.jpg`);
-    }
+    // Décors de combat : seule la liste est chargée ici, les calques le sont à l'entrée de chaque scène.
+    this.load.json('backdrops', 'assets/generated/backdrops.json');
     preloadCharacters(this, manifest, this.characterKeys());
   }
 
