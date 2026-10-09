@@ -5,6 +5,7 @@
  */
 import { BootScene } from './scenes/BootScene.js';
 import { CombatScene } from './scenes/CombatScene.js';
+import { ConquestScene } from './scenes/ConquestScene.js';
 import { MANIFEST_URL } from './sprites.js';
 import { BASE_W, BASE_H, computeFactor, watchResize } from './display.js';
 
@@ -16,12 +17,11 @@ async function start() {
 
   const manifest = await (await fetch(MANIFEST_URL)).json();
 
-  // Paramètres de test : ?region=givre&bataille=2
+  // Paramètres de test : ?region=givre&bataille=2  (ou ?conquete=givre)
   const params = new URLSearchParams(location.search);
-  const startData = {
-    regionId: params.get('region') ?? 'givre',
-    tierId: Number(params.get('bataille') ?? 1),
-  };
+  const start = params.has('conquete')
+    ? { scene: 'conquest', data: { regionId: params.get('conquete') } }
+    : { scene: 'combat', data: { regionId: params.get('region') ?? 'givre', tierId: Number(params.get('bataille') ?? 1) } };
 
   const { R, cssZoom } = computeFactor();
   const game = new Phaser.Game({
@@ -37,11 +37,11 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, CombatScene],
+    scene: [BootScene, CombatScene, ConquestScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);
-  game.registry.set('start', { scene: 'combat', data: startData });
+  game.registry.set('start', start);
 
   watchResize(game);
   window.__game = game; // pratique pour déboguer depuis la console

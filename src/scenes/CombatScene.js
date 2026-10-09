@@ -10,6 +10,7 @@ import { getBattleQuestions } from '../questions.js';
 import { regionById, enemyFor, defeatLine, MARECHAL, MAX_QUESTIONS, TIERS } from '../data/world.js';
 import { fitCamera } from '../display.js';
 import { text, panel, button, hpBar, C } from '../ui.js';
+import { ensureVariant } from '../variants.js';
 
 const W = 480;
 const GROUND_Y = 158;
@@ -30,6 +31,8 @@ export class CombatScene extends Phaser.Scene {
     this.manifest = this.registry.get('manifest');
     this.state = 'loading';
     this.qIndex = -1;
+    // La scène est réutilisée d'une bataille à l'autre : on oublie les boutons de la précédente.
+    this.endButtons = null;
   }
 
   create() {
@@ -39,7 +42,9 @@ export class CombatScene extends Phaser.Scene {
     const heroH = this.manifest.characters[MARECHAL.sprite].body.height;
     this.hero = new Fighter(this, this.manifest, MARECHAL.sprite, { x: HERO_X, groundY: GROUND_Y, height: heroH, faceLeft: false });
     const enemyH = this.tier.role === 'boss' ? heroH * BOSS_SCALE : heroH;
-    this.enemy = new Fighter(this, this.manifest, this.enemyDef.sprite, { x: ENEMY_X, groundY: GROUND_Y, height: enemyH, faceLeft: true });
+    this.enemy = new Fighter(this, this.manifest, this.enemySprite(), {
+      x: ENEMY_X, groundY: GROUND_Y, height: enemyH, faceLeft: true, attackAnim: this.enemyDef.attack,
+    });
 
     this.heroHp = this.tier.playerHp;
     this.enemyHp = this.tier.enemyHp;
@@ -47,6 +52,17 @@ export class CombatScene extends Phaser.Scene {
     this.drawCard();
     this.bindKeys();
     this.loadQuestions();
+  }
+
+  /**
+   * Soldats et chevaliers aux deux couleurs de leur maison ; les boss gardent
+   * leurs couleurs, sauf le Ver des sables, recoloré couleur sable.
+   */
+  enemySprite() {
+    const { sprite } = this.enemyDef;
+    if (this.tier.role !== 'boss') return ensureVariant(this, this.manifest, sprite, this.region.id, this.region.house.colors);
+    if (sprite === 'fire-worm') return ensureVariant(this, this.manifest, sprite, 'sable', []);
+    return sprite;
   }
 
   /* ------------------------------------------------------------------ */
@@ -231,6 +247,12 @@ export class CombatScene extends Phaser.Scene {
     if (won) await this.enemy.die();
     else if (!reason) await this.hero.die();
 
+    if (won && this.tier.id === TIERS.length) {
+      // Troisième victoire : la région est conquise.
+      this.time.delayedCall(500, () => this.scene.start('conquest', { regionId: this.region.id }));
+      return;
+    }
+
     const w = 260;
     const h = 92;
     const x = (W - w) / 2;
@@ -247,9 +269,9 @@ export class CombatScene extends Phaser.Scene {
     const actions = won
       ? [nextTier ? ['Bataille suivante', { regionId: this.region.id, tierId: nextTier.id }] : null,
         ['Rejouer', { regionId: this.region.id, tierId: this.tier.id }]]
-      : [['Recommencer', { regionId: this.region.id, tierId: 1 }]];
+      : [['Recommencer la région', { regionId: this.region.id, tierId: 1 }]];
     const list = actions.filter(Boolean);
-    const bw = 110;
+    const bw = 120;
     const total = list.length * bw + (list.length - 1) * 8;
     this.endButtons = list.map(([label, data], i) =>
       button(this, (W - total) / 2 + i * (bw + 8), y + h - 28, bw, 20, label, () => this.scene.restart(data)));

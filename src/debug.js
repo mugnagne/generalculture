@@ -4,6 +4,8 @@
  */
 import { REGIONS, MARECHAL } from './data/world.js';
 import { MANIFEST_URL } from './sprites.js';
+import { RECOLOR_RULES } from './data/recolor.js';
+import { readPixels, measureLightness, recolorImage } from './recolor.js';
 
 const BOSS_SCALE = 1.75;
 const manifest = await (await fetch(MANIFEST_URL)).json();
@@ -58,6 +60,41 @@ for (const [key, def] of Object.entries(manifest.characters)) {
   }
   document.getElementById('list').append(section);
 }
+
+// Recolorations aux couleurs des maisons (calculées comme dans le jeu)
+const recolorSection = document.createElement('section');
+recolorSection.innerHTML = `<h2>Recolorations</h2>
+  <div class="meta">Soldats et chevaliers aux couleurs de leur maison ; le Ver des sables couleur sable. Animation d'attente.</div>
+  <div class="anims"></div>`;
+const recolorWrap = recolorSection.querySelector('.anims');
+const variants = [];
+for (const r of REGIONS) {
+  variants.push([r.soldiers, r.house.colors, `${r.soldiers.name} · ${r.house.name}`]);
+  variants.push([r.knight, r.house.colors, `${r.knight.name} · ${r.house.name}`]);
+}
+const worm = REGIONS.find((r) => r.boss.sprite === 'fire-worm');
+if (worm) variants.push([worm.boss, [], `${worm.boss.name} · sable`]);
+for (const [enemy, colors, label] of variants) {
+  const rules = RECOLOR_RULES[enemy.sprite];
+  if (!rules) continue;
+  const def = manifest.characters[enemy.sprite];
+  const a = def.anims.idle;
+  const scale = (enemy === worm?.boss ? heroH * BOSS_SCALE : heroH) / def.body.height;
+  const fig = document.createElement('figure');
+  const canvas = document.createElement('canvas');
+  canvas.className = 'ground';
+  fig.append(canvas);
+  const cap = document.createElement('figcaption');
+  cap.innerHTML = `<b>${label}</b><br>${colors.join(' · ')}`;
+  fig.append(cap);
+  recolorWrap.append(fig);
+  const img = loadImage(a.file).then((src) => {
+    const refL = measureLightness(readPixels(src), rules);
+    return recolorImage(src, rules, colors, refL);
+  });
+  players.push({ canvas, a, def, scale, img });
+}
+document.getElementById('list').prepend(recolorSection);
 
 // Boucle d'animation commune
 let last = performance.now();

@@ -3,8 +3,10 @@
 Jeu de conquête en pixel art (Phaser 3) : chaque bataille se gagne en répondant à des questions
 de culture générale venues de Quizz API. Le quiz d'origine reste disponible sur `classique.html`.
 
-- `index.html` : le jeu. Paramètres de test : `?region=givre&bataille=1|2|3`.
-- `debug.html` : toutes les animations du manifeste, à l'échelle du jeu.
+- `index.html` : le jeu. Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`.
+- `debug.html` : toutes les animations du manifeste, à l'échelle du jeu, et les recolorations.
+- Recoloration : règles par plage de teinte dans `src/data/recolor.js`, algorithme dans `src/recolor.js`,
+  textures générées une fois au chargement (`src/variants.js`) ; les PNG d'origine ne changent pas.
 - `src/` : scènes Phaser, données des régions (`src/data/world.js`), interface Kenney (`src/ui.js`).
 - `scripts/build_assets.py` (Pillow) : régénère `assets/sprites/manifest.json` et `assets/generated/`
   (décors et carte en 480x270, palette). Les fichiers d'origine des assets ne sont jamais modifiés.

@@ -22,6 +22,8 @@ export const TIERS = [
 
 export const MAX_QUESTIONS = 10;
 
+// Arme des chevaliers Medieval Warrior Pack 2 (champ `attack`) : attack = épée, attack2 = espadon, attack3 = lance, attack4 = masse.
+
 /** Soldats par défaut, remplacés dans les Plaines de Cendre. */
 const SOLDIER_SPRITE = 'medieval-warrior-3';
 
@@ -39,7 +41,7 @@ export const REGIONS = [
     house: { name: 'Morvane', arms: "rose des vents d'argent sur vert océan", colors: ['#1D5C5A', '#C9D1D3'] },
     background: 'pirate_ship',
     soldiers: { name: 'Corsaires', sprite: SOLDIER_SPRITE },
-    knight: { name: 'La Capitaine-Chevalière', sprite: 'medieval-warrior-2', feminine: true },
+    knight: { name: 'La Capitaine-Chevalière', sprite: 'medieval-warrior-2', feminine: true, attack: 'attack', weapon: 'épée' },
     boss: { name: "L'Abomination des abysses", sprite: 'cthulu', feminine: true },
   },
   {
@@ -55,7 +57,7 @@ export const REGIONS = [
     house: { name: 'Astrane', arms: 'astrolabe de cuivre sur indigo', colors: ['#352F7A', '#B8733A'] },
     background: 'wizard_region',
     soldiers: { name: 'Automates de cuivre', sprite: SOLDIER_SPRITE },
-    knight: { name: 'Le Chevalier-Alchimiste', sprite: 'medieval-warrior-2' },
+    knight: { name: 'Le Chevalier-Alchimiste', sprite: 'medieval-warrior-2', attack: 'attack4', weapon: 'masse' },
     boss: { name: "L'Archimage de Lumenor", sprite: 'evil-wizard-2' },
   },
   {
@@ -71,7 +73,7 @@ export const REGIONS = [
     house: { name: 'Hardencourt', arms: 'cheval cabré blanc sur bordeaux', colors: ['#7A1F2B', '#F4F4F4'] },
     background: 'medieval_fest_region',
     soldiers: { name: 'Écuyers bagarreurs', sprite: SOLDIER_SPRITE },
-    knight: { name: 'Le Champion de joute', sprite: 'medieval-warrior-2' },
+    knight: { name: 'Le Champion de joute', sprite: 'medieval-warrior-2', attack: 'attack3', weapon: 'lance' },
     boss: { name: "Le Démon de l'arène", sprite: 'demon-slime' },
   },
   {
@@ -87,7 +89,7 @@ export const REGIONS = [
     house: { name: 'Sahrim', arms: "masque de théâtre d'or sur sable", colors: ['#D4B06A', '#2A9D8F'] },
     background: 'desert_region',
     soldiers: { name: 'Nomades des dunes', sprite: SOLDIER_SPRITE },
-    knight: { name: 'Le Chevalier des mirages', sprite: 'medieval-warrior-2' },
+    knight: { name: 'Le Chevalier des mirages', sprite: 'medieval-warrior-2', attack: 'attack2', weapon: 'espadon' },
     boss: { name: 'Le Ver des sables', sprite: 'fire-worm' },
   },
   {

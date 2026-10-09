@@ -9,12 +9,13 @@ export class Fighter {
    * @param {Phaser.Scene} scene
    * @param {object} manifest
    * @param {string} charKey  clé du personnage dans le manifeste
-   * @param {object} opts { x, groundY, height (hauteur visible en px), faceLeft }
+   * @param {object} opts { x, groundY, height (hauteur visible en px), faceLeft, attackAnim }
    */
-  constructor(scene, manifest, charKey, { x, groundY, height, faceLeft }) {
+  constructor(scene, manifest, charKey, { x, groundY, height, faceLeft, attackAnim = 'attack' }) {
     this.scene = scene;
     this.key = charKey;
     this.def = manifest.characters[charKey];
+    this.attackAnim = this.def.anims[attackAnim] ? attackAnim : 'attack';
     this.homeX = x;
     this.faceLeft = faceLeft;
 
@@ -60,9 +61,9 @@ export class Fighter {
     const dir = this.faceLeft ? -1 : 1;
     const reach = Math.abs(target.homeX - this.homeX) * 0.45;
     await this.tween({ x: this.homeX + dir * reach, duration: 220, ease: 'Quad.easeOut' });
-    const hit = this.play('attack');
+    const hit = this.play(this.attackAnim);
     // L'impact tombe vers le milieu de l'animation d'attaque.
-    const frames = this.def.anims.attack;
+    const frames = this.def.anims[this.attackAnim];
     let impact = Promise.resolve();
     this.scene.time.delayedCall((frames.frames / frames.fps) * 500, () => { impact = target.hurt(); });
     await hit;
