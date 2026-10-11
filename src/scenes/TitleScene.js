@@ -1,12 +1,12 @@
 /**
  * TitleScene — écran titre : Nouvelle partie / Continuer / Crédits.
  */
-import { MARECHAL } from '../data/world.js';
 import { fitCamera } from '../display.js';
 import { text, button, menuNav, C } from '../ui.js';
 import { drawBanner } from '../banner.js';
 import { Fighter } from '../fighter.js';
-import { hasProgress, resetSave } from '../save.js';
+import { loadRun, deleteRun } from '../core/run.js';
+import { getContent } from '../core/content.js';
 import { fadeIn, goTo } from '../transition.js';
 import { music, isMuted, toggleMute } from '../audio.js';
 
@@ -28,23 +28,26 @@ export class TitleScene extends Phaser.Scene {
     else this.add.rectangle(0, 0, W, H, 0x0069aa).setOrigin(0);
     this.add.rectangle(0, 0, W, H, 0x0e071b, 0.62).setOrigin(0);
 
-    // Le Maréchal et sa bannière, à gauche
+    // Le héros par défaut et sa bannière, à gauche
+    const hero = getContent().characters[0];
     const manifest = this.registry.get('manifest');
-    const heroH = manifest.characters[MARECHAL.sprite].body.height;
-    new Fighter(this, manifest, MARECHAL.sprite, { x: 92, groundY: 214, height: heroH * 2, faceLeft: false });
+    const heroH = manifest.characters[hero.sprite].body.height;
+    new Fighter(this, manifest, hero.sprite, { x: 92, groundY: 214, height: heroH * 2, faceLeft: false });
     this.add.ellipse(92, 214, 70, 8, 0x000000, 0.4);
-    drawBanner(this, 140, 216, 3);
+    drawBanner(this, 140, 216, 3, hero.banner.colors);
 
     text(this, 300, 34, 'La Reconquête', { size: 16, color: C.ink }).setOrigin(0.5, 0);
     text(this, 300, 52, 'de Valdorn', { size: 32, color: C.gold, bold: true }).setOrigin(0.5, 0)
       .setShadow(2, 2, '#8E251D', 0, false, true);
-    text(this, 300, 92, 'Sans maison ni couronne, le Maréchal reprend le continent,\nrégion par région, question après question.',
+    text(this, 300, 92, 'Trois actes, une seule réserve de vie : chaque question\nest un coup porté. Jusqu’à l’Usurpateur.',
       { size: 8, color: C.muted, align: 'center' }).setOrigin(0.5, 0);
 
-    const has = hasProgress();
+    const saved = loadRun();
+    const has = Boolean(saved);
     const bx = 300 - 70;
     this.newButton = button(this, bx, 126, 140, 22, 'Nouvelle partie', () => this.newGame(has));
-    this.continueButton = button(this, bx, 154, 140, 22, 'Continuer', () => goTo(this, 'map'));
+    this.continueButton = button(this, bx, 154, 140, 22, 'Continuer',
+      () => goTo(this, saved.resume.scene, saved.resume.data));
     this.creditsButton = button(this, bx, 182, 140, 22, 'Crédits', () => goTo(this, 'credits'));
     if (!has) {
       this.continueButton.setEnabled(false);
@@ -66,7 +69,7 @@ export class TitleScene extends Phaser.Scene {
   newGame(has) {
     if (has && !this.confirming) {
       this.confirming = true;
-      this.newButton.label.setText('Effacer la partie ?');
+      this.newButton.label.setText('Effacer la partie en cours ?');
       this.newButton.setState('bad');
       this.time.delayedCall(3000, () => {
         this.confirming = false;
@@ -75,7 +78,7 @@ export class TitleScene extends Phaser.Scene {
       });
       return;
     }
-    resetSave();
-    goTo(this, 'map');
+    deleteRun();
+    goTo(this, 'character');
   }
 }

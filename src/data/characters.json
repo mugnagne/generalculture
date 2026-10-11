@@ -1,0 +1,21 @@
+[
+  {
+    "id": "marechal",
+    "name": "Le Maréchal",
+    "description": "Général sans maison, il reconquiert Valdorn question après question.",
+    "hp": 30,
+    "startRelic": "feu-de-bivouac",
+    "ability": null,
+    "abilityText": "Aucune : le profil équilibré.",
+    "effects": [],
+    "sprite": "hero-knight",
+    "available": true,
+    "banner": {
+      "description": "faucille et marteau, or sur rouge",
+      "colors": [
+        "#E3B341",
+        "#C42430"
+      ]
+    }
+  }
+]

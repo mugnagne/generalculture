@@ -5,7 +5,7 @@
  * Une variante est enregistrée comme un personnage à part dans le manifeste
  * (clé « <perso>#<variante> »), avec ses propres textures et animations.
  */
-import { RECOLOR_RULES } from './data/recolor.js';
+import { getContent } from './core/content.js';
 import { readPixels, measureLightness, recolorImage } from './recolor.js';
 import { fileKey, createAnimations } from './sprites.js';
 
@@ -18,7 +18,7 @@ import { fileKey, createAnimations } from './sprites.js';
  * @returns {string} clé du personnage recoloré (ou d'origine s'il n'a pas de règles)
  */
 export function ensureVariant(scene, manifest, charKey, variantId, colors) {
-  const rules = RECOLOR_RULES[charKey];
+  const rules = getContent().recolorRules[charKey];
   if (!rules) return charKey;
   const key = `${charKey}#${variantId}`;
   if (manifest.characters[key]) return key;

@@ -5,11 +5,12 @@
  */
 import { BootScene } from './scenes/BootScene.js';
 import { CombatScene } from './scenes/CombatScene.js';
-import { ConquestScene } from './scenes/ConquestScene.js';
-import { MapScene } from './scenes/MapScene.js';
 import { TitleScene } from './scenes/TitleScene.js';
+import { CharacterScene } from './scenes/CharacterScene.js';
+import { RunScene } from './scenes/RunScene.js';
+import { PauseScene } from './scenes/PauseScene.js';
 import { CreditsScene } from './scenes/CreditsScene.js';
-import { FinaleScene } from './scenes/FinaleScene.js';
+import { loadContent } from './core/content.js';
 import { MANIFEST_URL } from './sprites.js';
 import { BASE_W, BASE_H, computeFactor, watchResize } from './display.js';
 
@@ -20,14 +21,13 @@ async function start() {
   } catch { /* la police de secours prendra le relais */ }
 
   const manifest = await (await fetch(MANIFEST_URL)).json();
+  // Données de contenu du rogue-lite (src/data/*.json), indispensables avant toute scène
+  await loadContent();
 
-  // Par défaut : l'écran titre. Paramètres de test : ?region=givre&bataille=2, ?conquete=givre,
-  // ?ecran=carte|finale|credits
+  // Par défaut : l'écran titre. Paramètres de test : ?ecran=personnage|campement|credits
   const params = new URLSearchParams(location.search);
-  const screens = { carte: 'map', finale: 'finale', credits: 'credits' };
-  let start = { scene: screens[params.get('ecran')] ?? 'title', data: {} };
-  if (params.has('conquete')) start = { scene: 'conquest', data: { regionId: params.get('conquete') } };
-  else if (params.has('region')) start = { scene: 'combat', data: { regionId: params.get('region'), tierId: Number(params.get('bataille') ?? 1) } };
+  const screens = { personnage: 'character', campement: 'run', credits: 'credits' };
+  const start = { scene: screens[params.get('ecran')] ?? 'title', data: {} };
 
   const { R, cssZoom } = computeFactor();
   const game = new Phaser.Game({
@@ -43,7 +43,7 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, TitleScene, MapScene, CombatScene, ConquestScene, FinaleScene, CreditsScene],
+    scene: [BootScene, TitleScene, CharacterScene, RunScene, CombatScene, PauseScene, CreditsScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);

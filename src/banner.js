@@ -2,7 +2,6 @@
  * banner.js — Bannière du Maréchal en pixel art : faucille et marteau, or sur rouge.
  * Dessinée avec des rectangles d'un pixel logique (nette à tout facteur d'agrandissement).
  */
-import { MARECHAL } from './data/world.js';
 
 // Emblème 9x9 : F = faucille, M = marteau
 const EMBLEM = [
@@ -23,8 +22,9 @@ const hex = (c) => Phaser.Display.Color.HexStringToColor(c).color;
  * Dessine une bannière à queue d'aronde accrochée à une hampe.
  * @param {number} x, y  pied de la hampe
  * @param {number} s     taille d'un « pixel » de la bannière (1 = petite, 2 = grande)
+ * @param {string[]} colors  [or, rouge] : couleurs de la bannière (characters.json)
  */
-export function drawBanner(scene, x, y, s = 1, colors = MARECHAL.colors) {
+export function drawBanner(scene, x, y, s, colors) {
   const [gold, red] = colors.map(hex);
   const g = scene.add.graphics({ x, y });
   const W = 13 * s;

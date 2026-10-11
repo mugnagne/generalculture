@@ -1,0 +1,81 @@
+[
+  {
+    "id": "sphinx", "title": "Le Sphinx",
+    "text": "Une créature de pierre barre le chemin. « Réponds juste et je t'offrirai un trésor rare. Échoue, et tu saigneras. »",
+    "choices": [
+      {
+        "label": "Répondre à l'énigme (question difficile)",
+        "effects": [{ "id": "quizChallenge", "params": {
+          "difficulty": "difficile",
+          "onCorrect": [{ "id": "gainRelic", "params": { "rarity": "rare" } }],
+          "onWrong": [{ "id": "loseHp", "params": { "amount": 8 } }]
+        } }]
+      },
+      { "label": "Passer son chemin", "effects": [] }
+    ]
+  },
+  {
+    "id": "fontaine", "title": "La Fontaine",
+    "text": "Une fontaine claire murmure au milieu des ruines. On dit qu'une pièce jetée dans son bassin rend plus robuste.",
+    "choices": [
+      { "label": "Boire (soigne 15 PV)", "effects": [{ "id": "heal", "params": { "amount": 15 } }] },
+      {
+        "label": "Jeter 50 or (+4 PV max)", "requires": { "gold": 50 },
+        "effects": [{ "id": "loseGold", "params": { "amount": 50 } }, { "id": "gainMaxHp", "params": { "amount": 4, "heal": true } }]
+      }
+    ]
+  },
+  {
+    "id": "tripot", "title": "Le Tripot",
+    "text": "Dans une taverne enfumée, un joueur propose un pari : une question, et ta mise doublée si tu as raison.",
+    "choices": [
+      { "label": "Miser la moitié de son or", "requires": { "gold": 2 }, "effects": [{ "id": "wager", "params": { "fraction": 0.5 } }] },
+      { "label": "Miser tout son or", "requires": { "gold": 1 }, "effects": [{ "id": "wager", "params": { "fraction": 1 } }] },
+      { "label": "Partir", "effects": [] }
+    ]
+  },
+  {
+    "id": "maitre-d-armes", "title": "Le Maître d'armes",
+    "text": "Un vieux maître d'armes propose un entraînement brutal : il te rendra plus fort, mais te laissera des cicatrices.",
+    "choices": [
+      {
+        "label": "Accepter (-6 PV max, +1 dégât permanent)", "requires": { "maxHp": 7 },
+        "effects": [{ "id": "loseMaxHp", "params": { "amount": 6 } }, { "id": "permanentDamage", "params": { "amount": 1 } }]
+      },
+      { "label": "Refuser", "effects": [] }
+    ]
+  },
+  {
+    "id": "alchimiste", "title": "L'Alchimiste",
+    "text": "Un alchimiste ambulant cherche des ingrédients. Il échange volontiers une de tes fioles contre deux des siennes.",
+    "choices": [
+      {
+        "label": "Échanger une fiole contre deux fioles aléatoires", "requires": { "consumables": 1 },
+        "effects": [{ "id": "tradeConsumable", "params": { "give": 1, "receive": 2 } }]
+      },
+      { "label": "Refuser", "effects": [] }
+    ]
+  },
+  {
+    "id": "bibliotheque", "title": "La Bibliothèque oubliée",
+    "text": "Sous la poussière, des grimoires attendent un lecteur. Les étudier demande des heures, et quelques forces.",
+    "choices": [
+      {
+        "label": "Choisir un Grimoire parmi 3 (-10 PV)", "requires": { "hp": 11 },
+        "effects": [{ "id": "loseHp", "params": { "amount": 10 } }, { "id": "chooseRelic", "params": { "pool": "grimoire", "count": 3 } }]
+      },
+      { "label": "Partir", "effects": [] }
+    ]
+  },
+  {
+    "id": "colporteur", "title": "Le Colporteur",
+    "text": "Un colporteur au sourire édenté propose une relique, au hasard, contre deux de tes fioles.",
+    "choices": [
+      {
+        "label": "Donner 2 fioles contre une relique au hasard", "requires": { "consumables": 2 },
+        "effects": [{ "id": "loseConsumables", "params": { "count": 2 } }, { "id": "gainRelic", "params": { "rarity": "random" } }]
+      },
+      { "label": "Refuser", "effects": [] }
+    ]
+  }
+]

@@ -1,0 +1,38 @@
+{
+  "_note": "Capacités des élites et des boss. Les valeurs de PV et de dégâts sont dans balance.json ; les sprites viennent des régions (regions.json).",
+  "abilities": [
+    {
+      "id": "brume", "name": "Brume", "intent": "Réponses cachées 3 s",
+      "description": "Les réponses n'apparaissent qu'après 3 secondes.",
+      "effects": [{ "id": "delayAnswers", "params": { "seconds": 3 } }]
+    },
+    {
+      "id": "rage", "name": "Rage", "intent": "+1 dégât à chaque erreur",
+      "description": "Ses dégâts augmentent de 1 à chaque erreur du joueur.",
+      "effects": [{ "id": "rampDamageOnWrong", "params": { "amount": 1 } }]
+    },
+    {
+      "id": "erudition", "name": "Érudition", "intent": "Questions difficiles",
+      "description": "Toutes ses questions sont de niveau difficile.",
+      "effects": [{ "id": "forceDifficulty", "params": { "difficulty": "difficile" } }]
+    },
+    {
+      "id": "mirage", "name": "Mirage", "intent": "Chrono -5 s",
+      "description": "L'API ne fournit que 3 mauvaises réponses : le mirage réduit donc le chrono de 5 s.",
+      "effects": [{ "id": "timerDelta", "params": { "seconds": -5 } }]
+    },
+    {
+      "id": "regeneration", "name": "Régénération", "intent": "+1 PV toutes les 3 questions",
+      "description": "Récupère 1 PV toutes les 3 questions.",
+      "effects": [{ "id": "regenEvery", "params": { "every": 3, "amount": 1 } }]
+    },
+    {
+      "id": "pression", "name": "Pression", "intent": "Chrono 12 s",
+      "description": "Le chrono passe à 12 secondes.",
+      "effects": [{ "id": "setTimer", "params": { "seconds": 12 } }]
+    }
+  ],
+  "eliteAbilities": ["brume", "rage", "erudition", "mirage", "regeneration", "pression"],
+  "bossAbilities": ["brume", "rage", "erudition", "mirage", "regeneration", "pression"],
+  "finalBoss": { "region": "hautecouronne" }
+}

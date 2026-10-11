@@ -2,17 +2,20 @@
  * debug.js — Affiche chaque animation du manifeste, à l'échelle du jeu.
  * Indépendant de Phaser : simple dessin canvas, frame par frame.
  */
-import { REGIONS, MARECHAL } from './data/world.js';
 import { MANIFEST_URL } from './sprites.js';
-import { RECOLOR_RULES } from './data/recolor.js';
+import { loadContent } from './core/content.js';
 import { readPixels, measureLightness, recolorImage } from './recolor.js';
 
 const BOSS_SCALE = 1.75;
 const manifest = await (await fetch(MANIFEST_URL)).json();
-const heroH = manifest.characters[MARECHAL.sprite].body.height;
+const content = await loadContent();
+const REGIONS = content.regions;
+const RECOLOR_RULES = content.recolorRules;
+const hero = content.characters[0];
+const heroH = manifest.characters[hero.sprite].body.height;
 
 // Rôles de chaque personnage d'après les données des régions
-const roles = new Map([[MARECHAL.sprite, ['Le Maréchal']]]);
+const roles = new Map(content.characters.map((c) => [c.sprite, [c.name]]));
 for (const r of REGIONS) {
   for (const [role, e] of [['soldats', r.soldiers], ['chevalier', r.knight], ['boss', r.boss]]) {
     if (!roles.has(e.sprite)) roles.set(e.sprite, []);

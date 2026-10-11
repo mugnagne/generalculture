@@ -1,0 +1,72 @@
+[
+  {
+    "id": "fiole-de-soin", "name": "Fiole de soin", "rarity": "common", "outOfCombat": true,
+    "description": "Rend 8 PV. Utilisable hors combat.",
+    "effects": [{ "id": "heal", "params": { "amount": 8 } }]
+  },
+  {
+    "id": "cinquante-cinquante", "name": "Cinquante-cinquante", "rarity": "common",
+    "description": "Retire 2 mauvaises réponses de la question en cours.",
+    "effects": [{ "id": "removeWrongAnswers", "params": { "count": 2 } }]
+  },
+  {
+    "id": "sablier", "name": "Sablier", "rarity": "common",
+    "description": "+15 s sur la question en cours.",
+    "effects": [{ "id": "addTime", "params": { "seconds": 15 } }]
+  },
+  {
+    "id": "bouclier-de-bois", "name": "Bouclier de bois", "rarity": "common",
+    "description": "La prochaine erreur ne coûte aucun PV.",
+    "effects": [{ "id": "blockNextWrong", "params": { "charges": 1 } }]
+  },
+  {
+    "id": "fiole-de-feu", "name": "Fiole de feu", "rarity": "common",
+    "description": "Inflige 2 dégâts à l'ennemi.",
+    "effects": [{ "id": "damageEnemy", "params": { "amount": 2 } }]
+  },
+  {
+    "id": "huile-de-lame", "name": "Huile de lame", "rarity": "common",
+    "description": "Les 3 prochaines bonnes réponses font +1 dégât.",
+    "effects": [{ "id": "bonusDamageCharges", "params": { "amount": 1, "charges": 3 } }]
+  },
+  {
+    "id": "parchemin-d-echange", "name": "Parchemin d'échange", "rarity": "common",
+    "description": "Remplace la question en cours par une autre, sans pénalité.",
+    "effects": [{ "id": "swapQuestion", "params": {} }]
+  },
+  {
+    "id": "avis-de-la-foule", "name": "Avis de la foule", "rarity": "uncommon",
+    "description": "Affiche des pourcentages de votes qui favorisent la bonne réponse.",
+    "effects": [{ "id": "crowdVote", "params": { "correctMin": 35, "correctMax": 70 } }]
+  },
+  {
+    "id": "parchemin-du-savant", "name": "Parchemin du savant", "rarity": "uncommon",
+    "description": "La prochaine question est tirée du thème de votre choix.",
+    "effects": [{ "id": "chooseNextTheme", "params": {} }]
+  },
+  {
+    "id": "rage-du-berserker", "name": "Rage du berserker", "rarity": "uncommon",
+    "description": "La prochaine bonne réponse fait double dégâts, mais une erreur coûte double.",
+    "effects": [{ "id": "berserk", "params": { "damageMult": 2, "takenMult": 2 } }]
+  },
+  {
+    "id": "elixir-de-vigueur", "name": "Élixir de vigueur", "rarity": "rare", "outOfCombat": true,
+    "description": "+5 PV max. Utilisable hors combat.",
+    "effects": [{ "id": "gainMaxHp", "params": { "amount": 5, "heal": true } }]
+  },
+  {
+    "id": "fee-en-bouteille", "name": "Fée en bouteille", "rarity": "rare", "passive": true,
+    "description": "Se déclenche seule à la mort : revient à 30 % des PV max.",
+    "effects": [{ "id": "reviveOnDeath", "params": { "percentMax": 30, "consume": true } }]
+  },
+  {
+    "id": "bombe-fumigene", "name": "Bombe fumigène", "rarity": "rare",
+    "description": "Fuir un combat (hors boss), sans récompense.",
+    "effects": [{ "id": "fleeCombat", "params": { "allowBoss": false } }]
+  },
+  {
+    "id": "chaudron-de-l-alchimiste", "name": "Chaudron de l'alchimiste", "rarity": "rare",
+    "description": "Remplit tous les emplacements vides avec des consommables aléatoires.",
+    "effects": [{ "id": "fillConsumables", "params": {} }]
+  }
+]

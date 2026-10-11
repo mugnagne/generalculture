@@ -5,7 +5,7 @@ import { preloadCharacters, createAnimations } from '../sprites.js';
 import { preloadUi, text, C } from '../ui.js';
 import { fitCamera } from '../display.js';
 import { preloadAudioList, loadAudioFiles, isMuted } from '../audio.js';
-import { REGIONS, MARECHAL } from '../data/world.js';
+import { getContent } from '../core/content.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -25,7 +25,6 @@ export class BootScene extends Phaser.Scene {
     this.load.on('complete', () => label.destroy());
 
     preloadUi(this);
-    this.load.json('regions', 'src/data/regions.json');
     this.load.text('credits-md', 'CREDITS.md');
     preloadAudioList(this);
     // Carte : si l'image manque, la scène de carte dessine un continent ovale de secours.
@@ -36,8 +35,9 @@ export class BootScene extends Phaser.Scene {
   }
 
   characterKeys() {
-    const keys = new Set([MARECHAL.sprite]);
-    for (const r of REGIONS) [r.soldiers, r.knight, r.boss].forEach((e) => keys.add(e.sprite));
+    const { characters, regions } = getContent();
+    const keys = new Set(characters.map((c) => c.sprite));
+    for (const r of regions) [r.soldiers, r.knight, r.boss].forEach((e) => keys.add(e.sprite));
     return [...keys];
   }
 

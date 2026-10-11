@@ -1,30 +1,35 @@
-# ⚔️ La Reconquête de Valdorn
+# ⚔️ La Reconquête de Valdorn — rogue-lite
 
-Jeu de conquête en pixel art (Phaser 3) : chaque bataille se gagne en répondant à des questions
-de culture générale venues de Quizz API. Le quiz d'origine reste disponible sur `classique.html`.
+Rogue-lite de quiz en pixel art (Phaser 3), inspiré de Slay the Spire : trois actes, une carte à routes,
+une seule réserve de PV, des reliques et des fioles. Chaque question vient de Quizz API.
+Le quiz d'origine reste disponible sur `classique.html`.
 
-- `index.html` : le jeu (écran titre → carte → combats → conquêtes → victoire finale → crédits).
-  Paramètres de test : `?region=givre&bataille=1|2|3`, `?conquete=givre`, `?ecran=carte|finale|credits`.
-- Crédits : l'écran lit `CREDITS.md` (chierit en premier, puis LuizMelo, Kronovi, Kenney).
+## Organisation
+
+- **Données** (`src/data/*.json`) : tout le contenu et l'équilibrage, jamais en dur dans le code.
+  `balance.json` (chiffres), `characters.json`, `consumables.json`, `relics.json`, `boss-relics.json`,
+  `enemies.json` (capacités), `events.json`, `regions.json` (thème → décor, soldats, chevalier, boss, couleurs),
+  `recolor.json` (recoloration par plage de teinte). Chaque effet = `{ "id": …, "params": { … } }`.
+- **Cœur** (`src/core/`, sans Phaser, testable dans Node) :
+  `rng.js` (générateur à graine, un flux par usage, état sauvegardé), `hooks.js` (hooks d'événement
+  `onRunStart`… et modificateurs `modifyDamageDealt`…), `effects.js` (implémentation de chaque identifiant
+  d'effet), `run.js` (état de la partie, actions, sauvegarde `localStorage` `valdorn:run:v1`),
+  `content.js` (chargement et préparation des JSON).
+- **Scènes** (`src/scenes/`) : titre, choix du personnage, campement (provisoire), combat, pause, crédits.
+- **Tests** : `node scripts/test-core.mjs` (générateur, création de partie, hooks, sauvegarde ; liste les
+  effets pas encore implémentés).
+- Paramètres de test : `?ecran=personnage|campement|credits`.
+
+## Ressources
+
+- Crédits : l'écran lit `CREDITS.md` (chierit en premier, puis LuizMelo, Kronovi, Kenney, CraftPix…).
 - Sons facultatifs : voir `assets/audio/LISEZMOI.md` (touche M pour couper le son).
-- Carte : régions = polygones de `src/data/regions.json`. Touche **E** sur la carte pour les retracer
-  (1-9 : région, clic : point, glisser : déplacer, clic droit : retirer, X : exporter le JSON à recopier
-  dans `src/data/regions.json`, R : revenir au fichier). Les modifications restent en brouillon local tant
-  qu'on n'a pas remplacé le fichier.
-- Progression : `localStorage` (`valdorn:save:v1`), bouton « Réinitialiser » sur la carte (double clic de confirmation).
 - `debug.html` : toutes les animations du manifeste, à l'échelle du jeu, et les recolorations.
-- Recoloration : règles par plage de teinte dans `src/data/recolor.js`, algorithme dans `src/recolor.js`,
-  textures générées une fois au chargement (`src/variants.js`) ; les PNG d'origine ne changent pas.
-- `src/` : scènes Phaser, données des régions (`src/data/world.js`), interface Kenney (`src/ui.js`).
 - `scripts/build_assets.py` (Pillow) : régénère `assets/sprites/manifest.json` et `assets/generated/`
   (carte en 480x270, palette, `backdrops.json`). Les fichiers d'origine des assets ne sont jamais modifiés.
-- Décors de combat CraftPix : `assets/backgrounds/<région>.png` ou `assets/backgrounds/<région>/` (calques).
-  `backdrops.json` liste, pour chaque variante, les calques du plus lointain au plus proche (ordre retrouvé
-  en les comparant à l'image assemblée du pack). Dans `src/data/world.js`, `backdrop.variant` choisit la
-  variante et `backdrop.ground` la ligne du sol (en pixels de l'image d'origine) où poser les combattants.
-- Le jeu réutilise tel quel `js/questionSource.js` (via `src/questions.js`). Quand une réserve
-  catégorie × difficulté compte moins de 10 questions, elle est complétée avec les niveaux voisins
-  de la même catégorie.
+- Décors de combat CraftPix : `assets/backgrounds/<région>/` (calques). Dans `src/data/regions.json`,
+  `backdrop.variant` choisit la variante et `backdrop.ground` la ligne du sol (pixels de l'image d'origine).
+- Questions : `js/questionSource.js` (inchangé), via `src/questions.js`.
 
 ---
 

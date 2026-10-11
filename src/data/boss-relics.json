@@ -1,0 +1,47 @@
+[
+  {
+    "id": "couronne-de-l-usurpateur", "name": "Couronne de l'Usurpateur",
+    "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Les feux de camp ne permettent plus de se reposer.",
+    "effects": [
+      { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
+      { "id": "noRest", "params": {} }
+    ]
+  },
+  {
+    "id": "masque-aveugle", "name": "Masque aveugle",
+    "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Les thèmes des cases ne sont plus affichés sur la carte.",
+    "effects": [
+      { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
+      { "id": "hideMapThemes", "params": {} }
+    ]
+  },
+  {
+    "id": "sablier-fele", "name": "Sablier fêlé",
+    "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Chrono de base réduit à 12 s.",
+    "effects": [
+      { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
+      { "id": "setBaseTimer", "params": { "seconds": 12 } }
+    ]
+  },
+  {
+    "id": "etoile-noire", "name": "Étoile noire",
+    "description": "Les élites donnent 2 reliques.", "drawback": "Les élites ont +2 PV.",
+    "effects": [
+      { "id": "eliteExtraRelics", "params": { "count": 1 } },
+      { "id": "eliteBonusHp", "params": { "amount": 2 } }
+    ]
+  },
+  {
+    "id": "pacte-du-marchand", "name": "Pacte du marchand",
+    "description": "Or gagné doublé.", "drawback": "Plus aucune fiole n'est trouvée après les combats.",
+    "effects": [
+      { "id": "goldMultiplier", "params": { "mult": 2 } },
+      { "id": "noConsumableDrops", "params": {} }
+    ]
+  },
+  {
+    "id": "grand-sac", "name": "Grand sac",
+    "description": "+2 emplacements de relique.", "drawback": "Aucune.",
+    "effects": [{ "id": "extraRelicSlots", "params": { "count": 2 } }]
+  }
+]

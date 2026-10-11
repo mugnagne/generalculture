@@ -1,0 +1,70 @@
+{
+  "_note": "Paramètres d'équilibrage du mode rogue-lite. Toutes les valeurs sont des points de départ à ajuster en jouant.",
+  "run": {
+    "startGold": 0,
+    "startConsumables": 1,
+    "startConsumableRarity": "common",
+    "consumableSlots": 3,
+    "relicSlots": 5,
+    "bossHealMissingPercent": 50,
+    "baseDamage": 1
+  },
+  "timer": { "baseSeconds": 20 },
+  "acts": 3,
+  "map": {
+    "floors": 5,
+    "nodesPerFloor": [3, 4],
+    "fixedFloors": { "1": "combat", "3": "treasure", "5": "rest" },
+    "noEliteOrRestBeforeFloor": 2,
+    "noConsecutive": ["elite", "rest", "shop"],
+    "weights": { "combat": 45, "unknown": 22, "elite": 12, "rest": 12, "shop": 9 },
+    "minThemesPerFloor": 3
+  },
+  "themes": {
+    "boss": "culture_generale",
+    "excludedFromMap": ["culture_generale"]
+  },
+  "difficulty": {
+    "_note": "Poids des niveaux de l'API par acte (index 0 = acte 1). Les élites piochent un cran au-dessus.",
+    "combat": [
+      { "facile": 70, "normal": 25, "difficile": 5 },
+      { "facile": 15, "normal": 70, "difficile": 15 },
+      { "facile": 5, "normal": 25, "difficile": 70 }
+    ],
+    "elite": [
+      { "facile": 15, "normal": 70, "difficile": 15 },
+      { "facile": 5, "normal": 25, "difficile": 70 },
+      { "facile": 0, "normal": 10, "difficile": 90 }
+    ],
+    "boss": [
+      { "facile": 70, "normal": 25, "difficile": 5 },
+      { "facile": 15, "normal": 70, "difficile": 15 },
+      { "facile": 5, "normal": 25, "difficile": 70 }
+    ]
+  },
+  "enemies": {
+    "soldier": { "hp": [4, 5, 6], "damage": [2, 3, 4], "abilities": 0 },
+    "elite": { "hp": [6, 7, 8], "damage": [3, 4, 5], "abilities": 1 },
+    "boss": { "hp": [10, 12, 14], "damage": [4, 5, 6], "abilities": 1, "phaseTwoAtPercent": 50 }
+  },
+  "rewards": {
+    "combat": { "gold": [10, 20] },
+    "elite": { "gold": [25, 35], "relics": 1 },
+    "boss": { "gold": 50, "bossRelicChoices": 3 },
+    "consumableDrop": { "start": 40, "step": 10, "min": 0, "max": 100 }
+  },
+  "rarity": {
+    "consumables": { "common": 65, "uncommon": 25, "rare": 10 },
+    "relics": { "common": 50, "uncommon": 33, "rare": 17 }
+  },
+  "shop": {
+    "consumables": 3,
+    "relics": 3,
+    "consumablePrices": { "common": 50, "uncommon": 75, "rare": 100 },
+    "relicPrices": { "common": 150, "uncommon": 250, "rare": 300 },
+    "heal": { "amount": 10, "price": 40 },
+    "sellRatio": 0.5
+  },
+  "rest": { "healPercentMax": 30, "studyDamage": 1 },
+  "unknown": { "event": 70, "combat": 15, "shop": 10, "treasure": 5 }
+}

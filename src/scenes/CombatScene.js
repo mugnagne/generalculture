@@ -7,12 +7,12 @@
  */
 import { Fighter } from '../fighter.js';
 import { getBattleQuestions } from '../questions.js';
-import { regionById, enemyFor, defeatLine, MARECHAL, MAX_QUESTIONS, TIERS } from '../data/world.js';
+import { regionById, enemyFor, defeatLine, MARECHAL, MAX_QUESTIONS } from '../data/world.js';
 import { fitCamera } from '../display.js';
 import { text, panel, button, hpBar, C } from '../ui.js';
 import { ensureVariant } from '../variants.js';
 import { preloadBackdrop, drawBackdrop } from '../backdrop.js';
-import { recordVictory, recordDefeat } from '../save.js';
+import { openPause } from './PauseScene.js';
 import { fadeIn, goTo } from '../transition.js';
 import { sfx, music, toggleMute } from '../audio.js';
 
@@ -59,8 +59,25 @@ export class CombatScene extends Phaser.Scene {
     this.enemyHp = this.tier.enemyHp;
     this.drawHud();
     this.drawCard();
+    this.drawPauseButton();
     this.bindKeys();
     this.loadQuestions();
+  }
+
+  /**
+   * Pause : fige le chrono (la scène est suspendue, son horloge aussi) et masque
+   * la question et les réponses pour qu'on ne puisse pas chercher pendant la pause.
+   */
+  drawPauseButton() {
+    this.pauseButton = button(this, W / 2 - 18, 6, 36, 16, 'Pause', () => openPause(this));
+    this.questionLayer = [this.questionText, ...this.answerButtons, this.feedback, this.feedbackBg];
+    this.events.on('pause', () => {
+      this.hiddenByPause = this.questionLayer.map((o) => o.visible);
+      this.questionLayer.forEach((o) => o.setVisible(false));
+    });
+    this.events.on('resume', () => {
+      this.questionLayer.forEach((o, i) => o.setVisible(this.hiddenByPause?.[i] ?? o.visible));
+    });
   }
 
   /**
@@ -139,6 +156,7 @@ export class CombatScene extends Phaser.Scene {
         this.endButtons?.[0]?.press();
       }
       if (e.key === 'm' || e.key === 'M') toggleMute(this.game);
+      if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && this.state !== 'ended') openPause(this);
     });
   }
 
@@ -189,12 +207,15 @@ export class CombatScene extends Phaser.Scene {
       b.setEnabled(true);
     });
     this.state = 'asking';
-    this.deadline = this.time.now + TIMER_MS;
+    // Temps restant décompté avec le delta des images : update() ne tourne pas pendant la pause,
+    // le chrono reste donc figé (l'horloge de la scène, elle, suit le temps réel).
+    this.timeLeft = TIMER_MS;
   }
 
-  update() {
+  update(_time, delta) {
     if (this.state !== 'asking') return;
-    const left = Math.max(0, this.deadline - this.time.now);
+    this.timeLeft = Math.max(0, this.timeLeft - delta);
+    const left = this.timeLeft;
     const frac = left / TIMER_MS;
     this.timerBar.width = (W - 24) * frac;
     this.timerBar.fillColor = frac > 0.5 ? C.timer : frac > 0.25 ? C.warn : C.bad;
@@ -254,17 +275,11 @@ export class CombatScene extends Phaser.Scene {
     this.state = 'ended';
     this.timerBar.width = 0;
     this.timerLabel.setText('');
-    if (won) recordVictory(this.region.id, this.tier.id);
-    else recordDefeat(this.region.id);
     sfx(this, won ? 'victoire' : 'defaite');
     if (won) await this.enemy.die();
     else if (!reason) await this.hero.die();
 
-    if (won && this.tier.id === TIERS.length) {
-      // Troisième victoire : la région est conquise (la capitale mène à la victoire finale).
-      this.time.delayedCall(500, () => goTo(this, this.region.capital ? 'finale' : 'conquest', { regionId: this.region.id }));
-      return;
-    }
+    this.pauseButton.setVisible(false);
 
     const w = 260;
     const h = 92;
@@ -275,18 +290,15 @@ export class CombatScene extends Phaser.Scene {
     text(this, W / 2, y + 10, won ? 'Victoire !' : 'Défaite…', { size: 16, color: won ? C.gold : C.badText }).setOrigin(0.5, 0);
     const msg = won
       ? defeatLine(this.enemyDef)
-      : reason ?? 'Le Maréchal doit se replier. La région se reprend depuis la première bataille.';
+      : reason ?? 'Le Maréchal doit se replier.';
     text(this, W / 2, y + 34, msg, { size: 8, width: w - 24, align: 'center' }).setOrigin(0.5, 0);
 
-    const nextTier = TIERS.find((t) => t.id === this.tier.id + 1);
-    const toMap = ['Retour à la carte', null];
-    const list = won
-      ? [['Bataille suivante', { regionId: this.region.id, tierId: nextTier.id }], toMap]
-      : [['Recommencer la région', { regionId: this.region.id, tierId: 1 }], toMap];
+    // Jalon 1 : combat d'essai de l'ancien moteur, sans effet sur la partie (remplacé au jalon 2).
+    const list = [['Retour au campement', null], ['Rejouer', { regionId: this.region.id, tierId: this.tier.id }]];
     const bw = 116;
     const total = list.length * bw + (list.length - 1) * 8;
     this.endButtons = list.map(([label, data], i) =>
       button(this, (W - total) / 2 + i * (bw + 8), y + h - 28, bw, 20, label,
-        () => goTo(this, data ? 'combat' : 'map', data ?? {})));
+        () => goTo(this, data ? 'combat' : 'run', data ?? {})));
   }
 }
