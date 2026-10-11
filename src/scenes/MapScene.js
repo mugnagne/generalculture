@@ -9,7 +9,7 @@ import { fadeIn, goTo } from '../transition.js';
 import { icon } from '../icons.js';
 import { drawTopBar, TOPBAR_H } from '../topbar.js';
 import { openPause } from './PauseScene.js';
-import { music, toggleMute } from '../audio.js';
+import { music, sfx, toggleMute } from '../audio.js';
 import { getContent } from '../core/content.js';
 import { loadRun, saveRun } from '../core/run.js';
 import { allNodes, nodeById, reachableNodes } from '../core/mapgen.js';
@@ -240,6 +240,7 @@ export class MapScene extends Phaser.Scene {
   showActIntro() {
     const c = getContent();
     const boss = c.regionById[this.run.map.boss.region];
+    if (this.run.act > 1) sfx(this, 'conquete');
     const layer = this.add.container(0, 0).setDepth(1000);
     layer.add(this.add.rectangle(0, 0, W, H, 0x0e071b, 0.75).setOrigin(0));
     layer.add(text(this, W / 2, 100, `Acte ${this.run.act}`, { size: 32, color: C.gold, bold: true }).setOrigin(0.5, 0));

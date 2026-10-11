@@ -533,6 +533,113 @@ test('trésor : une relique non possédée', () => {
   assert.notEqual(r.relics[0], 'feu-de-bivouac');
 });
 
+/* ---------------- Jalon 4 : événements, boss en deux phases ---------------- */
+const events = await import('../src/core/events.js');
+
+/** Partie placée sur un événement donné. */
+function onEvent(seed, id) {
+  const run = flow.newRun({ characterId: 'marechal', seed });
+  events.startEvent(run, { id: 'n' });
+  run.event.id = id;
+  return run;
+}
+
+test('événements : tous différents tant qu’il en reste', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'EVTS' });
+  const ids = getContent().events.map(() => events.startEvent(run, { id: 'n' }).id);
+  assert.equal(new Set(ids).size, getContent().events.length);
+});
+
+test('Fontaine et Maître d’armes : conditions et effets immédiats', () => {
+  const run = onEvent('FONTAINE', 'fontaine');
+  run.hp = 10;
+  const [drink, coin] = events.eventDef(run).choices;
+  assert.equal(events.choiceAvailable(run, coin).ok, false, 'il faut 50 or');
+  assert.ok(events.chooseOption(run, 0));
+  assert.equal(run.hp, 25);
+  run.gold = 60;
+  events.chooseOption(run, 1);
+  assert.equal(run.gold, 10);
+  assert.equal(run.maxHp, 34);
+  assert.ok(drink);
+  const m = onEvent('MAITRE', 'maitre-d-armes');
+  events.chooseOption(m, 0);
+  assert.equal(m.maxHp, 24);
+  assert.equal(m.bonuses.damage, 1);
+});
+
+test('Sphinx : relique rare si juste, -8 PV si faux (et mort possible)', () => {
+  let run = onEvent('SPHINX', 'sphinx');
+  events.chooseOption(run, 0);
+  const quiz = events.nextAction(run);
+  assert.equal(quiz.type, 'quiz');
+  assert.equal(quiz.difficulty, 'difficile');
+  events.resolveEventQuiz(run, quiz, { theme: 'histoire' }, true);
+  const gain = events.nextAction(run);
+  assert.equal(gain.type, 'gainRelic');
+  assert.equal(getContent().relicById[gain.id].rarity, 'rare');
+  run = onEvent('SPHINX2', 'sphinx');
+  run.hp = 5;
+  events.chooseOption(run, 0);
+  assert.ok(events.resolveEventQuiz(run, events.nextAction(run), { theme: 'histoire' }, false));
+  assert.equal(run.over, 'defeat');
+  assert.equal(run.stats.deathCause.event, 'Le Sphinx');
+});
+
+test('Tripot : mise doublée ou perdue', () => {
+  let run = onEvent('TRIPOT', 'tripot');
+  run.gold = 41;
+  events.chooseOption(run, 0);
+  let a = events.nextAction(run);
+  assert.equal(a.stake, 20);
+  events.resolveEventQuiz(run, a, { theme: 'musique' }, true);
+  assert.equal(run.gold, 61);
+  run = onEvent('TRIPOT2', 'tripot');
+  run.gold = 30;
+  events.chooseOption(run, 1);
+  a = events.nextAction(run);
+  events.resolveEventQuiz(run, a, { theme: 'musique' }, false);
+  assert.equal(run.gold, 0);
+});
+
+test('Bibliothèque, Colporteur, Alchimiste', () => {
+  let run = onEvent('BIBLIO', 'bibliotheque');
+  events.chooseOption(run, 0);
+  assert.equal(run.hp, 20);
+  const choose = events.nextAction(run);
+  assert.equal(choose.options.length, 3);
+  assert.ok(choose.options.every((id) => id.startsWith('grimoire-')));
+  run = onEvent('COLPORTEUR', 'colporteur');
+  run.consumables = ['sablier', 'sablier', 'fiole-de-soin'];
+  events.chooseOption(run, 0);
+  assert.equal(run.consumables.filter(Boolean).length, 1);
+  assert.equal(events.nextAction(run).type, 'gainRelic');
+  run = onEvent('ALCHIMISTE', 'alchimiste');
+  run.consumables = ['sablier', null, null];
+  events.chooseOption(run, 0);
+  const got = events.tradeConsumable(run, events.nextAction(run), 0);
+  assert.equal(got.length, 2);
+  assert.equal(run.consumables.filter(Boolean).length, 2);
+});
+
+test('boss : seconde phase à mi-PV (nouveau thème, nouvelle capacité)', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'PHASES' });
+  run.position = run.map.floors.at(-1)[0].id;
+  flow.enterNode(run, run.map.boss.id);
+  const cb = run.combat;
+  const before = [...cb.enemy.abilities];
+  const q = { id: 'q', theme: cb.theme };
+  let r;
+  for (let i = 0; i < 4; i++) r = combat.resolveAnswer(run, q, 'correct', 9000);
+  assert.equal(r.phaseTwo, null);
+  r = combat.resolveAnswer(run, q, 'correct', 9000);
+  assert.ok(r.phaseTwo);
+  assert.equal(cb.phase, 2);
+  assert.equal(cb.theme, getContent().regionById[cb.regionId].category);
+  assert.notDeepEqual(cb.enemy.abilities, before);
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).phaseTwo, null, 'une seule fois');
+});
+
 // Couverture des effets : informatif (les manquants arrivent aux jalons suivants)
 const used = usedEffectIds();
 const done = new Set(implementedEffects());

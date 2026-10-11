@@ -21,7 +21,7 @@
  * Effets temporaires d'une fiole (bouclier, huile…) : `apply` ajoute la fiole aux « buffs »
  * du combat ; ses propres gestionnaires de hooks s'appliquent alors tant qu'elle y reste.
  */
-import { heal, gainMaxHp, loseHp, loseMaxHp, gainGold, addConsumable, randomConsumable, removeConsumable } from './run.js';
+import { heal, gainMaxHp, loseHp, loseMaxHp, gainGold, addConsumable, randomConsumable, removeConsumable, randomRelic } from './run.js';
 
 /** Ajoute la fiole utilisée aux effets temporaires du combat. */
 function addBuff(ctx, state = {}) {
@@ -285,6 +285,41 @@ export const EFFECTS = {
       while (addConsumable(ctx.run, randomConsumable(ctx.run))) { /* jusqu'à remplir */ }
       ctx.actions.push({ type: 'refresh' });
     },
+  },
+
+  /* ---------------- Événements ---------------- */
+  // Question posée par l'écran d'événement ; ses conséquences (listes d'effets) viennent des données
+  quizChallenge: {
+    apply: (ctx, p) => ctx.actions.push({ type: 'quiz', difficulty: p.difficulty ?? null, onCorrect: p.onCorrect ?? [], onWrong: p.onWrong ?? [] }),
+  },
+  // Pari : une part de l'or misée sur une question (gagnée en double si juste, perdue sinon)
+  wager: {
+    apply: (ctx, p) => ctx.actions.push({ type: 'quiz', difficulty: null, stake: Math.max(1, Math.floor(ctx.run.gold * p.fraction)) }),
+  },
+  gainRelic: {
+    apply: (ctx, p) => {
+      const id = randomRelic(ctx.run, { rarity: p.rarity, stream: 'events' });
+      if (id) ctx.actions.push({ type: 'gainRelic', id });
+    },
+  },
+  // Choisir une relique parmi `count` d'une famille de reliques (« pool » : modèle, ex. grimoire)
+  chooseRelic: {
+    apply: (ctx, p) => {
+      const owned = new Set(ctx.run.relics.map((r) => r.id));
+      const pool = ctx.content.relics.filter((r) => (r.template ?? r.id) === p.pool && !owned.has(r.id));
+      const options = ctx.rng('events').shuffle(pool).slice(0, p.count).map((r) => r.id);
+      if (options.length) ctx.actions.push({ type: 'chooseRelic', options });
+    },
+  },
+  loseConsumables: {
+    apply: (ctx, p) => {
+      const slots = ctx.run.consumables.map((id, i) => (id ? i : -1)).filter((i) => i >= 0);
+      ctx.rng('events').shuffle(slots).slice(0, p.count).forEach((i) => removeConsumable(ctx.run, i));
+    },
+  },
+  // Le joueur choisit la fiole à donner (écran), puis en reçoit `receive` au hasard
+  tradeConsumable: {
+    apply: (ctx, p) => ctx.actions.push({ type: 'trade', give: p.give, receive: p.receive }),
   },
 
   /* ---------------- Emplacements ---------------- */

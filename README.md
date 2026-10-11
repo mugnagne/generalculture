@@ -16,12 +16,15 @@ Le quiz d'origine reste disponible sur `classique.html`.
   d'effet), `run.js` (état de la partie, actions, sauvegarde `localStorage` `valdorn:run:v1`),
   `content.js` (chargement et préparation des JSON), `mapgen.js` (carte d'un acte), `combat.js` (moteur de
   combat : intentions, dégâts, capacités, récompenses), `flow.js` (déplacement, fin de case, actes, fin de partie), `items.js` (utilisation des fioles),
-  `places.js` (feu de camp, marchand, trésor).
+  `places.js` (feu de camp, marchand, trésor), `events.js` (événements des cases « ? »).
 - **Scènes** (`src/scenes/`) : titre, choix du personnage, carte, combat, butin (et trésor, reliques de boss),
-  feu de camp, marchand, événements (provisoire), bilan, pause, crédits. Fenêtres communes (choix d'un thème,
+  feu de camp, marchand, événements, bilan, pause, crédits. Fenêtres communes (choix d'un thème,
   menu d'une fiole, emplacements de relique pleins) : `src/overlays.js`. Barre du haut : `src/topbar.js` ; icônes pixel dessinées en code : `src/icons.js`.
 - **Tests** : `node scripts/test-core.mjs` (générateur, partie, hooks, sauvegarde, règles de la carte sur
   1000 graines, combats ; liste les effets pas encore implémentés).
+- **Équilibrage** : `node scripts/simulate.mjs [parties]` joue des parties complètes avec le vrai moteur pour
+  trois profils de joueur (questions fictives : seule compte la probabilité de bien répondre) et donne le
+  taux de victoire et l'acte de la mort. Résultat actuel : faible ≈ 1 %, moyen ≈ 18 %, fort ≈ 79 % de victoires.
 - Paramètres de test : `?ecran=personnage|carte|credits`.
 
 ## Ressources

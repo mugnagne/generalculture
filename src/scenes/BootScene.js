@@ -27,7 +27,7 @@ export class BootScene extends Phaser.Scene {
     preloadUi(this);
     this.load.text('credits-md', 'CREDITS.md');
     preloadAudioList(this);
-    // Carte : si l'image manque, la scène de carte dessine un continent ovale de secours.
+    // Carte de Valdorn : fond de l'écran titre, de la carte des actes et des écrans hors combat (facultative).
     this.load.image('map', 'assets/generated/map/map.jpg');
     // Décors de combat : seule la liste est chargée ici, les calques le sont à l'entrée de chaque scène.
     this.load.json('backdrops', 'assets/generated/backdrops.json');

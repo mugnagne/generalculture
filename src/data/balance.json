@@ -1,5 +1,5 @@
 {
-  "_note": "Paramètres d'équilibrage du mode rogue-lite. Toutes les valeurs sont des points de départ à ajuster en jouant.",
+  "_note": "Paramètres d'équilibrage du mode rogue-lite. Simulation : node scripts/simulate.mjs (dégâts des boss abaissés de 4/5/6 à 3/4/5 : les boss causaient près des deux tiers des morts).",
   "run": {
     "startGold": 0,
     "startConsumables": 1,
@@ -45,7 +45,7 @@
   "enemies": {
     "soldier": { "hp": [4, 5, 6], "damage": [2, 3, 4], "abilities": 0 },
     "elite": { "hp": [6, 7, 8], "damage": [3, 4, 5], "abilities": 1 },
-    "boss": { "hp": [10, 12, 14], "damage": [4, 5, 6], "abilities": 1, "phaseTwoAtPercent": 50 }
+    "boss": { "hp": [10, 12, 14], "damage": [3, 4, 5], "abilities": 1, "phaseTwoAtPercent": 50, "_phaseTwo": "à mi-PV, le boss change de thème (celui de sa région, ou un thème au hasard) et de capacités", "phaseTwoAbilities": 1 }
   },
   "rewards": {
     "combat": { "gold": [10, 20] },

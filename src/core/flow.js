@@ -8,6 +8,7 @@ import { createRun, hooksFor, contextFor, heal, runSources } from './run.js';
 import { generateActMap, nodeById, reachableNodes } from './mapgen.js';
 import { createCombat } from './combat.js';
 import { enterShop, enterRest, openTreasure } from './places.js';
+import { startEvent } from './events.js';
 import { rngOf } from './rng.js';
 
 const FIGHTS = ['combat', 'elite', 'boss'];
@@ -95,8 +96,8 @@ export function enterNode(run, nodeId) {
     openTreasure(run);
     run.resume = { scene: 'reward', data: {} };
   } else {
-    // Événements : jalon 4
-    run.resume = { scene: 'node', data: { kind } };
+    startEvent(run, node);
+    run.resume = { scene: 'event', data: {} };
   }
   return run.resume;
 }
@@ -111,6 +112,7 @@ export function completeNode(run) {
   run.combat = null;
   run.pendingRewards = null;
   run.shop = null;
+  run.event = null;
   run.stats.floorsCleared++;
   if (node?.type !== 'boss') {
     run.resume = { scene: 'map', data: {} };

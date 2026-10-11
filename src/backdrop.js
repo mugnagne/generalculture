@@ -37,7 +37,7 @@ export function preloadBackdrop(scene, region) {
 /**
  * Dessine le décor et renvoie la hauteur du sol à l'écran.
  * @param {{ combat?: boolean }} opts  combat : recadrage sur le sol et légère parallaxe ;
- *   sinon l'image couvre simplement tout l'écran (écrans de conquête et de victoire).
+ *   sinon l'image couvre simplement tout l'écran.
  */
 export function drawBackdrop(scene, region, { combat = false } = {}) {
   const parallax = combat;

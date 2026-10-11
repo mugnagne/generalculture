@@ -18,7 +18,7 @@ import { fadeIn, goTo } from '../transition.js';
 import { sfx, music, toggleMute } from '../audio.js';
 import { getContent, itemDef } from '../core/content.js';
 import { loadRun, saveRun } from '../core/run.js';
-import { intent, questionDifficulty, startQuestion, resolveAnswer, finishCombat, nextQuestionTheme } from '../core/combat.js';
+import { intent, questionDifficulty, startQuestion, resolveAnswer, finishCombat, nextQuestionTheme, checkPhaseTwo } from '../core/combat.js';
 import { endRun, completeNode } from '../core/flow.js';
 import { canUseConsumable, useConsumable } from '../core/items.js';
 import { themePicker } from '../overlays.js';
@@ -116,14 +116,33 @@ export class CombatScene extends Phaser.Scene {
 
     // Bandeau central : thème et type de combat
     this.add.rectangle(W / 2, y, 150, 22, C.shadow, 0.6).setOrigin(0.5, 0);
-    text(this, W / 2, y + 2, c.regionByCategory[cb.theme].theme, { size: 8, color: C.ink })
+    this.themeLabel = text(this, W / 2, y + 2, c.regionByCategory[cb.theme].theme, { size: 8, color: C.ink })
       .setOrigin(0.5, 0).setShadow(1, 1, '#0E071B', 0, false, true);
-    text(this, W / 2, y + 11, `${KIND_LABEL[cb.kind]} · Acte ${cb.act}`, { size: 8, color: cb.kind === 'soldier' ? C.muted : C.gold })
+    this.kindLabel = text(this, W / 2, y + 11, this.kindText(), { size: 8, color: cb.kind === 'soldier' ? C.muted : C.gold })
       .setOrigin(0.5, 0).setShadow(1, 1, '#0E071B', 0, false, true);
 
     // Message de résultat (bonne / mauvaise réponse), sur un bandeau sombre
     this.feedbackBg = this.add.rectangle(W / 2, y + 26, 300, 14, C.shadow, 0.8).setOrigin(0.5, 0).setVisible(false);
     this.feedback = text(this, W / 2, y + 29, '', { size: 8, align: 'center', width: 288 }).setOrigin(0.5, 0);
+  }
+
+  kindText() {
+    const { cb } = this;
+    const phase = cb.kind === 'boss' ? ` · Phase ${cb.phase ?? 1}` : '';
+    return `${KIND_LABEL[cb.kind]} · Acte ${cb.act}${phase}`;
+  }
+
+  /** Seconde phase du boss : nouveau thème, nouvelles capacités, annoncés à l'écran. */
+  async showPhaseTwo(p) {
+    const c = getContent();
+    this.cameras.main.flash(300, 255, 255, 255);
+    this.cameras.main.shake(300, 0.004);
+    this.themeLabel.setText(c.regionByCategory[p.theme].theme);
+    this.kindLabel.setText(this.kindText());
+    const names = p.abilities.map((id) => c.abilityById[id].name).join(', ');
+    this.say(`${this.enemyDef.name} entre dans sa seconde phase ! Thème : ${c.regionByCategory[p.theme].theme}. Capacité : ${names}.`, C.gold);
+    this.refreshIntent();
+    await new Promise((resolve) => this.time.delayedCall(900, resolve));
   }
 
   /** Bulle d'intention au-dessus de l'ennemi : dégâts annoncés et capacités. */
@@ -369,6 +388,7 @@ export class CombatScene extends Phaser.Scene {
     if (!res.heroDead && !res.enemyDead) this.refreshIntent();
     // L'anecdote n'est affichée que si la source en fournit une.
     if (q.anecdote) this.say(`${this.feedback.text}\n${q.anecdote}`);
+    if (res.phaseTwo && !res.enemyDead) await this.showPhaseTwo(res.phaseTwo);
 
     if (res.heroDead) return this.finish(false);
     if (res.enemyDead) return this.finish(true, rewards);
@@ -417,6 +437,11 @@ export class CombatScene extends Phaser.Scene {
     } else if (a.type === 'damage') {
       this.enemyBar.set(cb.enemy.hp);
       this.float(ENEMY_X, this.enemyTop - 18, `-${a.amount}`, C.badText);
+      const phase = checkPhaseTwo(run);
+      if (phase) {
+        saveRun(run);
+        this.showPhaseTwo(phase);
+      }
       if (cb.enemy.hp <= 0) {
         this.state = 'resolving';
         const rewards = finishCombat(run, true);

@@ -39,9 +39,10 @@ export class SummaryScene extends Phaser.Scene {
 
     const answered = s.correct + s.wrong + s.timeouts;
     const pct = answered ? Math.round((s.correct / answered) * 100) : 0;
-    const cause = s.deathCause
-      ? `${s.deathCause.enemy}${KIND[s.deathCause.kind] ?? ''}, ${c.regionByCategory[s.deathCause.theme]?.theme ?? ''}, acte ${s.deathCause.act}`
-      : null;
+    const dc = s.deathCause;
+    let cause = null;
+    if (dc?.event) cause = `${dc.event} (événement), acte ${dc.act}`;
+    else if (dc) cause = `${dc.enemy}${KIND[dc.kind] ?? ''}, ${c.regionByCategory[dc.theme]?.theme ?? ''}, acte ${dc.act}`;
     const lines = [
       ['Étages franchis', `${s.floorsCleared} (acte ${run.act})`],
       ['Bonnes réponses', `${s.correct} / ${answered} (${pct} %)`],

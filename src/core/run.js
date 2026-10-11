@@ -11,7 +11,7 @@ import { EFFECTS } from './effects.js';
 import { initialStreams, normalizeSeed, rngOf } from './rng.js';
 
 export const SAVE_KEY = 'valdorn:run:v1';
-export const RUN_VERSION = 2; // 2 : carte et combats (les parties du jalon 1 ne sont pas reprises)
+export const RUN_VERSION = 2; // à augmenter quand le format de la sauvegarde change
 
 /* ------------------------------------------------------------------ */
 /*  Création                                                           */

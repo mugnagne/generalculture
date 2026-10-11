@@ -55,6 +55,7 @@ export function createCombat(run, node) {
     wrongCount: 0,
     streak: 0,
     themesSucceeded: [],
+    phase: 1,
     buffs: [],
     removedAnswers: [],
     nextTheme: null,
@@ -202,7 +203,30 @@ export function resolveAnswer(run, question, outcome, elapsedMs, choice = null) 
 
   // Coup mortel : Fée en bouteille ou Queue de lézard peuvent encore sauver le héros
   if (run.hp <= 0) hooks.emit('onLethal', ctx);
-  return { dealt, taken, enemyDead: cb.enemy.hp <= 0, heroDead: run.hp <= 0, revived: ctx.revived ?? null };
+  return {
+    dealt, taken, enemyDead: cb.enemy.hp <= 0, heroDead: run.hp <= 0, revived: ctx.revived ?? null, phaseTwo: checkPhaseTwo(run),
+  };
+}
+
+/**
+ * Boss tombé à mi-PV : seconde phase. Il change de thème (celui de sa région, ou un thème
+ * au hasard pour l'Usurpateur, dont la région est la Culture générale) et de capacités.
+ * @returns {{ theme, abilities } | null}
+ */
+export function checkPhaseTwo(run) {
+  const cb = run.combat;
+  const c = getContent();
+  const cfg = c.balance.enemies.boss;
+  if (cb.kind !== 'boss' || cb.phase === 2 || cb.enemy.hp <= 0) return null;
+  if (cb.enemy.hp > (cb.enemy.maxHp * cfg.phaseTwoAtPercent) / 100) return null;
+  const rng = rngOf(run, 'combat');
+  cb.phase = 2;
+  const pool = c.enemies.bossAbilities.filter((a) => !cb.enemy.abilities.includes(a));
+  cb.enemy.abilities = rng.shuffle(pool).slice(0, cfg.phaseTwoAbilities);
+  cb.enemy.rage = 0;
+  const own = c.regionById[cb.regionId].category;
+  cb.theme = c.mapThemes.includes(own) ? own : rng.pick(c.mapThemes);
+  return { theme: cb.theme, abilities: cb.enemy.abilities };
 }
 
 /* ------------------------------------------------------------------ */

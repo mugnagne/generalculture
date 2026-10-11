@@ -15,7 +15,7 @@ export const SOUND_KEYS = {
   coup: 'un coup porté',
   victoire: 'bataille gagnée',
   defaite: 'bataille perdue',
-  conquete: 'région conquise',
+  conquete: 'boss vaincu, début d’un nouvel acte',
   'musique-titre': 'écran titre (boucle)',
   'musique-carte': 'carte (boucle)',
   'musique-combat': 'combat (boucle)',
