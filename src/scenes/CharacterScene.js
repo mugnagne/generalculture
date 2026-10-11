@@ -8,7 +8,8 @@ import { Fighter } from '../fighter.js';
 import { fadeIn, goTo } from '../transition.js';
 import { getContent, itemDef } from '../core/content.js';
 import { newSeed, normalizeSeed } from '../core/rng.js';
-import { createRun, saveRun } from '../core/run.js';
+import { saveRun } from '../core/run.js';
+import { newRun } from '../core/flow.js';
 
 const W = 480;
 const H = 270;
@@ -83,7 +84,7 @@ export class CharacterScene extends Phaser.Scene {
   }
 
   start() {
-    const run = createRun({ characterId: this.characters[this.selected].id, seed: this.seed });
+    const run = newRun({ characterId: this.characters[this.selected].id, seed: this.seed });
     saveRun(run);
     goTo(this, run.resume.scene, run.resume.data);
   }

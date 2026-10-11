@@ -14,11 +14,13 @@ Le quiz d'origine reste disponible sur `classique.html`.
   `rng.js` (générateur à graine, un flux par usage, état sauvegardé), `hooks.js` (hooks d'événement
   `onRunStart`… et modificateurs `modifyDamageDealt`…), `effects.js` (implémentation de chaque identifiant
   d'effet), `run.js` (état de la partie, actions, sauvegarde `localStorage` `valdorn:run:v1`),
-  `content.js` (chargement et préparation des JSON).
-- **Scènes** (`src/scenes/`) : titre, choix du personnage, campement (provisoire), combat, pause, crédits.
-- **Tests** : `node scripts/test-core.mjs` (générateur, création de partie, hooks, sauvegarde ; liste les
-  effets pas encore implémentés).
-- Paramètres de test : `?ecran=personnage|campement|credits`.
+  `content.js` (chargement et préparation des JSON), `mapgen.js` (carte d'un acte), `combat.js` (moteur de
+  combat : intentions, dégâts, capacités, récompenses), `flow.js` (déplacement, fin de case, actes, fin de partie).
+- **Scènes** (`src/scenes/`) : titre, choix du personnage, carte, combat, butin, cases sans combat
+  (provisoire), bilan, pause, crédits. Barre du haut : `src/topbar.js` ; icônes pixel dessinées en code : `src/icons.js`.
+- **Tests** : `node scripts/test-core.mjs` (générateur, partie, hooks, sauvegarde, règles de la carte sur
+  1000 graines, combats ; liste les effets pas encore implémentés).
+- Paramètres de test : `?ecran=personnage|carte|credits`.
 
 ## Ressources
 

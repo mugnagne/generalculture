@@ -80,6 +80,22 @@ export const EFFECTS = {
     modifyTimer: (v, ctx, p) => Math.min(v, p.seconds),
   },
 
+  /* ---------------- Capacités ennemies ---------------- */
+  // Lues directement par le moteur de combat (activeEffect) : rien à faire dans les hooks
+  delayAnswers: { query: true },
+  forceDifficulty: { query: true },
+  rampDamageOnWrong: {
+    onWrong: (ctx, p) => { ctx.combat.enemy.rage += p.amount; },
+    onTimeout: (ctx, p) => { ctx.combat.enemy.rage += p.amount; },
+  },
+  regenEvery: {
+    // Au début des questions 4, 7, 10… (après chaque série de `every` questions)
+    onQuestionStart: (ctx, p) => {
+      const { enemy, questionCount } = ctx.combat;
+      if (questionCount > 1 && (questionCount - 1) % p.every === 0) enemy.hp = Math.min(enemy.maxHp, enemy.hp + p.amount);
+    },
+  },
+
   /* ---------------- Emplacements ---------------- */
   extraRelicSlots: {
     onAcquire: (ctx, p) => { ctx.run.relicSlots += p.count; },

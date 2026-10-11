@@ -1,5 +1,5 @@
 {
- "_note": "Régions de Valdorn : un thème (catégorie de Quizz API) par région. Le thème d'une case décide du décor, des soldats, du chevalier et des couleurs du combat. backdrop.variant : sous-dossier du pack de décor (assets/generated/backdrops.json) ; backdrop.ground : ligne du sol en pixels de l'image d'origine ; null = fond uni. knight.attack : animation d'attaque (Medieval Warrior Pack 2 : attack = épée, attack2 = espadon, attack3 = lance, attack4 = masse).",
+ "_note": "Régions de Valdorn : un thème (catégorie de Quizz API) par région. Le thème d'une case décide du décor, des soldats, du chevalier et des couleurs du combat. backdrop.variant : sous-dossier du pack de décor (assets/generated/backdrops.json) ; backdrop.ground : ligne du sol en pixels de l'image d'origine ; null = fond uni. knight.attack : animation d'attaque (Medieval Warrior Pack 2 : attack = épée, attack2 = espadon, attack3 = lance, attack4 = masse). short : libellé court du thème sous les cases de la carte.",
  "regions": [
   {
    "id": "givre",
@@ -7,6 +7,7 @@
    "where": "extrême nord",
    "category": "actu_politique",
    "theme": "Actu / Politique",
+   "short": "Politique",
    "house": {
     "name": "Valgrim",
     "arms": "ours blanc dressé sur bleu nuit",
@@ -38,6 +39,7 @@
    "where": "archipel ouest",
    "category": "art_litterature",
    "theme": "Art / Littérature",
+   "short": "Art & lettres",
    "house": {
     "name": "Morvane",
     "arms": "rose des vents d'argent sur vert océan",
@@ -73,6 +75,7 @@
    "where": "est",
    "category": "tv_cinema",
    "theme": "TV / Cinéma",
+   "short": "Cinéma",
    "house": {
     "name": "Orvald",
     "arms": "tour en ruine d'or sur brun",
@@ -104,6 +107,7 @@
    "where": "centre-ouest, sur le fleuve",
    "category": "gastronomie",
    "theme": "Gastronomie",
+   "short": "Gastronomie",
    "house": {
     "name": "Astrane",
     "arms": "astrolabe de cuivre sur indigo",
@@ -137,6 +141,7 @@
    "where": "centre",
    "category": "geographie",
    "theme": "Géographie",
+   "short": "Géographie",
    "house": {
     "name": "Lyrande",
     "arms": "harpe crème sur bleu ciel",
@@ -168,6 +173,7 @@
    "where": "centre-est",
    "category": "histoire",
    "theme": "Histoire",
+   "short": "Histoire",
    "house": {
     "name": "Hardencourt",
     "arms": "cheval cabré blanc sur bordeaux",
@@ -198,6 +204,7 @@
    "where": "sud-ouest",
    "category": "jeux_videos",
    "theme": "Jeux vidéo",
+   "short": "Jeux vidéo",
    "house": {
     "name": "Delisande",
     "arms": "plume d'or sur pourpre",
@@ -229,6 +236,7 @@
    "where": "extrême sud",
    "category": "musique",
    "theme": "Musique",
+   "short": "Musique",
    "house": {
     "name": "Sahrim",
     "arms": "masque de théâtre d'or sur sable",
@@ -262,6 +270,7 @@
    "where": "cœur du continent",
    "category": "culture_generale",
    "theme": "Culture générale",
+   "short": "Culture G.",
    "house": {
     "name": "Varn",
     "arms": "couronne noire sur gris acier",

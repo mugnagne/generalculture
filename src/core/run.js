@@ -11,7 +11,7 @@ import { EFFECTS } from './effects.js';
 import { initialStreams, normalizeSeed, rngOf } from './rng.js';
 
 export const SAVE_KEY = 'valdorn:run:v1';
-export const RUN_VERSION = 1;
+export const RUN_VERSION = 2; // 2 : carte et combats (les parties du jalon 1 ne sont pas reprises)
 
 /* ------------------------------------------------------------------ */
 /*  Création                                                           */
@@ -36,6 +36,9 @@ export function createRun({ characterId, seed }) {
     floor: 0,
     map: null,
     position: null,
+    bossesByAct: {},
+    combat: null,
+    pendingRewards: null,
     bonuses: { damage: 0, themeDamage: {} },
     consumableDropChance: c.balance.rewards.consumableDrop.start,
     usedQuestions: [],
@@ -44,7 +47,7 @@ export function createRun({ characterId, seed }) {
       floorsCleared: 0, deathCause: null,
     },
     flags: { goldSpent: false },
-    resume: { scene: 'run', data: {} },
+    resume: { scene: 'map', data: {} },
     rng: initialStreams(seed),
     startedAt: new Date().toISOString(),
     updatedAt: null,
@@ -207,6 +210,16 @@ export function loadRun() {
   try {
     const run = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null');
     return run && run.version === RUN_VERSION && !run.over ? run : null;
+  } catch {
+    return null;
+  }
+}
+
+/** Partie sauvegardée, même terminée (écran de bilan). */
+export function loadFinishedRun() {
+  try {
+    const run = JSON.parse(localStorage.getItem(SAVE_KEY) ?? 'null');
+    return run && run.version === RUN_VERSION ? run : null;
   } catch {
     return null;
   }

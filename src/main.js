@@ -7,7 +7,10 @@ import { BootScene } from './scenes/BootScene.js';
 import { CombatScene } from './scenes/CombatScene.js';
 import { TitleScene } from './scenes/TitleScene.js';
 import { CharacterScene } from './scenes/CharacterScene.js';
-import { RunScene } from './scenes/RunScene.js';
+import { MapScene } from './scenes/MapScene.js';
+import { RewardScene } from './scenes/RewardScene.js';
+import { NodeScene } from './scenes/NodeScene.js';
+import { SummaryScene } from './scenes/SummaryScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { CreditsScene } from './scenes/CreditsScene.js';
 import { loadContent } from './core/content.js';
@@ -24,9 +27,9 @@ async function start() {
   // Données de contenu du rogue-lite (src/data/*.json), indispensables avant toute scène
   await loadContent();
 
-  // Par défaut : l'écran titre. Paramètres de test : ?ecran=personnage|campement|credits
+  // Par défaut : l'écran titre. Paramètres de test : ?ecran=personnage|carte|credits
   const params = new URLSearchParams(location.search);
-  const screens = { personnage: 'character', campement: 'run', credits: 'credits' };
+  const screens = { personnage: 'character', carte: 'map', credits: 'credits' };
   const start = { scene: screens[params.get('ecran')] ?? 'title', data: {} };
 
   const { R, cssZoom } = computeFactor();
@@ -43,7 +46,7 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, TitleScene, CharacterScene, RunScene, CombatScene, PauseScene, CreditsScene],
+    scene: [BootScene, TitleScene, CharacterScene, MapScene, CombatScene, RewardScene, NodeScene, SummaryScene, PauseScene, CreditsScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);
