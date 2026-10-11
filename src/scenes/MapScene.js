@@ -7,11 +7,12 @@ import { fitCamera } from '../display.js';
 import { text, panel, button, C } from '../ui.js';
 import { fadeIn, goTo } from '../transition.js';
 import { icon } from '../icons.js';
+import { drawBanner } from '../banner.js';
 import { drawTopBar, TOPBAR_H } from '../topbar.js';
 import { openPause } from './PauseScene.js';
 import { music, sfx, toggleMute } from '../audio.js';
 import { getContent } from '../core/content.js';
-import { loadRun, saveRun } from '../core/run.js';
+import { loadRun, saveRun, heroName } from '../core/run.js';
 import { allNodes, nodeById, reachableNodes } from '../core/mapgen.js';
 import { enterNode, nodeKind, freeTravelNodes, freeTravelLeft } from '../core/flow.js';
 import { activeEffect } from '../core/combat.js';
@@ -221,6 +222,7 @@ export class MapScene extends Phaser.Scene {
 
     const boss = c.regionById[run.map.boss.region];
     box.add(text(this, x + 8, y + 7, `Acte ${run.act}`, { size: 16, color: C.gold }));
+    box.add(drawBanner(this, x + w - 30, y + 42, 1, run.hero?.crest));
     box.add(text(this, x + 8, y + 27, `Boss : ${boss.boss.name}`, { size: 8, color: C.ink, width: w - 16 }));
 
     const types = ['combat', 'elite', 'rest', 'shop', 'unknown', 'treasure', 'boss'];
@@ -232,6 +234,7 @@ export class MapScene extends Phaser.Scene {
     }
     this.hint = text(this, x + 8, ly + 6, '', { size: 8, color: C.muted, width: w - 16 });
     box.add(this.hint);
+    box.add(text(this, x + 8, H - 56, heroName(run), { size: 8, color: C.ink, width: w - 16 }));
     box.add(text(this, x + 8, H - 44, `Graine ${run.seed}`, { size: 8, color: C.muted }));
     box.add(button(this, x + 8, H - 30, w - 16, 18, 'Menu', () => openPause(this)));
     this.focusNode(null);

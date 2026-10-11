@@ -12,7 +12,7 @@ import { acquireRelic } from '../overlays.js';
 import { openPause } from './PauseScene.js';
 import { music, sfx } from '../audio.js';
 import { getContent, itemDef } from '../core/content.js';
-import { loadRun, saveRun, hooksFor, contextFor } from '../core/run.js';
+import { loadRun, saveRun, hooksFor, contextFor, heroName } from '../core/run.js';
 import { completeNode } from '../core/flow.js';
 import {
   eventDef, choiceAvailable, chooseOption, nextAction, doneAction, quizSettings, resolveEventQuiz, tradeConsumable,
@@ -287,7 +287,7 @@ export class EventScene extends Phaser.Scene {
   drawResult() {
     let y = this.frame();
     const lines = this.changes();
-    if (!lines.length) lines.push(['Rien ne change. Le Maréchal reprend la route.', null]);
+    if (!lines.length) lines.push([`Rien ne change. ${heroName(this.run)} reprend la route.`, null]);
     for (const [l, good] of lines) {
       text(this, W / 2, y, l, { size: 8, color: good === null ? C.muted : good ? C.goodText : C.badText }).setOrigin(0.5, 0);
       y += 12;
@@ -302,7 +302,7 @@ export class EventScene extends Phaser.Scene {
       text(this, W / 2, y, l, { size: 8, color: good ? C.goodText : C.badText }).setOrigin(0.5, 0);
       y += 12;
     }
-    text(this, W / 2, y + 6, 'Le Maréchal ne se relèvera pas.', { size: 8, color: C.badText }).setOrigin(0.5, 0);
+    text(this, W / 2, y + 6, `${heroName(this.run)} ne se relèvera pas.`, { size: 8, color: C.badText }).setOrigin(0.5, 0);
     const b = button(this, W / 2 - 60, 236, 120, 20, 'Bilan de la partie', () => goTo(this, 'summary'));
     menuNav(this, [b]);
   }

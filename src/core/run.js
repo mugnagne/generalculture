@@ -17,7 +17,7 @@ export const RUN_VERSION = 2; // à augmenter quand le format de la sauvegarde c
 /*  Création                                                           */
 /* ------------------------------------------------------------------ */
 
-export function createRun({ characterId, seed }) {
+export function createRun({ characterId, seed, heroName = null, crest = null }) {
   const c = getContent();
   const character = c.characters.find((ch) => ch.id === characterId);
   if (!character) throw new Error(`Personnage inconnu : ${characterId}`);
@@ -26,6 +26,11 @@ export function createRun({ characterId, seed }) {
     version: RUN_VERSION,
     seed: normalizeSeed(seed),
     characterId,
+    // Nom et écusson choisis par le joueur (sinon ceux du personnage)
+    hero: {
+      name: heroName || character.name,
+      crest: crest ?? { colors: [...character.banner.colors], emblem: [...character.banner.emblem] },
+    },
     hp: character.hp,
     maxHp: character.hp,
     gold: b.startGold,
@@ -231,3 +236,6 @@ export function deleteRun() {
     localStorage.removeItem(SAVE_KEY);
   } catch { /* rien à effacer */ }
 }
+
+/** Nom du héros de la partie. */
+export const heroName = (run) => run.hero?.name ?? getContent().characters.find((c) => c.id === run.characterId)?.name ?? 'Le héros';

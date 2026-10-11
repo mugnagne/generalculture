@@ -11,10 +11,23 @@
     "sprite": "hero-knight",
     "available": true,
     "banner": {
-      "description": "faucille et marteau, or sur rouge",
+      "description": "épée d'or entre deux étoiles, sur azur",
       "colors": [
-        "#E3B341",
-        "#C42430"
+        "#FFC825",
+        "#143464"
+      ],
+      "emblem": [
+        ".....x.....",
+        "....xxx....",
+        ".x..xxx..x.",
+        "xxx.xxx.xxx",
+        ".x..xxx..x.",
+        "....xxx....",
+        "....xxx....",
+        ".xxxxxxxxx.",
+        ".....x.....",
+        "....xxx....",
+        ".....x....."
       ]
     }
   }

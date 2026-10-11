@@ -6,6 +6,7 @@
  */
 import { getR } from './display.js';
 import { sfx } from './audio.js';
+import { fontFamily, isPixelFont } from './settings.js';
 
 const KENNEY = 'assets/ui/kenney-fantasy-ui-borders/PNG/Default/Border/';
 
@@ -34,7 +35,6 @@ export const C = {
   shadow: 0x0e071b,
 };
 
-export const FONT = '"Pixelify Sans", monospace';
 
 export function preloadUi(scene) {
   for (const [key, b] of Object.entries(BORDERS)) scene.load.image('ui:' + key, KENNEY + b.file);
@@ -44,12 +44,12 @@ export function preloadUi(scene) {
  * Pixelify Sans dessine les ligatures « fi » / « fl » comme un « A ».
  * Un antiliant (U+200C, invisible) entre les deux lettres empêche la ligature.
  */
-export const noLigatures = (s) => String(s).replace(/f(?=[ilf])/g, 'f\u200C');
+export const noLigatures = (s) => (isPixelFont() ? String(s).replace(/f(?=[ilf])/g, 'f\u200C') : String(s));
 
-/** Texte en police pixel (ligatures désactivées, y compris pour setText). */
+/** Texte dans la police choisie (Paramètres) ; ligatures de la police pixel désactivées. */
 export function text(scene, x, y, str, { size = 8, color = C.ink, width, align = 'left', bold = false } = {}) {
   const t = scene.add.text(x, y, noLigatures(str), {
-    fontFamily: FONT,
+    fontFamily: fontFamily(),
     fontSize: `${size}px`,
     fontStyle: bold ? '600' : 'normal',
     color,
@@ -164,7 +164,7 @@ export function hpBar(scene, x, y, max, { color = C.good, alignRight = false } =
 }
 
 /**
- * Navigation clavier dans une liste de boutons : flèches haut/bas (ou gauche/droite),
+ * Navigation clavier dans une liste de boutons (inactive pendant la saisie d'un champ texte : scene.typing) : flèches haut/bas (ou gauche/droite),
  * Entrée / Espace pour valider. Les boutons désactivés sont sautés.
  */
 export function menuNav(scene, buttons, { start = 0 } = {}) {
@@ -178,6 +178,7 @@ export function menuNav(scene, buttons, { start = 0 } = {}) {
     list[index].setState('hover');
   };
   scene.input.keyboard.on('keydown', (e) => {
+    if (scene.typing) return;
     if (['ArrowDown', 'ArrowRight'].includes(e.key)) focus(index + 1);
     else if (['ArrowUp', 'ArrowLeft'].includes(e.key)) focus(index - 1);
     else if ((e.key === 'Enter' || e.key === ' ') && index >= 0) usable()[index]?.press();

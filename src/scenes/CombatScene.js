@@ -17,7 +17,7 @@ import { openPause } from './PauseScene.js';
 import { fadeIn, goTo } from '../transition.js';
 import { sfx, music, toggleMute } from '../audio.js';
 import { getContent, itemDef } from '../core/content.js';
-import { loadRun, saveRun } from '../core/run.js';
+import { loadRun, saveRun, heroName } from '../core/run.js';
 import { intent, questionDifficulty, startQuestion, resolveAnswer, finishCombat, nextQuestionTheme, checkPhaseTwo } from '../core/combat.js';
 import { endRun, completeNode } from '../core/flow.js';
 import { canUseConsumable, useConsumable } from '../core/items.js';
@@ -379,7 +379,7 @@ export class CombatScene extends Phaser.Scene {
       await this.enemy.attack(this.hero);
       this.float(HERO_X, this.groundY - 70, res.taken ? `-${res.taken}` : 'Paré !', res.taken ? C.badText : C.gold);
       if (res.revived) {
-        this.say(`${itemDef(res.revived).name} : le Maréchal se relève !`, C.gold);
+        this.say(`${itemDef(res.revived).name} : ${heroName(this.run)} se relève !`, C.gold);
         this.float(HERO_X, this.groundY - 90, `${this.run.hp} PV`, C.goodText);
       }
     }
@@ -517,7 +517,7 @@ export class CombatScene extends Phaser.Scene {
     text(this, W / 2, y + 10, won ? 'Victoire !' : 'Défaite…', { size: 16, color: won ? C.gold : C.badText }).setOrigin(0.5, 0);
     const msg = won
       ? `${defeatLine(this.enemyDef, this.cb.kind)}\n+${rewards.gold} pièces d’or.`
-      : 'Le Maréchal tombe au combat. La reconquête s’arrête ici.';
+      : `${heroName(this.run)} tombe au combat. La reconquête s’arrête ici.`;
     text(this, W / 2, y + 32, msg, { size: 8, width: w - 24, align: 'center' }).setOrigin(0.5, 0);
 
     const [label, scene] = won ? ['Récompenses', 'reward'] : ['Bilan de la partie', 'summary'];

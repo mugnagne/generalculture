@@ -25,7 +25,10 @@ Le quiz d'origine reste disponible sur `classique.html`.
 - **Équilibrage** : `node scripts/simulate.mjs [parties]` joue des parties complètes avec le vrai moteur pour
   trois profils de joueur (questions fictives : seule compte la probabilité de bien répondre) et donne le
   taux de victoire et l'acte de la mort. Résultat actuel : faible ≈ 1 %, moyen ≈ 18 %, fort ≈ 79 % de victoires.
-- Paramètres de test : `?ecran=personnage|carte|credits`.
+- **Réglages** (`src/settings.js`, écran Paramètres) : police « Lisible » (Atkinson Hyperlegible, par défaut)
+  ou « Pixel » (Pixelify Sans). Écran du héros : nom modifiable et écusson à dessiner (`CrestScene`, motif
+  11 x 11 en deux couleurs, gardé pour les parties suivantes ; blason par défaut dans `characters.json`).
+- Paramètres de test : `?ecran=personnage|carte|credits|ecusson|parametres`.
 
 ## Ressources
 

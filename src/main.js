@@ -15,6 +15,8 @@ import { ShopScene } from './scenes/ShopScene.js';
 import { SummaryScene } from './scenes/SummaryScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { CreditsScene } from './scenes/CreditsScene.js';
+import { CrestScene } from './scenes/CrestScene.js';
+import { SettingsScene } from './scenes/SettingsScene.js';
 import { loadContent } from './core/content.js';
 import { MANIFEST_URL } from './sprites.js';
 import { BASE_W, BASE_H, computeFactor, watchResize } from './display.js';
@@ -22,16 +24,20 @@ import { BASE_W, BASE_H, computeFactor, watchResize } from './display.js';
 async function start() {
   // La police doit être prête avant le premier texte Phaser.
   try {
-    await document.fonts.load('8px "Pixelify Sans"', 'éèàçœ');
+    await Promise.all([
+      document.fonts.load('8px "Pixelify Sans"', 'éèàçœ'),
+      document.fonts.load('8px "Atkinson Hyperlegible"', 'éèàçœ'),
+      document.fonts.load('bold 8px "Atkinson Hyperlegible"', 'éèàçœ'),
+    ]);
   } catch { /* la police de secours prendra le relais */ }
 
   const manifest = await (await fetch(MANIFEST_URL)).json();
   // Données de contenu du rogue-lite (src/data/*.json), indispensables avant toute scène
   await loadContent();
 
-  // Par défaut : l'écran titre. Paramètres de test : ?ecran=personnage|carte|credits
+  // Par défaut : l'écran titre. Paramètres de test : ?ecran=personnage|carte|credits|ecusson|parametres
   const params = new URLSearchParams(location.search);
-  const screens = { personnage: 'character', carte: 'map', credits: 'credits' };
+  const screens = { personnage: 'character', carte: 'map', credits: 'credits', ecusson: 'crest', parametres: 'settings' };
   const start = { scene: screens[params.get('ecran')] ?? 'title', data: {} };
 
   const { R, cssZoom } = computeFactor();
@@ -48,7 +54,7 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, TitleScene, CharacterScene, MapScene, CombatScene, RewardScene, RestScene, ShopScene, EventScene, SummaryScene, PauseScene, CreditsScene],
+    scene: [BootScene, TitleScene, CharacterScene, MapScene, CombatScene, RewardScene, RestScene, ShopScene, EventScene, SummaryScene, PauseScene, CreditsScene, CrestScene, SettingsScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);

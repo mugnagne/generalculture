@@ -9,7 +9,8 @@ import { fadeIn, goTo } from '../transition.js';
 import { icon } from '../icons.js';
 import { itemInfo, itemTint, tooltip } from '../topbar.js';
 import { getContent } from '../core/content.js';
-import { loadFinishedRun, deleteRun } from '../core/run.js';
+import { loadFinishedRun, deleteRun, heroName } from '../core/run.js';
+import { drawBanner } from '../banner.js';
 import { music } from '../audio.js';
 
 const W = 480;
@@ -37,6 +38,8 @@ export class SummaryScene extends Phaser.Scene {
     text(this, W / 2, 16, won ? 'Valdorn est reconquise !' : 'La reconquête s’arrête là', { size: 16, color: won ? C.gold : C.badText })
       .setOrigin(0.5, 0);
 
+    drawBanner(this, W - 64, 230, 2, run.hero?.crest);
+    text(this, W - 50, 234, heroName(run), { size: 8, color: C.ink }).setOrigin(0.5, 0);
     const answered = s.correct + s.wrong + s.timeouts;
     const pct = answered ? Math.round((s.correct / answered) * 100) : 0;
     const dc = s.deathCause;

@@ -34,7 +34,7 @@ export class TitleScene extends Phaser.Scene {
     const heroH = manifest.characters[hero.sprite].body.height;
     new Fighter(this, manifest, hero.sprite, { x: 92, groundY: 214, height: heroH * 2, faceLeft: false });
     this.add.ellipse(92, 214, 70, 8, 0x000000, 0.4);
-    drawBanner(this, 140, 216, 3, hero.banner.colors);
+    drawBanner(this, 140, 216, 3);
 
     text(this, 300, 34, 'La Reconquête', { size: 16, color: C.ink }).setOrigin(0.5, 0);
     text(this, 300, 52, 'de Valdorn', { size: 32, color: C.gold, bold: true }).setOrigin(0.5, 0)
@@ -48,12 +48,13 @@ export class TitleScene extends Phaser.Scene {
     this.newButton = button(this, bx, 126, 140, 22, 'Nouvelle partie', () => this.newGame(has));
     this.continueButton = button(this, bx, 154, 140, 22, 'Continuer',
       () => goTo(this, saved.resume.scene, saved.resume.data));
-    this.creditsButton = button(this, bx, 182, 140, 22, 'Crédits', () => goTo(this, 'credits'));
+    this.settingsButton = button(this, bx, 182, 140, 22, 'Paramètres', () => goTo(this, 'settings'));
+    this.creditsButton = button(this, bx, 210, 140, 22, 'Crédits', () => goTo(this, 'credits'));
     if (!has) {
       this.continueButton.setEnabled(false);
       this.continueButton.setState('dim');
     }
-    menuNav(this, [this.newButton, this.continueButton, this.creditsButton], { start: has ? 1 : 0 });
+    menuNav(this, [this.newButton, this.continueButton, this.settingsButton, this.creditsButton], { start: has ? 1 : 0 });
 
     this.soundText = text(this, W - 8, H - 12, '', { size: 8, color: C.muted }).setOrigin(1, 0);
     this.updateSoundText();

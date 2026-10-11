@@ -35,6 +35,7 @@ Les fichiers d'origine ne sont jamais modifiés : réductions et recolorations s
 |---|---|---|
 | Palette ENDESGA 64 (`assets/palette/`) | ENDESGA | voir <https://lospec.com/palette-list/endesga-64> |
 | Police Pixelify Sans (Google Fonts) | Stefie Justprince | SIL Open Font License 1.1 |
+| Police Atkinson Hyperlegible (Google Fonts) | Braille Institute of America | SIL Open Font License 1.1 |
 | Phaser 3.90 (`vendor/`) | Phaser Studio | MIT |
 
 ## Décors de combat (`assets/backgrounds/`)

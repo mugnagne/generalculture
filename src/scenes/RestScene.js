@@ -10,7 +10,7 @@ import { drawTopBar } from '../topbar.js';
 import { themePicker } from '../overlays.js';
 import { music } from '../audio.js';
 import { getContent } from '../core/content.js';
-import { loadRun, saveRun } from '../core/run.js';
+import { loadRun, saveRun, heroName } from '../core/run.js';
 import { restOptions, rest, study } from '../core/places.js';
 import { completeNode } from '../core/flow.js';
 
@@ -45,7 +45,7 @@ export class RestScene extends Phaser.Scene {
     panel(this, W / 2 - 150, 30, 300, 222);
     icon(this, W / 2, 62, 'rest', { scale: 4 });
     text(this, W / 2, 88, 'Feu de camp', { size: 16, color: C.gold }).setOrigin(0.5, 0);
-    text(this, W / 2, 108, 'Le Maréchal fait halte. Une seule action avant de repartir.', { size: 8, color: C.muted }).setOrigin(0.5, 0);
+    text(this, W / 2, 108, `${heroName(run)} fait halte. Une seule action avant de repartir.`, { size: 8, color: C.muted }).setOrigin(0.5, 0);
 
     const restLabel = opt.canRest ? `Se reposer (+${opt.healAmount} PV)` : 'Se reposer (impossible)';
     const restB = button(this, W / 2 - 130, 128, 260, 22, restLabel, () => this.doRest());
