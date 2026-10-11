@@ -10,6 +10,8 @@ import { CharacterScene } from './scenes/CharacterScene.js';
 import { MapScene } from './scenes/MapScene.js';
 import { RewardScene } from './scenes/RewardScene.js';
 import { NodeScene } from './scenes/NodeScene.js';
+import { RestScene } from './scenes/RestScene.js';
+import { ShopScene } from './scenes/ShopScene.js';
 import { SummaryScene } from './scenes/SummaryScene.js';
 import { PauseScene } from './scenes/PauseScene.js';
 import { CreditsScene } from './scenes/CreditsScene.js';
@@ -46,7 +48,7 @@ async function start() {
       autoCenter: Phaser.Scale.CENTER_BOTH,
       zoom: cssZoom,
     },
-    scene: [BootScene, TitleScene, CharacterScene, MapScene, CombatScene, RewardScene, NodeScene, SummaryScene, PauseScene, CreditsScene],
+    scene: [BootScene, TitleScene, CharacterScene, MapScene, CombatScene, RewardScene, RestScene, ShopScene, NodeScene, SummaryScene, PauseScene, CreditsScene],
   });
   game.registry.set('R', R);
   game.registry.set('manifest', manifest);

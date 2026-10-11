@@ -13,7 +13,8 @@ import { music, toggleMute } from '../audio.js';
 import { getContent } from '../core/content.js';
 import { loadRun, saveRun } from '../core/run.js';
 import { allNodes, nodeById, reachableNodes } from '../core/mapgen.js';
-import { enterNode, nodeKind } from '../core/flow.js';
+import { enterNode, nodeKind, freeTravelNodes, freeTravelLeft } from '../core/flow.js';
+import { activeEffect } from '../core/combat.js';
 
 const W = 480;
 const H = 270;
@@ -107,7 +108,10 @@ export class MapScene extends Phaser.Scene {
     const { run } = this;
     const c = getContent();
     const reachable = new Set(reachableNodes(run.map, run.position).map((n) => n.id));
-    this.reachable = reachableNodes(run.map, run.position).sort((a, b) => a.x - b.x);
+    // Bottes ailées : cases de l'étage suivant hors des chemins
+    this.free = new Set(freeTravelNodes(run).map((n) => n.id));
+    this.hideThemes = Boolean(activeEffect(run, 'hideMapThemes'));
+    this.reachable = [...reachableNodes(run.map, run.position), ...freeTravelNodes(run)].sort((a, b) => a.x - b.x);
     const visited = new Set(allNodes(run.map).filter((n) => n.visited).map((n) => n.id));
 
     // Chemins : pointillés ; parcourus en or, accessibles en clair, les autres estompés
@@ -132,7 +136,7 @@ export class MapScene extends Phaser.Scene {
     }
 
     this.nodeViews = new Map();
-    for (const node of allNodes(run.map)) this.drawNode(node, reachable.has(node.id), visited.has(node.id), c);
+    for (const node of allNodes(run.map)) this.drawNode(node, reachable.has(node.id) || this.free.has(node.id), visited.has(node.id), c);
   }
 
   dotted(g, a, b, color, alpha) {
@@ -152,7 +156,8 @@ export class MapScene extends Phaser.Scene {
     const kind = node.revealed ?? node.type;
     const r = isBoss ? 17 : 9;
 
-    const ring = this.add.circle(x, y, r + 2, here ? C.goldHex : isReachable ? 0xf9e6cf : 0x424c6e, 1);
+    const isFree = this.free.has(node.id);
+    const ring = this.add.circle(x, y, r + 2, here ? C.goldHex : isFree ? C.timer : isReachable ? 0xf9e6cf : 0x424c6e, 1);
     const disc = this.add.circle(x, y, r, isVisited ? 0x2a2f4e : C.panel, 1);
     const img = icon(this, x, y, kind, { scale: isBoss ? 2 : 1 });
     if (!isReachable && !here && !isVisited) img.setAlpha(0.75);
@@ -162,7 +167,9 @@ export class MapScene extends Phaser.Scene {
     // Thème sous les combats et les élites ; nom du boss
     let label = null;
     if ((kind === 'combat' || kind === 'elite') && node.theme) {
-      label = text(this, x, y + r + 2, c.regionByCategory[node.theme].short, { size: 8, color: isReachable ? C.ink : C.muted });
+      // Masque aveugle : thèmes cachés (sauf sur les cases déjà visitées)
+      const shown = !this.hideThemes || isVisited;
+      label = text(this, x, y + r + 2, shown ? c.regionByCategory[node.theme].short : '?', { size: 8, color: isReachable ? C.ink : C.muted });
     } else if (isBoss) {
       const region = c.regionById[node.region];
       label = text(this, x, y + r + 3, `${region.boss.name}\n${c.regionByCategory[node.theme].short}`,
@@ -197,7 +204,9 @@ export class MapScene extends Phaser.Scene {
     if (id) {
       const v = this.nodeViews.get(id);
       const label = NODE_LABELS[nodeKind(v.node)] ?? '';
-      this.hint.setText(`${label}${v.node.theme ? ` · ${getContent().regionByCategory[v.node.theme].theme}` : ''}`);
+      const theme = v.node.theme && !this.hideThemes ? ` · ${getContent().regionByCategory[v.node.theme].theme}` : '';
+      const free = this.free.has(id) ? `\nBottes ailées : ${freeTravelLeft(this.run)} saut(s) restant(s).` : '';
+      this.hint.setText(`${label}${theme}${free}`);
     } else this.hint.setText('Choisissez une case reliée.');
   }
 

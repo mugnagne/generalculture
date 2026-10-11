@@ -15,9 +15,11 @@ Le quiz d'origine reste disponible sur `classique.html`.
   `onRunStart`… et modificateurs `modifyDamageDealt`…), `effects.js` (implémentation de chaque identifiant
   d'effet), `run.js` (état de la partie, actions, sauvegarde `localStorage` `valdorn:run:v1`),
   `content.js` (chargement et préparation des JSON), `mapgen.js` (carte d'un acte), `combat.js` (moteur de
-  combat : intentions, dégâts, capacités, récompenses), `flow.js` (déplacement, fin de case, actes, fin de partie).
-- **Scènes** (`src/scenes/`) : titre, choix du personnage, carte, combat, butin, cases sans combat
-  (provisoire), bilan, pause, crédits. Barre du haut : `src/topbar.js` ; icônes pixel dessinées en code : `src/icons.js`.
+  combat : intentions, dégâts, capacités, récompenses), `flow.js` (déplacement, fin de case, actes, fin de partie), `items.js` (utilisation des fioles),
+  `places.js` (feu de camp, marchand, trésor).
+- **Scènes** (`src/scenes/`) : titre, choix du personnage, carte, combat, butin (et trésor, reliques de boss),
+  feu de camp, marchand, événements (provisoire), bilan, pause, crédits. Fenêtres communes (choix d'un thème,
+  menu d'une fiole, emplacements de relique pleins) : `src/overlays.js`. Barre du haut : `src/topbar.js` ; icônes pixel dessinées en code : `src/icons.js`.
 - **Tests** : `node scripts/test-core.mjs` (générateur, partie, hooks, sauvegarde, règles de la carte sur
   1000 graines, combats ; liste les effets pas encore implémentés).
 - Paramètres de test : `?ecran=personnage|carte|credits`.

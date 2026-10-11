@@ -317,6 +317,222 @@ test('même graine → même carte', () => {
   assert.deepEqual(a.map, b.map);
 });
 
+/* ---------------- Jalon 3 : fioles, reliques, lieux ---------------- */
+const items = await import('../src/core/items.js');
+const places = await import('../src/core/places.js');
+
+/** Partie de test en plein combat de soldat (acte 1), question factice prête. */
+function fight(seed, { relics = [], consumables = [] } = {}) {
+  const run = flow.newRun({ characterId: 'marechal', seed });
+  run.consumables = [null, null, null];
+  for (const id of relics) run_.addRelic(run, id);
+  for (const id of consumables) run_.addConsumable(run, id);
+  flow.enterNode(run, run.map.floors[0][0].id);
+  const q = { id: 'q', theme: run.combat.theme, bonne_reponse: 'A', reponses: ['A', 'B', 'C', 'D'] };
+  combat.startQuestion(run, q);
+  return { run, q, cb: run.combat };
+}
+
+test('fioles : feu, bouclier, huile, rage du berserker', () => {
+  let { run, q, cb } = fight('FIOLES', { consumables: ['fiole-de-feu', 'bouclier-de-bois', 'huile-de-lame'] });
+  items.useConsumable(run, 0, { question: q });
+  assert.equal(cb.enemy.hp, 2);
+  items.useConsumable(run, 1, { question: q });
+  assert.equal(combat.resolveAnswer(run, q, 'wrong', 1000, 'B').taken, 0);
+  assert.equal(combat.resolveAnswer(run, q, 'wrong', 1000, 'B').taken, 2, 'le bouclier ne sert qu’une fois');
+  items.useConsumable(run, 2, { question: q });
+  cb.enemy.hp = 50;
+  const dealt = [1, 2, 3, 4].map(() => combat.resolveAnswer(run, q, 'correct', 9000).dealt);
+  assert.deepEqual(dealt, [2, 2, 2, 1]);
+  assert.deepEqual(run.consumables, [null, null, null]);
+
+  ({ run, q, cb } = fight('BERSERK', { consumables: ['rage-du-berserker', 'rage-du-berserker'] }));
+  items.useConsumable(run, 0, { question: q });
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 2);
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 1);
+  items.useConsumable(run, 1, { question: q });
+  assert.equal(combat.resolveAnswer(run, q, 'timeout', 20000).taken, 4);
+});
+
+test('fioles : 50/50, avis de la foule, sablier, échange, savant, chaudron, fumigène', () => {
+  const { run, q, cb } = fight('FIOLES2', { consumables: ['cinquante-cinquante', 'avis-de-la-foule', 'sablier'] });
+  let [a] = items.useConsumable(run, 0, { question: q });
+  assert.equal(a.type, 'removeAnswers');
+  assert.equal(a.answers.length, 2);
+  assert.ok(!a.answers.includes('A'));
+  [a] = items.useConsumable(run, 1, { question: q });
+  const votes = Object.values(a.votes);
+  assert.equal(votes.reduce((x, y) => x + y, 0), 100);
+  assert.equal(votes.length, 2, 'pas de vote pour les réponses retirées');
+  assert.ok(a.votes.A > Math.max(...Object.entries(a.votes).filter(([k]) => k !== 'A').map(([, v]) => v)));
+  [a] = items.useConsumable(run, 2, { question: q });
+  assert.deepEqual(a, { type: 'addTime', seconds: 15 });
+  assert.equal(items.canUseConsumable(run, 0, { inCombat: true }).ok, false);
+  run_.addConsumable(run, 'parchemin-d-echange');
+  assert.equal(items.canUseConsumable(run, 0, { inCombat: true, hasQuestion: false }).ok, false);
+  assert.equal(items.canUseConsumable(run, 0, { inCombat: true, hasQuestion: true }).ok, true);
+  run_.addConsumable(run, 'chaudron-de-l-alchimiste');
+  items.useConsumable(run, 1, { question: q });
+  assert.equal(run.consumables.filter(Boolean).length, 3);
+  run.consumables = ['bombe-fumigene', 'fiole-de-soin', null];
+  assert.equal(items.canUseConsumable(run, 1).ok, true, 'la fiole de soin marche hors combat');
+  assert.equal(items.canUseConsumable(run, 0).ok, false, 'la bombe non');
+  cb.kind = 'boss';
+  assert.equal(items.canUseConsumable(run, 0, { inCombat: true }).ok, false, 'pas de fuite face au boss');
+  cb.kind = 'soldier';
+  assert.deepEqual(items.useConsumable(run, 0, { question: q }), [{ type: 'flee' }]);
+  assert.equal(cb.over, 'fled');
+});
+
+test('Fée en bouteille et Queue de lézard : résurrection', () => {
+  const { run, q } = fight('FEE', { relics: ['queue-de-lezard'], consumables: ['fee-en-bouteille'] });
+  run.hp = 1;
+  let r = combat.resolveAnswer(run, q, 'wrong', 1000, 'B');
+  assert.ok(!r.heroDead);
+  assert.equal(r.revived, 'queue-de-lezard');
+  assert.equal(run.hp, 15);
+  run.hp = 1;
+  r = combat.resolveAnswer(run, q, 'wrong', 1000, 'B');
+  assert.equal(r.revived, 'fee-en-bouteille');
+  assert.equal(run.hp, 9);
+  assert.deepEqual(run.consumables, [null, null, null]);
+  run.hp = 1;
+  assert.ok(combat.resolveAnswer(run, q, 'wrong', 1000, 'B').heroDead);
+});
+
+test('reliques de dégâts : élan, coup de grâce, polymathe, encyclopédie, spécialiste', () => {
+  let { run, q, cb } = fight('ELAN', { relics: ['elan-du-duelliste'] });
+  cb.enemy.hp = 50;
+  assert.deepEqual([1, 2, 3].map(() => combat.resolveAnswer(run, q, 'correct', 9000).dealt), [1, 2, 3]);
+  combat.resolveAnswer(run, q, 'wrong', 9000, 'B');
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 1);
+
+  ({ run, q, cb } = fight('GRACE', { relics: ['coup-de-grace'] }));
+  cb.enemy.hp = 2;
+  assert.ok(combat.resolveAnswer(run, q, 'correct', 9000).enemyDead);
+
+  ({ run, q, cb } = fight('POLY', { relics: ['polymathe'] }));
+  cb.enemy.hp = 50;
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 1);
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 2);
+
+  ({ run, q, cb } = fight('ENCYCLO', { relics: ['encyclopedie-vivante'] }));
+  cb.enemy.hp = 500;
+  for (let i = 0; i < 15; i++) combat.resolveAnswer(run, q, 'correct', 9000);
+  assert.equal(run.bonuses.damage, 1);
+
+  ({ run, q, cb } = fight('SPECIALISTE'));
+  run_.addRelic(run, 'specialiste', { theme: cb.theme });
+  cb.enemy.hp = 50;
+  assert.equal(combat.resolveAnswer(run, q, 'correct', 9000).dealt, 2);
+  assert.equal(combat.resolveAnswer(run, q, 'wrong', 9000, 'B').taken, 4);
+  assert.equal(combat.resolveAnswer(run, { ...q, theme: 'autre' }, 'wrong', 9000, 'B').taken, 2);
+});
+
+test('reliques de survie : armure de cuir, seconde chance', () => {
+  let { run, q } = fight('ARMURE', { relics: ['armure-de-cuir'] });
+  assert.equal(combat.resolveAnswer(run, q, 'wrong', 1000, 'B').taken, 0);
+  assert.equal(combat.resolveAnswer(run, q, 'wrong', 1000, 'B').taken, 2);
+  ({ run, q } = fight('SECONDE', { relics: ['seconde-chance'] }));
+  const r = combat.resolveAnswer(run, q, 'wrong', 1000, 'B');
+  assert.ok(r.retry);
+  assert.equal(r.removed.length, 2);
+  assert.equal(r.removed[0], 'B');
+  assert.ok(!r.removed.includes('A'));
+  assert.equal(run.hp, 30);
+  assert.ok(!combat.resolveAnswer(run, q, 'wrong', 1000, 'C').retry, 'une fois par combat');
+});
+
+test('reliques de marchand : tirelire, ticket de repas, œuf d’or', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'MARCHAND' });
+  run_.addRelic(run, 'tirelire');
+  run_.addRelic(run, 'ticket-de-repas');
+  run_.addRelic(run, 'oeuf-d-or');
+  flow.enterNode(run, run.map.floors[0][0].id);
+  assert.equal(run.gold, 10);
+  combat.finishCombat(run, true);
+  const egg = run.relics.find((r) => r.id === 'oeuf-d-or');
+  assert.equal(run_.sellValue(egg), 125 + 5);
+  run.hp = 10;
+  run.gold = 500;
+  places.enterShop(run, { id: 'shop-test' });
+  assert.equal(run.hp, 25);
+  assert.ok(places.buyHeal(run));
+  assert.ok(!places.buyHeal(run), 'soin payant : une fois par visite');
+  const g = run.gold;
+  run.combat = null;
+  flow.completeNode(run);
+  flow.enterNode(run, run.map.floors[1].find((n) => run.map.floors[0][0].next.includes(n.id)).id);
+  assert.equal(run.gold, g, 'la tirelire est cassée après un achat');
+});
+
+test('marchand : stock gardé, achat, revente', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'BOUTIQUE' });
+  run.gold = 1000;
+  const node = { id: 'n' };
+  const shop = places.enterShop(run, node);
+  assert.equal(shop.consumables.length, 3);
+  assert.equal(shop.relics.length, 3);
+  assert.equal(places.enterShop(run, node), shop, 'stock identique en revenant');
+  run.consumables = [null, null, null];
+  assert.ok(places.buyConsumable(run, 0));
+  assert.ok(!places.buyConsumable(run, 0), 'déjà vendu');
+  assert.equal(run.gold, 1000 - shop.consumables[0].price);
+  const before = run.gold;
+  const value = places.sellRelic(run, run.relics[0]);
+  assert.equal(value, 75);
+  assert.equal(run.gold, before + 75);
+  assert.equal(run.relics.length, 0);
+});
+
+test('feu de camp : repos (30 % des PV max) ou étude ; Couronne de l’Usurpateur', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'REPOS' });
+  run.hp = 5;
+  assert.equal(places.rest(run), 9);
+  places.study(run, 'histoire');
+  const q = { theme: 'histoire' };
+  combat.createCombat(run, { id: 'x', type: 'combat', theme: 'histoire' });
+  assert.equal(combat.damageFor(run, q), 2);
+  run_.addRelic(run, 'couronne-de-l-usurpateur');
+  assert.equal(places.restOptions(run).canRest, false);
+  assert.equal(places.rest(run), 0);
+});
+
+test('reliques de boss : choix de 3, Étoile noire, Pacte du marchand', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'BOSSRELIC' });
+  run.position = run.map.floors.at(-1)[0].id;
+  flow.enterNode(run, run.map.boss.id);
+  const rewards = combat.finishCombat(run, true);
+  assert.equal(new Set(rewards.bossRelics).size, 3);
+  run_.addRelic(run, 'etoile-noire');
+  run_.addRelic(run, 'pacte-du-marchand');
+  combat.createCombat(run, { id: 'e', type: 'elite', theme: 'histoire' });
+  assert.equal(run.combat.enemy.hp, 8);
+  const r = combat.finishCombat(run, true);
+  assert.equal(r.relics.length, 2);
+  assert.equal(r.consumable, null);
+  assert.ok(r.gold >= 50 && r.gold <= 70);
+});
+
+test('Bottes ailées : 3 sauts hors des chemins', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'BOTTES-1' });
+  run_.addRelic(run, 'bottes-ailees');
+  flow.enterNode(run, run.map.floors[0][0].id);
+  run.combat = null;
+  const off = flow.freeTravelNodes(run);
+  if (off.length) {
+    flow.enterNode(run, off[0].id);
+    assert.equal(flow.freeTravelLeft(run), 2);
+  }
+});
+
+test('trésor : une relique non possédée', () => {
+  const run = flow.newRun({ characterId: 'marechal', seed: 'TRESOR' });
+  const r = places.openTreasure(run);
+  assert.equal(r.relics.length, 1);
+  assert.notEqual(r.relics[0], 'feu-de-bivouac');
+});
+
 // Couverture des effets : informatif (les manquants arrivent aux jalons suivants)
 const used = usedEffectIds();
 const done = new Set(implementedEffects());

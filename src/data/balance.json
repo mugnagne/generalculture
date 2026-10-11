@@ -61,7 +61,7 @@
     "consumables": 3,
     "relics": 3,
     "consumablePrices": { "common": 50, "uncommon": 75, "rare": 100 },
-    "relicPrices": { "common": 150, "uncommon": 250, "rare": 300 },
+    "relicPrices": { "common": 150, "uncommon": 250, "rare": 300, "boss": 300 },
     "heal": { "amount": 10, "price": 40 },
     "sellRatio": 0.5
   },

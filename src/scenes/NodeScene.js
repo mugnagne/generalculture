@@ -1,6 +1,5 @@
 /**
- * NodeScene — Cases sans combat : feu de camp, marchand et trésor (jalon 3), événements
- * (jalon 4). Pour l'instant, un simple écran de passage qui valide la case.
+ * NodeScene — Événements (jalon 4). Pour l'instant, un simple écran de passage qui valide la case.
  */
 import { fitCamera } from '../display.js';
 import { text, panel, button, menuNav, C } from '../ui.js';
@@ -13,7 +12,6 @@ import { NODE_LABELS } from './MapScene.js';
 
 const W = 480;
 const H = 270;
-const COMING = { rest: 3, shop: 3, treasure: 3, event: 4 };
 
 export class NodeScene extends Phaser.Scene {
   constructor() {
@@ -38,7 +36,7 @@ export class NodeScene extends Phaser.Scene {
     panel(this, W / 2 - 130, 60, 260, 140);
     icon(this, W / 2, 92, kind, { scale: 3 });
     text(this, W / 2, 116, NODE_LABELS[kind] ?? kind, { size: 16, color: C.gold }).setOrigin(0.5, 0);
-    text(this, W / 2, 138, `Cette case arrive au jalon ${COMING[kind] ?? 3}.\nLe Maréchal poursuit sa route.`,
+    text(this, W / 2, 138, `Les événements arrivent au jalon 4.\nLe Maréchal poursuit sa route.`,
       { size: 8, color: C.muted, align: 'center' }).setOrigin(0.5, 0);
     const b = button(this, W / 2 - 60, 170, 120, 20, 'Continuer', () => this.leave());
     menuNav(this, [b]);

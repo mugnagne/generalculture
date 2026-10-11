@@ -16,10 +16,12 @@ import { preloadBackdrop, drawBackdrop } from '../backdrop.js';
 import { openPause } from './PauseScene.js';
 import { fadeIn, goTo } from '../transition.js';
 import { sfx, music, toggleMute } from '../audio.js';
-import { getContent } from '../core/content.js';
+import { getContent, itemDef } from '../core/content.js';
 import { loadRun, saveRun } from '../core/run.js';
-import { intent, questionDifficulty, startQuestion, resolveAnswer, finishCombat } from '../core/combat.js';
-import { endRun } from '../core/flow.js';
+import { intent, questionDifficulty, startQuestion, resolveAnswer, finishCombat, nextQuestionTheme } from '../core/combat.js';
+import { endRun, completeNode } from '../core/flow.js';
+import { canUseConsumable, useConsumable } from '../core/items.js';
+import { themePicker } from '../overlays.js';
 
 const W = 480;
 const HERO_X = 130;
@@ -75,11 +77,16 @@ export class CombatScene extends Phaser.Scene {
     });
     this.enemyTop = this.groundY - enemyH;
 
-    this.topbar = drawTopBar(this, this.run);
+    this.topbar = drawTopBar(this, this.run, {
+      where: () => ({ inCombat: true, hasQuestion: this.state === 'asking' }),
+      onUse: (slot) => this.useItem(slot),
+    });
     this.drawHud();
     this.drawIntent();
     this.drawCard();
     this.drawPauseButton();
+    this.buffText = text(this, 6, TOPBAR_H + 24, '', { size: 8, color: C.gold }).setShadow(1, 1, '#0E071B', 0, false, true);
+    this.refreshBuffs();
     this.bindKeys();
     this.next();
   }
@@ -213,16 +220,9 @@ export class CombatScene extends Phaser.Scene {
     this.timerLabel.setText('');
     this.questionText.setText('Les éclaireurs rapportent la question…');
 
-    let q;
-    try {
-      q = await drawQuestion(this.run, { theme: this.cb.theme, difficulty: questionDifficulty(this.run) });
-    } catch (err) {
-      if (!this.sys.isActive()) return;
-      this.questionText.setText(`Impossible de charger la question : ${err.message}`);
-      this.retryButton = button(this, W / 2 - 40, 226, 80, 20, 'Réessayer', () => this.next());
-      return;
-    }
-    if (!this.sys.isActive() && !this.sys.isPaused()) return; // scène quittée pendant le chargement
+    const theme = nextQuestionTheme(this.run);
+    const q = await this.fetchQuestion(theme, () => this.next());
+    if (!q) return;
 
     const hpBefore = this.cb.enemy.hp;
     const { timerSeconds, answerDelay } = startQuestion(this.run, q);
@@ -231,15 +231,35 @@ export class CombatScene extends Phaser.Scene {
       this.float(ENEMY_X, this.enemyTop - 18, `+${this.cb.enemy.hp - hpBefore} PV`, C.goodText);
     }
     this.refreshIntent();
+    this.show(q, timerSeconds, answerDelay);
+  }
 
+  /** Tire une question (null si l'API échoue : bouton Réessayer). */
+  async fetchQuestion(theme, retry) {
+    try {
+      const q = await drawQuestion(this.run, { theme, difficulty: questionDifficulty(this.run) });
+      if (!this.sys.isActive() && !this.sys.isPaused()) return null; // scène quittée pendant le chargement
+      return q;
+    } catch (err) {
+      if (!this.sys.isActive()) return null;
+      this.questionText.setText(`Impossible de charger la question : ${err.message}`);
+      this.retryButton = button(this, W / 2 - 40, 226, 80, 20, 'Réessayer', retry);
+      return null;
+    }
+  }
+
+  /** Affiche une question et lance le chrono. */
+  show(q, timerSeconds, answerDelay) {
     this.current = q;
-    this.questionText.setText(q.question);
+    this.clearVotes();
+    this.questionText.setText(q.theme === this.cb.theme ? q.question : `[${getContent().regionByCategory[q.theme].theme}] ${q.question}`);
     this.answerButtons.forEach((b, i) => {
       const rep = q.reponses[i];
       b.setVisible(false);
       if (rep === undefined) return;
       b.label.setText(rep);
       b.value = rep;
+      b.removed = false;
       b.setState('idle');
       b.setEnabled(true);
     });
@@ -265,18 +285,33 @@ export class CombatScene extends Phaser.Scene {
     if (this.state !== 'asking') return;
     this.timeLeft = Math.max(0, this.timeLeft - delta);
     if (!this.answersShown && this.timerTotal - this.timeLeft >= this.answerDelayMs) this.showAnswers();
-    const frac = this.timeLeft / this.timerTotal;
+    const frac = Math.min(1, this.timeLeft / this.timerTotal);
     this.timerBar.width = (W - 24) * frac;
     this.timerBar.fillColor = frac > 0.5 ? C.timer : frac > 0.25 ? C.warn : C.bad;
     this.timerLabel.setText(`${Math.ceil(this.timeLeft / 1000)} s`);
     if (this.timeLeft <= 0) this.answer(null);
   }
 
+  /** Retire des réponses (50/50, Seconde chance) : boutons grisés et inactifs. */
+  removeAnswers(values) {
+    for (const b of this.answerButtons) {
+      if (!values.includes(b.value)) continue;
+      b.removed = true;
+      b.setEnabled(false);
+      b.setState('dim');
+      this.voteTexts?.get(b.value)?.destroy();
+    }
+  }
+
+  clearVotes() {
+    this.voteTexts?.forEach((t) => t.destroy());
+    this.voteTexts = new Map();
+  }
+
   async answer(index) {
     if (this.state !== 'asking') return;
-    if (index !== null && !this.answersShown) return;
+    if (index !== null && (!this.answersShown || this.answerButtons[index].removed)) return;
     this.state = 'resolving';
-    this.timerLabel.setText('');
     if (!this.answersShown) this.showAnswers();
     const q = this.current;
     const choice = index === null ? null : this.answerButtons[index].value;
@@ -285,7 +320,16 @@ export class CombatScene extends Phaser.Scene {
     const elapsed = this.timerTotal - this.timeLeft;
 
     // Jugement et sauvegarde immédiats : recharger la page ne change rien au résultat
-    const res = resolveAnswer(this.run, q, outcome, elapsed);
+    const res = resolveAnswer(this.run, q, outcome, elapsed, choice);
+    if (res.retry) {
+      // Seconde chance : même question, réponses en moins, le chrono continue
+      saveRun(this.run);
+      this.removeAnswers(res.removed);
+      this.say('Seconde chance ! Deux réponses en moins, réessayez.', C.gold);
+      this.state = 'asking';
+      return;
+    }
+    this.timerLabel.setText('');
     let rewards = null;
     if (res.heroDead) {
       finishCombat(this.run, false);
@@ -314,9 +358,14 @@ export class CombatScene extends Phaser.Scene {
     } else {
       this.say(`${index === null ? 'Temps écoulé !' : 'Mauvaise réponse !'} La bonne réponse : ${q.bonne_reponse}`, C.badText);
       await this.enemy.attack(this.hero);
-      this.float(HERO_X, this.groundY - 70, `-${res.taken}`, C.badText);
+      this.float(HERO_X, this.groundY - 70, res.taken ? `-${res.taken}` : 'Paré !', res.taken ? C.badText : C.gold);
+      if (res.revived) {
+        this.say(`${itemDef(res.revived).name} : le Maréchal se relève !`, C.gold);
+        this.float(HERO_X, this.groundY - 90, `${this.run.hp} PV`, C.goodText);
+      }
     }
     this.topbar.refresh();
+    this.refreshBuffs();
     if (!res.heroDead && !res.enemyDead) this.refreshIntent();
     // L'anecdote n'est affichée que si la source en fournit une.
     if (q.anecdote) this.say(`${this.feedback.text}\n${q.anecdote}`);
@@ -325,6 +374,85 @@ export class CombatScene extends Phaser.Scene {
     if (res.enemyDead) return this.finish(true, rewards);
     this.state = 'answered';
     this.nextButton.setVisible(true);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Fioles                                                             */
+  /* ------------------------------------------------------------------ */
+
+  /** Utilisation d'une fiole (menu de la barre du haut), pendant une question ou entre deux. */
+  useItem(slot) {
+    if (!['asking', 'answered'].includes(this.state)) return;
+    const hasQuestion = this.state === 'asking';
+    if (!canUseConsumable(this.run, slot, { inCombat: true, hasQuestion }).ok) return;
+    const name = itemDef(this.run.consumables[slot]).name;
+    const actions = useConsumable(this.run, slot, { question: hasQuestion ? this.current : null });
+    saveRun(this.run);
+    this.topbar.refresh();
+    this.refreshBuffs();
+    this.say(`${name} !`, C.gold);
+    for (const a of actions) this.applyAction(a);
+  }
+
+  applyAction(a) {
+    const { run, cb } = this;
+    if (a.type === 'removeAnswers') this.removeAnswers(a.answers);
+    else if (a.type === 'addTime') {
+      this.timeLeft += a.seconds * 1000;
+      this.timerTotal = Math.max(this.timerTotal, this.timeLeft);
+    } else if (a.type === 'votes') {
+      this.clearVotes();
+      for (const b of this.answerButtons) {
+        if (!(b.value in a.votes) || b.removed) continue;
+        const t = text(this, b.x + b.width - 8, b.y + b.height / 2, `${a.votes[b.value]} %`, { size: 8, color: C.gold }).setOrigin(1, 0.5);
+        this.voteTexts.set(b.value, t);
+      }
+    } else if (a.type === 'swapQuestion') this.swapQuestion();
+    else if (a.type === 'chooseTheme') {
+      themePicker(this, 'Thème de la prochaine question', (theme) => {
+        cb.nextTheme = theme;
+        saveRun(run);
+        this.say(`Prochaine question : ${getContent().regionByCategory[theme].theme}.`, C.gold);
+      });
+    } else if (a.type === 'damage') {
+      this.enemyBar.set(cb.enemy.hp);
+      this.float(ENEMY_X, this.enemyTop - 18, `-${a.amount}`, C.badText);
+      if (cb.enemy.hp <= 0) {
+        this.state = 'resolving';
+        const rewards = finishCombat(run, true);
+        run.resume = { scene: 'reward', data: {} };
+        saveRun(run);
+        this.finish(true, rewards);
+      }
+    } else if (a.type === 'flee') {
+      this.state = 'ended';
+      const next = completeNode(run);
+      saveRun(run);
+      goTo(this, next.scene, next.data);
+    } else if (a.type === 'refresh') this.topbar.refresh();
+  }
+
+  /** Parchemin d'échange : nouvelle question du même thème, chrono remis à neuf. */
+  async swapQuestion() {
+    const theme = this.current.theme;
+    this.state = 'loading';
+    this.answerButtons.forEach((b) => b.setVisible(false));
+    this.questionText.setText('Une autre question arrive…');
+    const q = await this.fetchQuestion(theme, () => this.swapQuestion());
+    if (!q) return;
+    const { timerSeconds, answerDelay } = startQuestion(this.run, q, { swap: true });
+    saveRun(this.run);
+    this.show(q, timerSeconds, answerDelay);
+  }
+
+  /** Effets temporaires en cours (bouclier, huile…), sous le bouton Pause. */
+  refreshBuffs() {
+    const list = this.cb.buffs.map((b) => {
+      const name = itemDef(b.id)?.name ?? b.id;
+      return b.state?.charges ? `${name} (${b.state.charges})` : name;
+    });
+    if (this.cb.nextTheme) list.push(`Savant : ${getContent().regionByCategory[this.cb.nextTheme].short}`);
+    this.buffText.setText(list.join('\n'));
   }
 
   /** Affiche un message sur le bandeau de résultat. */

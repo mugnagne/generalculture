@@ -9,7 +9,7 @@
  * Le combat dure jusqu'à 0 PV d'un des deux camps.
  */
 import { getContent, regionOfTheme } from './content.js';
-import { hooksFor, contextFor, gainGold, randomConsumable, randomRelic } from './run.js';
+import { hooksFor, contextFor, gainGold, randomConsumable, randomRelic, runSources } from './run.js';
 import { rngOf } from './rng.js';
 
 const KIND = { combat: 'soldier', elite: 'elite', boss: 'boss' };
@@ -30,6 +30,9 @@ export function createCombat(run, node) {
   const pool = kind === 'elite' ? c.enemies.eliteAbilities : kind === 'boss' ? c.enemies.bossAbilities : [];
   const abilities = rng.shuffle(pool).slice(0, stats.abilities);
   const def = kind === 'soldier' ? region.soldiers : kind === 'elite' ? region.knight : region.boss;
+  // Étoile noire : PV supplémentaires pour les élites
+  const bonusHp = kind === 'elite' ? effectParams(run, 'eliteBonusHp').reduce((n, p) => n + p.amount, 0) : 0;
+  const hp = stats.hp[act - 1] + bonusHp;
 
   run.combat = {
     nodeId: node.id,
@@ -41,8 +44,8 @@ export function createCombat(run, node) {
       name: def.name,
       sprite: def.sprite,
       attack: def.attack ?? null,
-      hp: stats.hp[act - 1],
-      maxHp: stats.hp[act - 1],
+      hp,
+      maxHp: hp,
       damage: stats.damage[act - 1],
       rage: 0,
       abilities,
@@ -53,6 +56,9 @@ export function createCombat(run, node) {
     streak: 0,
     themesSucceeded: [],
     buffs: [],
+    removedAnswers: [],
+    nextTheme: null,
+    secondChanceUsed: false,
     over: null, // null | 'won' | 'lost' | 'fled'
   };
   const hooks = combatHooks(run);
@@ -77,13 +83,18 @@ export function combatSources(run) {
 export const combatHooks = (run) => hooksFor(run, () => combatSources(run));
 export const combatContext = (run, more = {}) => contextFor(run, { combat: run.combat, ...more });
 
+/** Paramètres de toutes les occurrences actives d'un effet (reliques, personnage, combat). */
+export function effectParams(run, effectId) {
+  const out = [];
+  for (const s of [...runSources(run), ...combatSources(run)]) {
+    for (const e of s.effects ?? []) if (e.id === effectId) out.push(e.params ?? {});
+  }
+  return out;
+}
+
 /** Paramètres d'un effet actif (ex. delayAnswers), ou null. */
 export function activeEffect(run, effectId) {
-  for (const s of [...combatSources(run)]) {
-    const e = s.effects?.find((x) => x.id === effectId);
-    if (e) return e.params ?? {};
-  }
-  return null;
+  return effectParams(run, effectId)[0] ?? null;
 }
 
 /** Ce que l'ennemi annonce avant la question : dégâts en cas d'erreur et effets. */
@@ -109,13 +120,27 @@ export function questionDifficulty(run) {
 /*  Déroulement                                                        */
 /* ------------------------------------------------------------------ */
 
-/** Début d'une question : déclenche onQuestionStart et renvoie chrono et délai d'affichage. */
-export function startQuestion(run, question) {
+/** Thème de la prochaine question (Parchemin du savant : thème choisi, une seule fois). */
+export function nextQuestionTheme(run) {
   const cb = run.combat;
-  cb.questionCount++;
+  const theme = cb.nextTheme ?? cb.theme;
+  cb.nextTheme = null;
+  return theme;
+}
+
+/**
+ * Début d'une question : déclenche onQuestionStart et renvoie chrono et délai d'affichage.
+ * `swap` : question de remplacement (Parchemin d'échange), qui ne compte pas comme une nouvelle question.
+ */
+export function startQuestion(run, question, { swap = false } = {}) {
+  const cb = run.combat;
+  cb.removedAnswers = [];
   const hooks = combatHooks(run);
   const ctx = combatContext(run, { question });
-  hooks.emit('onQuestionStart', ctx);
+  if (!swap) {
+    cb.questionCount++;
+    hooks.emit('onQuestionStart', ctx);
+  }
   const base = getContent().balance.timer.baseSeconds;
   return {
     timerSeconds: Math.max(3, hooks.modify('modifyTimer', base, ctx)),
@@ -132,10 +157,21 @@ export function damageFor(run, question, answer = {}) {
 
 /**
  * Résout une réponse. `outcome` : 'correct' | 'wrong' | 'timeout'.
- * @returns {{ dealt, taken, enemyDead, heroDead }}
+ * `choice` : réponse choisie (pour Seconde chance).
+ * @returns {{ dealt, taken, enemyDead, heroDead, revived, retry?, removed? }}
+ *   retry : Seconde chance, la question est rejouée sans pénalité avec des réponses en moins
  */
-export function resolveAnswer(run, question, outcome, elapsedMs) {
+export function resolveAnswer(run, question, outcome, elapsedMs, choice = null) {
   const cb = run.combat;
+  const chance = activeEffect(run, 'secondChance');
+  if (outcome === 'wrong' && chance && !cb.secondChanceUsed) {
+    cb.secondChanceUsed = true;
+    const removed = new Set([...cb.removedAnswers, choice]);
+    const pool = question.reponses.filter((r) => r !== question.bonne_reponse && !removed.has(r));
+    const more = rngOf(run, 'combat').shuffle(pool).slice(0, Math.max(0, chance.removeAnswers - 1));
+    cb.removedAnswers = [...removed, ...more];
+    return { dealt: 0, taken: 0, enemyDead: false, heroDead: false, retry: true, removed: [choice, ...more] };
+  }
   const hooks = combatHooks(run);
   const answer = { correct: outcome === 'correct', elapsedMs, theme: question.theme };
   const ctx = combatContext(run, { question, answer });
@@ -164,9 +200,9 @@ export function resolveAnswer(run, question, outcome, elapsedMs) {
     hooks.emit(outcome === 'timeout' ? 'onTimeout' : 'onWrong', { ...ctx, taken });
   }
 
-  // Coup mortel : les effets de résurrection (jalon 3) peuvent encore sauver le héros
+  // Coup mortel : Fée en bouteille ou Queue de lézard peuvent encore sauver le héros
   if (run.hp <= 0) hooks.emit('onLethal', ctx);
-  return { dealt, taken, enemyDead: cb.enemy.hp <= 0, heroDead: run.hp <= 0 };
+  return { dealt, taken, enemyDead: cb.enemy.hp <= 0, heroDead: run.hp <= 0, revived: ctx.revived ?? null };
 }
 
 /* ------------------------------------------------------------------ */
@@ -192,17 +228,20 @@ export function finishCombat(run, won) {
   const rng = rngOf(run, 'rewards');
   const table = c.balance.rewards[cb.kind === 'soldier' ? 'combat' : cb.kind];
   const goldRoll = Array.isArray(table.gold) ? rng.int(table.gold[0], table.gold[1]) : table.gold;
-  const rewards = { gold: gainGold(run, goldRoll, hooks), consumable: null, relics: [], bossRelicChoices: 0 };
+  const rewards = { gold: gainGold(run, goldRoll, hooks), consumable: null, relics: [], bossRelics: [] };
 
   if (cb.kind !== 'boss') rewards.consumable = rollConsumableDrop(run);
   if (cb.kind === 'elite') {
-    const count = (table.relics ?? 1) + (activeEffect(run, 'eliteExtraRelics')?.count ?? 0);
+    const count = (table.relics ?? 1) + effectParams(run, 'eliteExtraRelics').reduce((n, p) => n + p.count, 0);
     for (let i = 0; i < count; i++) {
       const id = randomRelic(run, { exclude: rewards.relics });
       if (id) rewards.relics.push(id);
     }
   }
-  if (cb.kind === 'boss') rewards.bossRelicChoices = table.bossRelicChoices;
+  if (cb.kind === 'boss') {
+    const owned = new Set(run.relics.map((r) => r.id));
+    rewards.bossRelics = rng.shuffle(c.bossRelics.filter((r) => !owned.has(r.id))).slice(0, table.bossRelicChoices).map((r) => r.id);
+  }
   run.pendingRewards = rewards;
   return rewards;
 }
@@ -217,7 +256,4 @@ function rollConsumableDrop(run) {
   return drop ? randomConsumable(run) : null;
 }
 
-function noDrops(run) {
-  return Boolean(activeEffect(run, 'noConsumableDrops'))
-    || run.relics.some((r) => (getContent().bossRelicById[r.id]?.effects ?? []).some((e) => e.id === 'noConsumableDrops'));
-}
+const noDrops = (run) => Boolean(activeEffect(run, 'noConsumableDrops'));

@@ -4,9 +4,10 @@
  * appelante sauvegarde ensuite la partie et ouvre cette scène.
  */
 import { getContent } from './content.js';
-import { createRun, hooksFor, contextFor, heal } from './run.js';
+import { createRun, hooksFor, contextFor, heal, runSources } from './run.js';
 import { generateActMap, nodeById, reachableNodes } from './mapgen.js';
 import { createCombat } from './combat.js';
+import { enterShop, enterRest, openTreasure } from './places.js';
 import { rngOf } from './rng.js';
 
 const FIGHTS = ['combat', 'elite', 'boss'];
@@ -35,6 +36,28 @@ export const currentNode = (run) => (run.position ? nodeById(run.map, run.positi
 /** Type effectif d'une case (une case Inconnue révèle son contenu en y entrant). */
 export const nodeKind = (node) => node.revealed ?? node.type;
 
+/* ------------------------------------------------------------------ */
+/*  Bottes ailées : aller sur n'importe quelle case de l'étage suivant  */
+/* ------------------------------------------------------------------ */
+
+function freeTravelSources(run) {
+  return runSources(run).flatMap((s) => (s.effects ?? []).filter((e) => e.id === 'freeTravel').map((e) => ({ s, p: e.params })));
+}
+
+/** Charges restantes des Bottes ailées. */
+export function freeTravelLeft(run) {
+  return freeTravelSources(run).reduce((n, { s, p }) => n + Math.max(0, p.charges - (s.state.used ?? 0)), 0);
+}
+
+/** Cases de l'étage suivant hors des chemins (accessibles avec les Bottes ailées). */
+export function freeTravelNodes(run) {
+  if (!run.position || freeTravelLeft(run) <= 0) return [];
+  const here = nodeById(run.map, run.position);
+  const linked = new Set(here.next);
+  const next = here.floor < run.map.floors.length ? run.map.floors[here.floor] : [];
+  return next.filter((n) => !linked.has(n.id));
+}
+
 /**
  * Avance sur une case accessible et prépare ce qui s'y trouve.
  * @returns {{ scene, data }} scène à ouvrir
@@ -42,7 +65,9 @@ export const nodeKind = (node) => node.revealed ?? node.type;
 export function enterNode(run, nodeId) {
   const c = getContent();
   if (!reachableNodes(run.map, run.position).some((n) => n.id === nodeId)) {
-    throw new Error(`Case inaccessible : ${nodeId}`);
+    if (!freeTravelNodes(run).some((n) => n.id === nodeId)) throw new Error(`Case inaccessible : ${nodeId}`);
+    const { s } = freeTravelSources(run).find(({ s: src, p }) => (src.state.used ?? 0) < p.charges);
+    s.state.used = (s.state.used ?? 0) + 1;
   }
   const node = nodeById(run.map, nodeId);
   run.position = node.id;
@@ -60,8 +85,17 @@ export function enterNode(run, nodeId) {
   if (FIGHTS.includes(kind)) {
     createCombat(run, { ...node, type: kind });
     run.resume = { scene: 'combat', data: {} };
+  } else if (kind === 'shop') {
+    enterShop(run, node);
+    run.resume = { scene: 'shop', data: {} };
+  } else if (kind === 'rest') {
+    enterRest(run, node);
+    run.resume = { scene: 'rest', data: {} };
+  } else if (kind === 'treasure') {
+    openTreasure(run);
+    run.resume = { scene: 'reward', data: {} };
   } else {
-    // Feu de camp, marchand, trésor (jalon 3) et événements (jalon 4)
+    // Événements : jalon 4
     run.resume = { scene: 'node', data: { kind } };
   }
   return run.resume;
@@ -76,6 +110,7 @@ export function completeNode(run) {
   const node = currentNode(run);
   run.combat = null;
   run.pendingRewards = null;
+  run.shop = null;
   run.stats.floorsCleared++;
   if (node?.type !== 'boss') {
     run.resume = { scene: 'map', data: {} };

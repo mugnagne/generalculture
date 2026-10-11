@@ -5,6 +5,9 @@
 import { text, panel, C } from './ui.js';
 import { icon } from './icons.js';
 import { getContent, itemDef } from './core/content.js';
+import { saveRun, removeConsumable, sellValue } from './core/run.js';
+import { useConsumable } from './core/items.js';
+import { consumableMenu } from './overlays.js';
 
 const W = 480;
 export const TOPBAR_H = 18;
@@ -21,8 +24,26 @@ export function itemTint(id) {
   return RARITY_TINT[c.consumableById[id]?.rarity] ?? RARITY_TINT.common;
 }
 
-/** Texte de l'infobulle d'un objet. */
-export function itemInfo(id) {
+/** État particulier d'une relique possédée (thème choisi, charges, valeur…). */
+function relicStatus(instance) {
+  const c = getContent();
+  const def = itemDef(instance.id);
+  const st = instance.state;
+  const out = [];
+  for (const e of def.effects ?? []) {
+    const p = e.params ?? {};
+    if (e.id === 'specialist' && st.theme) out.push(`Thème : ${c.regionByCategory[st.theme]?.theme}.`);
+    if (e.id === 'freeTravel') out.push(`Charges : ${p.charges - (st.used ?? 0)} / ${p.charges}.`);
+    if (e.id === 'reviveOnDeath' && p.oncePerRun) out.push(st.used ? 'Déjà utilisée.' : 'Pas encore utilisée.');
+    if (e.id === 'encyclopedia') out.push(`Bonnes réponses : ${(st.count ?? 0) % p.every} / ${p.every}.`);
+    if (e.id === 'piggyBank' && st.broken) out.push('Cassée : de l’or a été dépensé.');
+    if (e.id === 'growingSellValue') out.push(`Revente : ${sellValue(instance)} or.`);
+  }
+  return out.join(' ');
+}
+
+/** Texte de l'infobulle d'un objet (instance : relique possédée, pour son état). */
+export function itemInfo(id, instance = null) {
   const c = getContent();
   const def = itemDef(id);
   const rarity = { common: 'commune', uncommon: 'peu commune', rare: 'rare' };
@@ -30,7 +51,8 @@ export function itemInfo(id) {
   if (c.bossRelicById[id]) kind = 'Relique de boss';
   else if (c.relicById[id]) kind = `Relique ${rarity[def.rarity]} · ${c.families[def.family]?.name ?? ''}`;
   else kind = `Fiole ${rarity[def.rarity]}${def.outOfCombat ? ' · aussi hors combat' : ''}`;
-  return { name: def.name, kind, description: def.description, drawback: def.drawback ?? null };
+  const status = instance ? relicStatus(instance) : '';
+  return { name: def.name, kind, description: status ? `${def.description}\n${status}` : def.description, drawback: def.drawback ?? null };
 }
 
 /** Infobulle réutilisable (une par scène). */
@@ -64,11 +86,15 @@ export function tooltip(scene) {
 }
 
 /**
- * Dessine la barre du haut.
- * @param {{ onConsumable?: (slot) => void }} opts  clic sur une fiole (utilisation, jalon 3)
- * @returns {{ refresh: () => void, container }}
+ * Dessine la barre du haut. Un clic sur une fiole ouvre son menu (Utiliser / Jeter).
+ * @param {object} opts
+ *   where    : () => ({ inCombat, hasQuestion }) — où en est-on (défaut : hors combat)
+ *   onUse    : (slot) => void — utilisation gérée par la scène (combat) ; sinon effet immédiat
+ *   onChange : () => void — appelé après une utilisation ou un jet hors combat
+ *   onMenu   : (open: boolean) => void — menu ouvert / fermé (le combat fige alors son chrono)
+ * @returns {{ refresh: () => void, container, tip }}
  */
-export function drawTopBar(scene, run, { onConsumable = null } = {}) {
+export function drawTopBar(scene, run, { where = () => ({ inCombat: false, hasQuestion: false }), onUse = null, onChange = null, onMenu = null } = {}) {
   const tip = tooltip(scene);
   const bar = scene.add.container(0, 0).setDepth(900);
   // Fond interactif : bloque les clics vers ce qui défile dessous (carte)
@@ -85,7 +111,32 @@ export function drawTopBar(scene, run, { onConsumable = null } = {}) {
   const dynamic = scene.add.container(0, 0);
   bar.add(dynamic);
 
-  const slot = (x, id, onClick) => {
+  const openMenu = (i) => {
+    tip.hide();
+    onMenu?.(true);
+    const after = () => {
+      saveRun(run);
+      refresh();
+      onChange?.();
+    };
+    consumableMenu(scene, run, i, {
+      where: where(),
+      onUse: (s) => {
+        onMenu?.(false);
+        if (onUse) return onUse(s);
+        useConsumable(run, s);
+        after();
+      },
+      onDiscard: (s) => {
+        onMenu?.(false);
+        removeConsumable(run, s);
+        after();
+      },
+      onClose: () => onMenu?.(false),
+    });
+  };
+
+  const slot = (x, id, onClick, instance = null) => {
     const box = scene.add.rectangle(x, 1, SLOT, SLOT, id ? C.panelAlt : C.panel, 1).setOrigin(0)
       .setStrokeStyle(1, id ? 0x657392 : 0x2a2f4e);
     dynamic.add(box);
@@ -94,7 +145,7 @@ export function drawTopBar(scene, run, { onConsumable = null } = {}) {
     const zone = scene.add.zone(x, 1, SLOT, SLOT).setOrigin(0).setInteractive({ useHandCursor: Boolean(onClick) });
     zone.on('pointerover', () => {
       box.setStrokeStyle(1, C.goldHex);
-      tip.show(x + SLOT / 2, TOPBAR_H + 2, itemInfo(id));
+      tip.show(x + SLOT / 2, TOPBAR_H + 2, itemInfo(id, instance));
     });
     zone.on('pointerout', () => {
       box.setStrokeStyle(1, 0x657392);
@@ -112,12 +163,12 @@ export function drawTopBar(scene, run, { onConsumable = null } = {}) {
     goldText.setText(String(run.gold));
     let x = 104;
     run.consumables.forEach((id, i) => {
-      slot(x, id, id && onConsumable ? () => onConsumable(i) : null);
+      slot(x, id, id ? () => openMenu(i) : null);
       x += SLOT + 2;
     });
     x += 8;
     for (let i = 0; i < run.relicSlots; i++) {
-      slot(x, run.relics[i]?.id ?? null, null);
+      slot(x, run.relics[i]?.id ?? null, null, run.relics[i]);
       x += SLOT + 2;
     }
     const floors = getContent().balance.map.floors;

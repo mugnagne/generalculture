@@ -154,7 +154,8 @@ export function addRelic(run, id, { theme } = {}) {
 export function sellValue(instance) {
   const c = getContent();
   const def = itemDef(instance.id);
-  const price = c.balance.shop.relicPrices[def?.rarity] ?? 0;
+  const rarity = c.bossRelicById[instance.id] ? 'boss' : def?.rarity;
+  const price = c.balance.shop.relicPrices[rarity] ?? 0;
   return Math.floor(price * c.balance.shop.sellRatio) + (instance.state.bonusValue ?? 0);
 }
 
