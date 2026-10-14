@@ -3,7 +3,7 @@
  * emplacements de reliques, acte et étage. Survol d'un objet : sa description.
  */
 import { text, panel, C } from './ui.js';
-import { icon } from './icons.js';
+import { icon, itemIcon } from './icons.js';
 import { getContent, itemDef } from './core/content.js';
 import { saveRun, removeConsumable, sellValue } from './core/run.js';
 import { useConsumable } from './core/items.js';
@@ -141,7 +141,7 @@ export function drawTopBar(scene, run, { where = () => ({ inCombat: false, hasQu
       .setStrokeStyle(1, id ? 0x657392 : 0x2a2f4e);
     dynamic.add(box);
     if (!id) return;
-    dynamic.add(icon(scene, x + SLOT / 2, 1 + SLOT / 2, getContent().consumableById[id] ? 'vial' : 'relic', { tint: itemTint(id) }));
+    dynamic.add(itemIcon(scene, x + SLOT / 2, 1 + SLOT / 2, id, 16));
     const zone = scene.add.zone(x, 1, SLOT, SLOT).setOrigin(0).setInteractive({ useHandCursor: Boolean(onClick) });
     zone.on('pointerover', () => {
       box.setStrokeStyle(1, C.goldHex);

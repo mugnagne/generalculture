@@ -5,11 +5,11 @@
 import { fitCamera } from '../display.js';
 import { text, panel, button, menuNav, C } from '../ui.js';
 import { fadeIn, goTo } from '../transition.js';
-import { icon } from '../icons.js';
-import { drawTopBar, itemInfo, itemTint } from '../topbar.js';
+import { icon, itemIcon } from '../icons.js';
+import { drawTopBar, itemInfo } from '../topbar.js';
 import { acquireRelic } from '../overlays.js';
 import { music, sfx } from '../audio.js';
-import { getContent, itemDef } from '../core/content.js';
+import { itemDef } from '../core/content.js';
 import { loadRun, saveRun, freeConsumableSlots, sellValue } from '../core/run.js';
 import { buyConsumable, payRelic, buyHeal, shopHeal, sellRelic } from '../core/places.js';
 import { completeNode } from '../core/flow.js';
@@ -51,9 +51,8 @@ export class ShopScene extends Phaser.Scene {
     text(this, 300 - 8, 36, message, { size: 8, color: C.goodText }).setOrigin(1, 0);
 
     const row = (y, id, price, sold, onBuy, blocked) => {
-      const isVial = Boolean(getContent().consumableById[id]);
       this.add.rectangle(14, y, 284, 24, C.panelAlt, sold ? 0.3 : 0.7).setOrigin(0);
-      icon(this, 26, y + 12, isVial ? 'vial' : 'relic', { tint: itemTint(id) }).setAlpha(sold ? 0.4 : 1);
+      itemIcon(this, 26, y + 12, id, 20).setAlpha(sold ? 0.4 : 1);
       const info = itemInfo(id);
       text(this, 38, y + 3, info.name, { size: 8, color: sold ? C.muted : C.ink });
       text(this, 38, y + 13, info.kind, { size: 8, color: C.muted });
@@ -94,7 +93,7 @@ export class ShopScene extends Phaser.Scene {
     if (!run.relics.length) text(this, 318, 80, 'Aucune relique.', { size: 8, color: C.muted });
     run.relics.forEach((r, i) => {
       const y = 80 + i * 22;
-      icon(this, 324, y + 9, 'relic', { tint: itemTint(r.id) });
+      itemIcon(this, 324, y + 9, r.id, 16);
       const name = text(this, 332, y + 4, itemDef(r.id).name, { size: 8, color: C.ink, width: 78 });
       name.setInteractive().on('pointerover', () => tip.show(390, y + 22, itemInfo(r.id, r))).on('pointerout', () => tip.hide());
       buttons.push(button(this, 414, y + 1, 54, 18, `+${sellValue(r)}`, () => {

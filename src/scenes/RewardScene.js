@@ -6,9 +6,8 @@
 import { fitCamera } from '../display.js';
 import { text, panel, button, menuNav, C } from '../ui.js';
 import { fadeIn, goTo } from '../transition.js';
-import { icon } from '../icons.js';
-import { drawTopBar, itemInfo, itemTint } from '../topbar.js';
-import { getContent } from '../core/content.js';
+import { icon, itemIcon } from '../icons.js';
+import { drawTopBar, itemInfo } from '../topbar.js';
 import { loadRun, saveRun, addConsumable, freeConsumableSlots } from '../core/run.js';
 import { acquireRelic } from '../overlays.js';
 import { completeNode } from '../core/flow.js';
@@ -85,9 +84,9 @@ export class RewardScene extends Phaser.Scene {
     let y = 64;
     for (const row of rows) {
       const info = row.id ? itemInfo(row.id) : null;
-      const isVial = row.id && getContent().consumableById[row.id];
       this.add.rectangle(px + 10, y, pw - 20, 38, C.panelAlt, 0.7).setOrigin(0);
-      icon(this, px + 24, y + 19, row.iconName ?? (isVial ? 'vial' : 'relic'), { tint: row.id ? itemTint(row.id) : null, scale: 2 });
+      if (row.id) itemIcon(this, px + 24, y + 19, row.id, 32);
+      else icon(this, px + 24, y + 19, row.iconName, { scale: 2 });
       text(this, px + 42, y + 3, info?.name ?? row.label, { size: 8, color: C.gold });
       const desc = row.full ?? (info ? `${info.description}${info.drawback ? ` Contrepartie : ${info.drawback}` : ''}` : row.note);
       text(this, px + 42, y + 13, desc, { size: 8, color: row.full ? C.badText : C.ink, width: row.take ? pw - 130 : pw - 60 });

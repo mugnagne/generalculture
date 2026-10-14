@@ -5,6 +5,7 @@
  * de la palette ENDESGA 64 (« . » = transparent). Les textures sont créées une seule
  * fois par jeu, à la demande, sous la clé « icon:<nom> » (ou « icon:<nom>:<teinte> »).
  */
+import { getContent, itemDef } from './core/content.js';
 
 const PALETTE = {
   k: '#0E071B', // contour
@@ -228,4 +229,31 @@ export function iconKey(scene, name, tint = null) {
 /** Ajoute une icône à la scène (origine au centre). */
 export function icon(scene, x, y, name, { tint = null, scale = 1 } = {}) {
   return scene.add.image(x, y, iconKey(scene, name, tint)).setScale(scale);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Icônes des objets (fioles et reliques) : packs CraftPix 32 x 32     */
+/* ------------------------------------------------------------------ */
+
+const itemKey = (path) => 'item:' + path;
+
+/** À appeler dans un preload() : charge l'icône de chaque fiole et relique (champ « icon » des données). */
+export function preloadItemIcons(scene) {
+  const c = getContent();
+  const paths = new Set([...c.consumables, ...c.relics, ...c.bossRelics].map((x) => x.icon).filter(Boolean));
+  for (const p of paths) if (!scene.textures.exists(itemKey(p))) scene.load.image(itemKey(p), encodeURI(p));
+}
+
+/**
+ * Icône d'un objet, centrée en (x, y), de `size` pixels de côté (16 = la moitié de l'image
+ * d'origine, nette dès l'agrandissement x2). Sans image : petite fiole ou amulette dessinée en code.
+ */
+export function itemIcon(scene, x, y, id, size = 16) {
+  const def = itemDef(id);
+  const key = def?.icon && itemKey(def.icon);
+  if (key && scene.textures.exists(key)) return scene.add.image(x, y, key).setDisplaySize(size, size);
+  const c = getContent();
+  const vial = Boolean(c.consumableById[id]);
+  const tint = c.bossRelicById[id] ? '#A93B89' : c.families[def?.family]?.color ?? '#5AC54F';
+  return icon(scene, x, y, vial ? 'vial' : 'relic', { tint, scale: Math.max(1, Math.round(size / 8)) });
 }

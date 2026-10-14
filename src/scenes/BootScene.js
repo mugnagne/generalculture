@@ -6,6 +6,7 @@ import { preloadUi, text, C } from '../ui.js';
 import { fitCamera } from '../display.js';
 import { preloadAudioList, loadAudioFiles, isMuted } from '../audio.js';
 import { getContent } from '../core/content.js';
+import { preloadItemIcons } from '../icons.js';
 
 export class BootScene extends Phaser.Scene {
   constructor() {
@@ -32,6 +33,8 @@ export class BootScene extends Phaser.Scene {
     // Décors de combat : seule la liste est chargée ici, les calques le sont à l'entrée de chaque scène.
     this.load.json('backdrops', 'assets/generated/backdrops.json');
     preloadCharacters(this, manifest, this.characterKeys());
+    // Icônes des fioles et des reliques (assets/icons/, packs CraftPix)
+    preloadItemIcons(this);
   }
 
   characterKeys() {

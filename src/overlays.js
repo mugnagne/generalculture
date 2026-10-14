@@ -3,8 +3,8 @@
  * obtention d'une relique (thème à choisir, emplacements pleins → revendre ou renoncer).
  */
 import { text, panel, button, menuNav, C } from './ui.js';
-import { icon } from './icons.js';
-import { itemInfo, itemTint } from './topbar.js';
+import { icon, itemIcon } from './icons.js';
+import { itemInfo } from './topbar.js';
 import { getContent, itemDef } from './core/content.js';
 import { addRelic, freeRelicSlots, sellValue } from './core/run.js';
 import { sellRelic } from './core/places.js';
@@ -63,7 +63,7 @@ export function consumableMenu(scene, run, slot, { where, onUse, onDiscard, onCl
   const info = itemInfo(id);
   const can = canUseConsumable(run, slot, where);
   const m = modal(scene, 240, 116, { title: info.name });
-  m.layer.add(icon(scene, m.x + 22, m.y + 44, 'vial', { tint: itemTint(id), scale: 2 }));
+  m.layer.add(itemIcon(scene, m.x + 22, m.y + 44, id, 32));
   m.layer.add(text(scene, m.x + 40, m.y + 24, info.kind, { size: 8, color: C.muted, width: m.w - 52 }));
   m.layer.add(text(scene, m.x + 40, m.y + 36, info.description, { size: 8, color: C.ink, width: m.w - 52 }));
   if (!can.ok) m.layer.add(text(scene, W / 2, m.y + 72, can.reason, { size: 8, color: C.badText }).setOrigin(0.5, 0));
@@ -109,7 +109,7 @@ export function relicSwap(scene, run, newId, done) {
   const buttons = [];
   run.relics.forEach((r, i) => {
     const y = m.y + 34 + i * 22;
-    m.layer.add(icon(scene, m.x + 20, y + 9, 'relic', { tint: itemTint(r.id) }));
+    m.layer.add(itemIcon(scene, m.x + 20, y + 9, r.id, 16));
     m.layer.add(text(scene, m.x + 30, y + 4, itemDef(r.id).name, { size: 8, color: C.ink }));
     buttons.push(m.addButton(m.x + m.w - 112, y, 100, 18, `Vendre +${sellValue(r)} or`, () => {
       sellRelic(run, r);

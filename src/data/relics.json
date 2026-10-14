@@ -9,92 +9,92 @@
   },
   "relics": [
     {
-      "id": "lame-affutee", "name": "Lame affûtée", "family": "guerrier", "rarity": "common",
+      "id": "lame-affutee", "icon": "assets/icons/goblin-loot/Icon32.png", "name": "Lame affûtée", "family": "guerrier", "rarity": "common",
       "description": "La première bonne réponse de chaque combat fait +2 dégâts.",
       "effects": [{ "id": "bonusDamage", "params": { "amount": 2, "when": "firstCorrectOfCombat" } }]
     },
     {
-      "id": "elan-du-duelliste", "name": "Élan du duelliste", "family": "guerrier", "rarity": "uncommon",
+      "id": "elan-du-duelliste", "icon": "assets/icons/goblin-loot/Icon30.png", "name": "Élan du duelliste", "family": "guerrier", "rarity": "uncommon",
       "description": "+1 dégât par bonne réponse consécutive, remis à zéro à la première erreur.",
       "effects": [{ "id": "streakDamage", "params": { "perStreak": 1 } }]
     },
     {
-      "id": "reflexe", "name": "Réflexe", "family": "guerrier", "rarity": "common",
+      "id": "reflexe", "icon": "assets/icons/loot/Icons_11.png", "name": "Réflexe", "family": "guerrier", "rarity": "common",
       "description": "Une bonne réponse en moins de 5 s fait +1 dégât.",
       "effects": [{ "id": "bonusDamage", "params": { "amount": 1, "when": "fastAnswer", "seconds": 5 } }]
     },
     {
-      "id": "coup-de-grace", "name": "Coup de grâce", "family": "guerrier", "rarity": "rare",
+      "id": "coup-de-grace", "icon": "assets/icons/loot/Icons_09.png", "name": "Coup de grâce", "family": "guerrier", "rarity": "rare",
       "description": "Un ennemi à 2 PV ou moins est achevé à la bonne réponse suivante.",
       "effects": [{ "id": "finisher", "params": { "threshold": 2 } }]
     },
     {
-      "id": "grimoire-$theme", "name": "Grimoire : $themeName", "family": "erudit", "rarity": "common", "perTheme": true,
+      "id": "grimoire-$theme", "icon": "assets/icons/loot/Icons_29.png", "name": "Grimoire : $themeName", "family": "erudit", "rarity": "common", "perTheme": true,
       "description": "+1 dégât sur les questions du thème $themeName.",
       "effects": [{ "id": "bonusDamage", "params": { "amount": 1, "when": "theme", "theme": "$theme" } }]
     },
     {
-      "id": "polymathe", "name": "Polymathe", "family": "erudit", "rarity": "uncommon",
+      "id": "polymathe", "icon": "assets/icons/loot/Icons_27.png", "name": "Polymathe", "family": "erudit", "rarity": "uncommon",
       "description": "+1 dégât par thème différent déjà réussi dans le combat.",
       "effects": [{ "id": "polymath", "params": { "per": 1 } }]
     },
     {
-      "id": "encyclopedie-vivante", "name": "Encyclopédie vivante", "family": "erudit", "rarity": "rare",
+      "id": "encyclopedie-vivante", "icon": "assets/icons/loot/Icons_16.png", "name": "Encyclopédie vivante", "family": "erudit", "rarity": "rare",
       "description": "Gagne +1 dégât permanent toutes les 15 bonnes réponses de la partie.",
       "effects": [{ "id": "encyclopedia", "params": { "every": 15, "amount": 1 } }]
     },
     {
-      "id": "specialiste", "name": "Spécialiste", "family": "erudit", "rarity": "uncommon", "chooseTheme": true,
+      "id": "specialiste", "icon": "assets/icons/loot/Icons_07.png", "name": "Spécialiste", "family": "erudit", "rarity": "uncommon", "chooseTheme": true,
       "description": "Dégâts doublés sur le thème choisi, mais les erreurs sur ce thème coûtent double.",
       "effects": [{ "id": "specialist", "params": { "damageMult": 2, "takenMult": 2 } }]
     },
     {
-      "id": "feu-de-bivouac", "name": "Feu de bivouac", "family": "survivant", "rarity": "common",
+      "id": "feu-de-bivouac", "icon": "assets/icons/goblin-loot/Icon33.png", "name": "Feu de bivouac", "family": "survivant", "rarity": "common",
       "description": "Rend 3 PV à la fin de chaque combat.",
       "effects": [{ "id": "healOnCombatEnd", "params": { "amount": 3 } }]
     },
     {
-      "id": "fruit-des-collines", "name": "Fruit des collines", "family": "survivant", "rarity": "common",
+      "id": "fruit-des-collines", "icon": "assets/icons/loot/Icons_08.png", "name": "Fruit des collines", "family": "survivant", "rarity": "common",
       "description": "+7 PV max.",
       "effects": [{ "id": "gainMaxHp", "params": { "amount": 7, "heal": true } }]
     },
     {
-      "id": "armure-de-cuir", "name": "Armure de cuir", "family": "survivant", "rarity": "uncommon",
+      "id": "armure-de-cuir", "icon": "assets/icons/loot/Icons_18.png", "name": "Armure de cuir", "family": "survivant", "rarity": "uncommon",
       "description": "La première erreur de chaque combat ne coûte aucun PV.",
       "effects": [{ "id": "blockFirstWrong", "params": {} }]
     },
     {
-      "id": "seconde-chance", "name": "Seconde chance", "family": "survivant", "rarity": "uncommon",
+      "id": "seconde-chance", "icon": "assets/icons/loot/Icons_26.png", "name": "Seconde chance", "family": "survivant", "rarity": "uncommon",
       "description": "Une fois par combat, une erreur permet de rejouer la question avec 2 réponses en moins.",
       "effects": [{ "id": "secondChance", "params": { "removeAnswers": 2 } }]
     },
     {
-      "id": "queue-de-lezard", "name": "Queue de lézard", "family": "survivant", "rarity": "rare",
+      "id": "queue-de-lezard", "icon": "assets/icons/loot/Icons_17.png", "name": "Queue de lézard", "family": "survivant", "rarity": "rare",
       "description": "Une fois par partie, revient à 50 % des PV au lieu de mourir.",
       "effects": [{ "id": "reviveOnDeath", "params": { "percentMax": 50, "oncePerRun": true } }]
     },
     {
-      "id": "tirelire", "name": "Tirelire", "family": "marchand", "rarity": "common",
+      "id": "tirelire", "icon": "assets/icons/loot/Icons_01.png", "name": "Tirelire", "family": "marchand", "rarity": "common",
       "description": "+10 or par étage tant que rien n'a été acheté.",
       "effects": [{ "id": "piggyBank", "params": { "gold": 10 } }]
     },
     {
-      "id": "ticket-de-repas", "name": "Ticket de repas", "family": "marchand", "rarity": "common",
+      "id": "ticket-de-repas", "icon": "assets/icons/loot/Icons_24.png", "name": "Ticket de repas", "family": "marchand", "rarity": "common",
       "description": "Rend 15 PV en entrant chez un marchand.",
       "effects": [{ "id": "healOnShopEnter", "params": { "amount": 15 } }]
     },
     {
-      "id": "oeuf-d-or", "name": "Œuf d'or", "family": "marchand", "rarity": "uncommon",
+      "id": "oeuf-d-or", "icon": "assets/icons/loot/Icons_15.png", "name": "Œuf d'or", "family": "marchand", "rarity": "uncommon",
       "description": "Sa valeur de revente monte de 5 or après chaque combat.",
       "effects": [{ "id": "growingSellValue", "params": { "step": 5 } }]
     },
     {
-      "id": "sablier-d-erudit", "name": "Sablier d'érudit", "family": "polyvalente", "rarity": "common",
+      "id": "sablier-d-erudit", "icon": "assets/icons/loot/Icons_33.png", "name": "Sablier d'érudit", "family": "polyvalente", "rarity": "common",
       "description": "+5 s par question.",
       "effects": [{ "id": "timerBonus", "params": { "seconds": 5 } }]
     },
     {
-      "id": "bottes-ailees", "name": "Bottes ailées", "family": "polyvalente", "rarity": "rare",
+      "id": "bottes-ailees", "icon": "assets/icons/goblin-loot/Icon15.png", "name": "Bottes ailées", "family": "polyvalente", "rarity": "rare",
       "description": "3 fois par partie, ignorer les chemins de la carte.",
       "effects": [{ "id": "freeTravel", "params": { "charges": 3 } }]
     }

@@ -1,6 +1,6 @@
 [
   {
-    "id": "couronne-de-l-usurpateur", "name": "Couronne de l'Usurpateur",
+    "id": "couronne-de-l-usurpateur", "icon": "assets/icons/loot/Icons_40.png", "name": "Couronne de l'Usurpateur",
     "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Les feux de camp ne permettent plus de se reposer.",
     "effects": [
       { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
@@ -8,7 +8,7 @@
     ]
   },
   {
-    "id": "masque-aveugle", "name": "Masque aveugle",
+    "id": "masque-aveugle", "icon": "assets/icons/goblin-loot/Icon8.png", "name": "Masque aveugle",
     "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Les thèmes des cases ne sont plus affichés sur la carte.",
     "effects": [
       { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
@@ -16,7 +16,7 @@
     ]
   },
   {
-    "id": "sablier-fele", "name": "Sablier fêlé",
+    "id": "sablier-fele", "icon": "assets/icons/loot/Icons_30.png", "name": "Sablier fêlé",
     "description": "+1 dégât sur chaque bonne réponse.", "drawback": "Chrono de base réduit à 12 s.",
     "effects": [
       { "id": "bonusDamage", "params": { "amount": 1, "when": "always" } },
@@ -24,7 +24,7 @@
     ]
   },
   {
-    "id": "etoile-noire", "name": "Étoile noire",
+    "id": "etoile-noire", "icon": "assets/icons/loot/Icons_22.png", "name": "Étoile noire",
     "description": "Les élites donnent 2 reliques.", "drawback": "Les élites ont +2 PV.",
     "effects": [
       { "id": "eliteExtraRelics", "params": { "count": 1 } },
@@ -32,7 +32,7 @@
     ]
   },
   {
-    "id": "pacte-du-marchand", "name": "Pacte du marchand",
+    "id": "pacte-du-marchand", "icon": "assets/icons/loot/Icons_28.png", "name": "Pacte du marchand",
     "description": "Or gagné doublé.", "drawback": "Plus aucune fiole n'est trouvée après les combats.",
     "effects": [
       { "id": "goldMultiplier", "params": { "mult": 2 } },
@@ -40,7 +40,7 @@
     ]
   },
   {
-    "id": "grand-sac", "name": "Grand sac",
+    "id": "grand-sac", "icon": "assets/icons/goblin-loot/Icon17.png", "name": "Grand sac",
     "description": "+2 emplacements de relique.", "drawback": "Aucune.",
     "effects": [{ "id": "extraRelicSlots", "params": { "count": 2 } }]
   }

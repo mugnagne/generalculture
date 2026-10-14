@@ -6,8 +6,8 @@
 import { fitCamera } from '../display.js';
 import { text, panel, button, menuNav, C } from '../ui.js';
 import { fadeIn, goTo } from '../transition.js';
-import { icon } from '../icons.js';
-import { itemInfo, itemTint, tooltip } from '../topbar.js';
+import { icon, itemIcon } from '../icons.js';
+import { itemInfo, tooltip } from '../topbar.js';
 import { getContent } from '../core/content.js';
 import { loadFinishedRun, deleteRun, heroName } from '../core/run.js';
 import { drawBanner } from '../banner.js';
@@ -79,7 +79,7 @@ export class SummaryScene extends Phaser.Scene {
     const tip = tooltip(this);
     run.relics.forEach((r, i) => {
       const x = 34 + i * 22;
-      const img = icon(this, x, 205, 'relic', { tint: itemTint(r.id), scale: 2 }).setInteractive();
+      const img = itemIcon(this, x, 205, r.id, 20).setInteractive();
       img.on('pointerover', () => tip.show(x, 120, itemInfo(r.id)));
       img.on('pointerout', () => tip.hide());
     });

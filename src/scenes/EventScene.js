@@ -6,8 +6,8 @@
 import { fitCamera } from '../display.js';
 import { text, panel, button, menuNav, C } from '../ui.js';
 import { fadeIn, goTo } from '../transition.js';
-import { icon } from '../icons.js';
-import { drawTopBar, itemInfo, itemTint } from '../topbar.js';
+import { icon, itemIcon } from '../icons.js';
+import { drawTopBar, itemInfo } from '../topbar.js';
 import { acquireRelic } from '../overlays.js';
 import { openPause } from './PauseScene.js';
 import { music, sfx } from '../audio.js';
@@ -201,7 +201,7 @@ export class EventScene extends Phaser.Scene {
   relicRow(y, id) {
     const info = itemInfo(id);
     this.add.rectangle(PX + 12, y, PW - 24, 38, C.panelAlt, 0.7).setOrigin(0);
-    icon(this, PX + 26, y + 19, 'relic', { tint: itemTint(id), scale: 2 });
+    itemIcon(this, PX + 26, y + 19, id, 32);
     text(this, PX + 44, y + 3, info.name, { size: 8, color: C.gold });
     text(this, PX + 44, y + 13, info.description, { size: 8, color: C.ink, width: PW - 140 });
   }
@@ -235,7 +235,7 @@ export class EventScene extends Phaser.Scene {
     run.consumables.forEach((id, slot) => {
       if (!id) return;
       const by = y + 20 + buttons.length * 26;
-      icon(this, PX + 24, by + 10, 'vial', { tint: itemTint(id) });
+      itemIcon(this, PX + 22, by + 10, id, 16);
       buttons.push(button(this, PX + 34, by, PW - 48, 20, itemDef(id).name, () => {
         tradeConsumable(run, action, slot);
         saveRun(run);

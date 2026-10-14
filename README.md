@@ -39,6 +39,8 @@ Le quiz d'origine reste disponible sur `classique.html`.
   (carte en 480x270, palette, `backdrops.json`). Les fichiers d'origine des assets ne sont jamais modifiés.
 - Décors de combat CraftPix : `assets/backgrounds/<région>/` (calques). Dans `src/data/regions.json`,
   `backdrop.variant` choisit la variante et `backdrop.ground` la ligne du sol (pixels de l'image d'origine).
+- Icônes des fioles et des reliques : packs CraftPix copiés tels quels dans `assets/icons/` ; chaque objet
+  pointe vers son image par le champ `icon` de `consumables.json`, `relics.json` et `boss-relics.json`.
 - Questions : `js/questionSource.js` (inchangé), via `src/questions.js`.
 
 ---

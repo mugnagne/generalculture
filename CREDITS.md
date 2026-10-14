@@ -29,6 +29,17 @@ Les fichiers d'origine ne sont jamais modifiés : réductions et recolorations s
 |---|---|---|---|
 | `kenney-fantasy-ui-borders/` | Fantasy UI Borders | Kenney (www.kenney.nl) | CC0 (License.txt) |
 
+## Icônes d'objets (`assets/icons/`)
+
+Packs gratuits de CraftPix (craftpix.net), utilisés sans modification, selon la licence
+<https://craftpix.net/file-licenses/>.
+
+| Dossier | Pack | Auteur | Licence |
+|---|---|---|---|
+| `potions/` | 48 Free Magic Potions Pixel Art Icons (fioles) | CraftPix · craftpix.net | craftpix.net/file-licenses |
+| `loot/` | Free 40 Loot Icons Pixel Art (reliques) | CraftPix · craftpix.net | craftpix.net/file-licenses |
+| `goblin-loot/` | Free Goblin Loot Icons 32x32 Pixel Art (reliques) | CraftPix · craftpix.net | craftpix.net/file-licenses |
+
 ## Palette, police, moteur
 
 | Ressource | Auteur | Licence |
